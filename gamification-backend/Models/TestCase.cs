@@ -4,10 +4,10 @@ public struct TestCase
 {
     public TestCase(string input, string output)
     {
-        this.input = input;
-        this.output = output;
+        Input = input;
+        Output = output;
     }
 
-    public string input { get; }
-    public string output { get; }
+    public string Input { get; }
+    public string Output { get; }
 }
