@@ -6,9 +6,20 @@ namespace GamificationBackend.Service;
 
 public class CodeCompiler
 {
-    private static readonly HttpClient Client = new();
+    private static CodeCompiler? _instance;
+    private readonly HttpClient? _client;
 
-    public static async Task<List<string>> RunTask(GameTask task)
+    private CodeCompiler()
+    {
+        _client = new HttpClient();
+    }
+
+    public static CodeCompiler Instance()
+    {
+        return _instance ??= new CodeCompiler();
+    }
+
+    public async Task<List<string>> RunTask(GameTask task)
     {
         // Serialize our concrete class into a JSON String
         var stringPayload = JsonSerializer.Serialize(task);
@@ -18,7 +29,7 @@ public class CodeCompiler
 
 
         // Do the actual request and await the response
-        var httpResponse = await Client.PostAsync("http://localhost/8000/compiler/", httpContent);
+        var httpResponse = await _client.PostAsync("http://localhost/8000/compiler/", httpContent);
 
         // If the response contains content we want to read it!
         if (httpResponse.Content != null)

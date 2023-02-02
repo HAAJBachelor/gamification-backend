@@ -8,14 +8,14 @@ public static class GameLogic
 {
     public static TestCaseResult RunTestCase(GameTask task)
     {
-        var output = CodeCompiler.RunTask(task).Result;
+        var output = CodeCompiler.Instance().RunTask(task).Result;
         var result = ValidateTestCase(task.SingleTestCase().Output, output[0]);
         return result;
     }
 
     public static TaskResult Submit(GameTask task)
     {
-        var outputs = CodeCompiler.RunTask(task).Result;
+        var outputs = CodeCompiler.Instance().RunTask(task).Result;
         var testCaseResults = outputs
             .Select((t, i) =>
                 ValidateTestCase(task.TestCases[i].Output, t))
