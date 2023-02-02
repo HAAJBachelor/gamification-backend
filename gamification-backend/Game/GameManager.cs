@@ -1,6 +1,6 @@
-﻿using gamification_backend.Game;
+﻿using gamification_backend.Models;
 
-namespace gamification_backend.Models;
+namespace gamification_backend.Game;
 
 public class GameManager
 {

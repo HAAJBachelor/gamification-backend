@@ -1,4 +1,4 @@
-﻿namespace gamification_backend.Models;
+﻿namespace gamification_backend.Game;
 
 public class State
 {
