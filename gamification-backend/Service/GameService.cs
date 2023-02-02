@@ -6,20 +6,22 @@ namespace GamificationBackend.Service;
 public class GameService : IGameService
 {
     private readonly IGameRepository _repo;
+    private GameManager _manager;
 
     public GameService(IGameRepository repo)
     {
         _repo = repo;
+        _manager = GameManager.The();
     }
     
     public string CreateSession(string username)
     {
-        GameManager.CreateSession(username);
+        _manager.CreateSession(username);
         return "Done";
     }
 
-    public List<GameSession> GetSessions()
+    public Dictionary<int, GameSession> GetSessions()
     {
-        return GameManager.GetSessions();
+        return _manager.GetSessions();
     }
 }
