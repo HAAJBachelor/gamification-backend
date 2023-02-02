@@ -1,19 +1,40 @@
-﻿using System.Diagnostics;
+﻿using GamificationBackend.Game;
 
 namespace GamificationBackend.Models;
 
 public class GameSession
 {
-    //verdier er public kun for testing...
-    public int Id { get; set; } // Unique identifier for each session
-    public string User { get; set; } // Username or some other identifier? May be replaced with a user-object or user-id.
+    private readonly StateManager _stateManager;
 
-    private StateManager StateManager;
-    public GameSession(string name, int id)
+    private GameTask? _currentTask;
+
+    private int _id; // Unique identifier for each session
+    private string _user; // User class?
+
+    public GameSession(string name, int id, int startTime)
     {
-        User = name;
-        Id = id;
-        StateManager = new StateManager(this);
+        _user = name;
+        _id = id;
+        _stateManager = new StateManager(startTime);
+    }
 
+    public void StartNewTask(GameTask newTask)
+    {
+        _currentTask = newTask;
+    }
+
+    public TaskResult SubmitTask(string input)
+    {
+        if (_currentTask == null) throw new NullReferenceException("Error in GameSession.SubmitTask()");
+
+        _currentTask.userCode = input;
+        var res = GameLogic.Submit(_currentTask);
+
+        if (res.Success)
+        {
+            //Update life and points in state
+        }
+
+        return res;
     }
 }
