@@ -10,13 +10,13 @@ public class GameSession
 
     public GameSession(string name, int id, int startTime)
     {
-        _user = name;
-        _id = id;
+        User = name;
+        Id = id;
         _stateManager = new StateManager(startTime);
     }
 
-    private int _id { get; } // Unique identifier for each session
-    private string _user { get; } // User class?
+    private int Id { get; } // Unique identifier for each session
+    private string User { get; } // User class?
 
     public void StartNewTask(GameTask newTask)
     {
@@ -28,15 +28,13 @@ public class GameSession
         if (_currentTask == null) throw new NullReferenceException("Error in GameSession.SubmitTask()");
 
         _currentTask.userCode = input;
-        TaskResult res = GameLogic.RunTestCase(_currentTask);
+        var res = GameLogic.Submit(_currentTask);
 
-        if (TaskResult.Success)
+        if (res.Success)
         {
             //Update life and points in state
         }
-        else
-        {
-            return res;
-        }
+
+        return res;
     }
 }

@@ -2,25 +2,27 @@
 
 public class GameManager
 {
+    private static GameManager _instance;
+
     //private static List<GameSession> sessions;
     private readonly Dictionary<int, GameSession> _sessions;
     private int _idCounter;
-    private static GameManager _instance;
 
-    public static GameManager The()
-    {
-        if (_instance is null) _instance = new GameManager();
-        return _instance;
-    }
     private GameManager()
     {
         _sessions = new Dictionary<int, GameSession>();
         _idCounter = 0;
     }
 
+    public static GameManager The()
+    {
+        if (_instance is null) _instance = new GameManager();
+        return _instance;
+    }
+
     public void CreateSession(string User = "TestString")
     {
-        GameSession session = new GameSession(User, _idCounter);
+        var session = new GameSession(User, _idCounter, 600);
         _sessions.Add(_idCounter, session);
         _idCounter++;
     }
@@ -29,5 +31,4 @@ public class GameManager
     {
         return _sessions;
     }
-
 }

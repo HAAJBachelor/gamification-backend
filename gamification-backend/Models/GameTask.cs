@@ -3,7 +3,7 @@
 public class GameTask
 {
     public string Description { get; set; }
-    public| string userCode { get; set; }
+    public string userCode { get; set; }
     public List<TestCase> TestCases { get; set; }
 
     public void addSingleTestCase(TestCase testCase)
