@@ -6,16 +6,27 @@ namespace GamificationBackend.Game;
 
 public static class GameLogic
 {
-    public static TestResult RunTestCase(GameTask task)
+    public static TestCaseResult RunTestCase(GameTask task)
     {
         var output = CodeCompiler.RunTask(task).Result;
-        var result = ValidateTestCase(task.TestCases[0].output, output[0]);
+        var result = ValidateTestCase(task.SingleTestCase().Output, output[0]);
         return result;
     }
 
-    private static TestResult ValidateTestCase(string expected, string output)
+    public static TaskResult Submit(GameTask task)
     {
-        var result = new TestResult();
+        var outputs = CodeCompiler.RunTask(task).Result;
+        var testCaseResults = outputs
+            .Select((t, i) =>
+                ValidateTestCase(task.TestCases[i].Output, t))
+            .ToList();
+        var success = testCaseResults.All(testCaseResult => testCaseResult.Success);
+        return new TaskResult(testCaseResults, success);
+    }
+
+    private static TestCaseResult ValidateTestCase(string expected, string output)
+    {
+        var result = new TestCaseResult();
         if (expected == output)
         {
             result.Success = true;
