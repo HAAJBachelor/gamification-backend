@@ -8,15 +8,15 @@ public class GameSession
 
     private GameTask? _currentTask;
 
+    private int _id; // Unique identifier for each session
+    private string _user; // User class?
+
     public GameSession(string name, int id, int startTime)
     {
-        User = name;
-        Id = id;
+        _user = name;
+        _id = id;
         _stateManager = new StateManager(startTime);
     }
-
-    private int Id { get; } // Unique identifier for each session
-    private string User { get; } // User class?
 
     public void StartNewTask(GameTask newTask)
     {
