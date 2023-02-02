@@ -1,10 +1,10 @@
-﻿namespace GamificationBackend.Models;
+﻿namespace gamification_backend.Models;
 
 public class StateManager
 {
     private readonly Timer _timer;
-    private int _points;
     private int _lives;
+    private int _points;
 
     public StateManager(int seconds)
     {
@@ -38,5 +38,4 @@ public class StateManager
     {
         return new State(_points, _lives, _timer.GetTime());
     }
-
 }

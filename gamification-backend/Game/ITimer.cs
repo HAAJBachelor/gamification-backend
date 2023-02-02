@@ -1,4 +1,4 @@
-﻿namespace GamificationBackend.Models;
+﻿namespace gamification_backend.Models;
 
 public interface ITimer
 {

@@ -1,8 +1,8 @@
 ﻿using System.Text;
-using GamificationBackend.Models;
-using GamificationBackend.Service;
+using gamification_backend.Models;
+using gamification_backend.Service;
 
-namespace GamificationBackend.Game;
+namespace gamification_backend.Game;
 
 public static class GameLogic
 {

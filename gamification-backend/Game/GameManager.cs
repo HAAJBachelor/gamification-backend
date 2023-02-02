@@ -1,4 +1,6 @@
-﻿namespace GamificationBackend.Models;
+﻿using gamification_backend.Game;
+
+namespace gamification_backend.Models;
 
 public class GameManager
 {
@@ -24,11 +26,24 @@ public class GameManager
     {
         var session = new GameSession(User, _idCounter, 600);
         _sessions.Add(_idCounter, session);
+        Console.WriteLine("Making new session, {0}", _sessions.Count);
         _idCounter++;
     }
 
     public Dictionary<int, GameSession> GetSessions()
     {
         return _sessions;
+    }
+
+    public TaskResult SubmitTask(string input)
+    {
+        var session = _sessions[0];
+        return session.SubmitTask(input);
+    }
+
+    public void AddTask(GameTask gt)
+    {
+        Console.WriteLine(_sessions.Count);
+        _sessions[0].StartNewTask(gt);
     }
 }
