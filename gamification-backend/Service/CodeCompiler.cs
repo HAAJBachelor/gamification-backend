@@ -1,8 +1,8 @@
 ﻿using System.Text;
 using System.Text.Json;
-using GamificationBackend.Models;
+using gamification_backend.Models;
 
-namespace GamificationBackend.Service;
+namespace gamification_backend.Service;
 
 public class CodeCompiler
 {
@@ -29,7 +29,7 @@ public class CodeCompiler
 
 
         // Do the actual request and await the response
-        var httpResponse = await _client.PostAsync("http://localhost/8000/compiler/", httpContent);
+        var httpResponse = await _client.PostAsync("http://localhost:8000/compiler/", httpContent);
 
         // If the response contains content we want to read it!
         if (httpResponse.Content != null)

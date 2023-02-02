@@ -1,7 +1,5 @@
-using GamificationBackend;
-using GamificationBackend.DAL;
-using GamificationBackend.Models;
-using GamificationBackend.Service;
+using gamification_backend.DAL;
+using gamification_backend.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 

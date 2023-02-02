@@ -1,7 +1,12 @@
-﻿namespace GamificationBackend.Models;
+﻿namespace gamification_backend.Models;
 
 public class GameTask
 {
+    public GameTask()
+    {
+        TestCases = new List<TestCase>();
+    }
+
     public string Description { get; set; }
     public string userCode { get; set; }
     public List<TestCase> TestCases { get; set; }

@@ -1,6 +1,6 @@
-﻿using GamificationBackend.Game;
+﻿using gamification_backend.Models;
 
-namespace GamificationBackend.Models;
+namespace gamification_backend.Game;
 
 public class GameSession
 {
