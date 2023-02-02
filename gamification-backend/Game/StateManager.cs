@@ -1,18 +1,14 @@
-﻿using System.Reflection.Metadata;
-
-namespace GamificationBackend.Models;
+﻿namespace GamificationBackend.Models;
 
 public class StateManager
 {
-    private readonly GameSession _session;
-    private Timer _timer;
+    private readonly Timer _timer;
     private int _points;
     private int _lives;
 
-    public StateManager(GameSession s)
+    public StateManager(int seconds)
     {
-        _session = s;
-        _timer = new Timer();
+        _timer = new Timer(seconds);
         _points = 0;
         _lives = 3; // Example amount
     }
@@ -32,15 +28,15 @@ public class StateManager
         _points += amount;
     }
 
-    public void addTime(int seconds)
+    public void AddTime(int seconds)
     {
-        //_timer.AddTime(int seconds);
+        _timer.AddTime(seconds);
     }
 
     //Returns state as a State-object containing all data.
     public State GetState()
     {
-        return new State(_points, _lives, _timer);
+        return new State(_points, _lives, _timer.GetTime());
     }
 
 }
