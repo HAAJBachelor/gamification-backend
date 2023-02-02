@@ -13,7 +13,7 @@ public class GameSession
     {
         User = name;
         Id = id;
-        StateManager = new StateManager();
+        StateManager = new StateManager(this);
 
     }
 }
