@@ -11,6 +11,8 @@ public class GameSession
     private int _id; // Unique identifier for each session
     private string _user; // User class?
 
+    private List<GameTask> _taskSetToSelectFrom;
+
     public GameSession(string name, int id, int startTime)
     {
         _user = name;
@@ -18,9 +20,21 @@ public class GameSession
         _stateManager = new StateManager(startTime);
     }
 
-    public void StartNewTask(GameTask newTask)
+    public GameTask StartNewTask(int id)
     {
-        _currentTask = newTask;
+        if (_taskSetToSelectFrom is not { Count: 3 })
+        {
+            throw new Exception("Error in GameSession.StartNewTask()");
+        }
+        _currentTask = _taskSetToSelectFrom[id];
+        _taskSetToSelectFrom.Clear();
+
+        return _currentTask;
+    }
+
+    public void SaveGeneratedTaskSet(List<GameTask> tasks)
+    {
+        _taskSetToSelectFrom = tasks;
     }
 
     public TaskResult SubmitTask(string input)

@@ -28,18 +28,19 @@ public class GameService : IGameService
 
     public TaskResult SubmitTask(string input)
     {
-        GetTask();
         _manager.CreateSession("Ole");
         return _manager.SubmitTask(input);
     }
 
-    public void GetTask()
-    {
-        _manager.AddTask(_repo.GetTask());
-    }
-
     public List<GameTask> GenerateTaskSet()
     {
-        return _repo.GenerateTaskSet();
+        List<GameTask> tasks = _repo.GenerateTaskSet();
+        _manager.SaveTaskSet(tasks);
+        return tasks;
+    }
+
+    public GameTask SelectTask(int id)
+    {
+        return _manager.SelectTask(id);
     }
 }

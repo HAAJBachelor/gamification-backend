@@ -38,6 +38,12 @@ namespace gamification_backend.Controllers
             return _service.SubmitTask(input);
         }
 
+        [HttpGet]
+        public GameTask SelectTask(int id)
+        {
+            return _service.SelectTask(id);
+        }
+
         // GET: /api/GenerateTasks/
         [HttpGet]
         public List<GameTask> GenerateTasks()
