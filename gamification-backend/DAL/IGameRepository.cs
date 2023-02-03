@@ -8,5 +8,7 @@ namespace gamification_backend.DAL
         // All methods in GameRepository must be added here.
 
         public GameTask GetTask();
+
+        public List<GameTask> GenerateTaskSet();
     }
 }

@@ -12,4 +12,6 @@ public interface IGameService
     public TaskResult SubmitTask(string input);
 
     public void GetTask();
+
+    public List<GameTask> GenerateTaskSet();
 }

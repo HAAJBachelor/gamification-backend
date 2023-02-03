@@ -37,4 +37,9 @@ public class GameService : IGameService
     {
         _manager.AddTask(_repo.GetTask());
     }
+
+    public List<GameTask> GenerateTaskSet()
+    {
+        return _repo.GenerateTaskSet();
+    }
 }
