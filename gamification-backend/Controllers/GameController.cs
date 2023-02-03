@@ -9,33 +9,46 @@ namespace gamification_backend.Controllers
     [ApiController]
     public class GameController : Controller
     {
-        private readonly IGameService _gameService;
+        private readonly IGameService _service;
 
         public GameController(IGameService service)
         {
-            _gameService = service;
+            _service = service;
         }
 
         // GET: /api/StartGame/
         [HttpGet]
         public string CreateSession(string username)
         {
-            return _gameService.CreateSession(username);
+            return _service.CreateSession(username);
         }
 
         // GET: /api/GetSessions/
         [HttpGet]
         public ActionResult<IEnumerable<GameSession>> GetSessions() // Kun for testing
         {
-            return Ok(_gameService.GetSessions());
+            return Ok(_service.GetSessions());
         }
 
-        // POST: /api/SubmitTask
+        // POST: /api/SubmitTask/
         // FIXME: FIX ME
         [HttpPost]
         public ActionResult<TaskResult> SubmitTask(string input)
         {
-            return _gameService.SubmitTask(input);
+            return _service.SubmitTask(input);
+        }
+
+        [HttpGet]
+        public GameTask SelectTask(int id)
+        {
+            return _service.SelectTask(id);
+        }
+
+        // GET: /api/GenerateTasks/
+        [HttpGet]
+        public List<GameTask> GenerateTasks()
+        {
+            return _service.GenerateTaskSet();
         }
     }
 }

@@ -35,15 +35,19 @@ public class GameManager
         return _sessions;
     }
 
+    public GameTask SelectTask(int id)
+    {
+        return _sessions[0].StartNewTask(id);
+    }
+
     public TaskResult SubmitTask(string input)
     {
         var session = _sessions[0];
         return session.SubmitTask(input);
     }
 
-    public void AddTask(GameTask gt)
+    public void SaveTaskSet(List<GameTask> tasks)
     {
-        Console.WriteLine(_sessions.Count);
-        _sessions[0].StartNewTask(gt);
+        _sessions[0].SaveGeneratedTaskSet(tasks);
     }
 }
