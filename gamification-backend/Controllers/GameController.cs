@@ -16,7 +16,7 @@ namespace gamification_backend.Controllers
             _service = service;
         }
 
-        // GET: /api/StartGame/
+        // GET: /api/CreateSession/
         [HttpGet]
         public string CreateSession(string username)
         {
@@ -38,6 +38,7 @@ namespace gamification_backend.Controllers
             return _service.SubmitTask(input);
         }
 
+        // GET: /api/SelectTask
         [HttpGet]
         public GameTask SelectTask(int id)
         {
