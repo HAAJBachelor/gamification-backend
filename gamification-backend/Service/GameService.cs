@@ -15,10 +15,9 @@ public class GameService : IGameService
         _manager = GameManager.The();
     }
 
-    public string CreateSession(string username)
+    public int CreateSession()
     {
-        _manager.CreateSession(username);
-        return "Done";
+        return _manager.CreateSession();
     }
 
     public Dictionary<int, GameSession> GetSessions()
@@ -28,7 +27,7 @@ public class GameService : IGameService
 
     public TaskResult SubmitTask(string input)
     {
-        _manager.CreateSession("Ole");
+        _manager.CreateSession();
         return _manager.SubmitTask(input);
     }
 

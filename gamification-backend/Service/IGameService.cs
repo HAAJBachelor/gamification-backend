@@ -5,7 +5,7 @@ namespace gamification_backend.Service;
 
 public interface IGameService
 {
-    public string CreateSession(string username);
+    public int CreateSession();
 
     public Dictionary<int, GameSession> GetSessions();
 

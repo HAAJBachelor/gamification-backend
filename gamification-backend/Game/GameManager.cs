@@ -22,12 +22,13 @@ public class GameManager
         return _instance;
     }
 
-    public void CreateSession(string User = "TestString")
+    public int CreateSession()
     {
-        var session = new GameSession(User, _idCounter, 600);
+        var session = new GameSession(_idCounter, 600);
         _sessions.Add(_idCounter, session);
         Console.WriteLine("Making new session, {0}", _sessions.Count);
         _idCounter++;
+        return _idCounter - 1;
     }
 
     public Dictionary<int, GameSession> GetSessions()

@@ -24,7 +24,7 @@ namespace gamification_backend.Controllers
         public ActionResult<string> CreateSession(string username)
         {
             if (!string.IsNullOrEmpty(HttpContext.Session.GetString(_valid))) return Ok("Session already exists");
-            HttpContext.Session.SetInt32(_sessionId, _service.CreateSession(username));
+            HttpContext.Session.SetInt32(_sessionId, _service.CreateSession());
             HttpContext.Session.SetString(_valid, "valid");
             Console.WriteLine(HttpContext.Session.GetInt32(_sessionId));
             return Ok();
