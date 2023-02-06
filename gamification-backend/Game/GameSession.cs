@@ -5,11 +5,8 @@ namespace gamification_backend.Game;
 public class GameSession
 {
     private readonly StateManager _stateManager;
-
     private GameTask? _currentTask;
-
     private int _id; // Unique identifier for each session
-
     private List<GameTask> _taskSetToSelectFrom;
     private string _user; // User class?
 
@@ -48,6 +45,8 @@ public class GameSession
         if (res.Success)
         {
             //Update life and points in state
+            _stateManager.AddTime(_currentTask.Time);
+            _stateManager.UpdateLife(_currentTask.Lives);
         }
 
         return res;
