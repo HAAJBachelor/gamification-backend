@@ -9,11 +9,11 @@ public class GameSession
     private GameTask? _currentTask;
 
     private int _id; // Unique identifier for each session
-    private string _user; // User class?
 
     private List<GameTask> _taskSetToSelectFrom;
+    private string _user; // User class?
 
-    public GameSession(string name, int id, int startTime)
+    public GameSession(int id, int startTime, string name = "placeholder")
     {
         _user = name;
         _id = id;
@@ -26,6 +26,7 @@ public class GameSession
         {
             throw new Exception("Error in GameSession.StartNewTask()");
         }
+
         _currentTask = _taskSetToSelectFrom[id];
         _taskSetToSelectFrom.Clear();
 

@@ -1,5 +1,4 @@
-﻿using gamification_backend.Game;
-using gamification_backend.Models;
+﻿using gamification_backend.Models;
 using gamification_backend.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,6 +9,9 @@ namespace gamification_backend.Controllers
     public class GameController : Controller
     {
         private readonly IGameService _service;
+        private readonly string _sessionId = "sessionId";
+        private readonly string _valid = "valid";
+
 
         public GameController(IGameService service)
         {
@@ -18,16 +20,13 @@ namespace gamification_backend.Controllers
 
         // GET: /api/CreateSession/
         [HttpGet]
-        public string CreateSession(string username)
+        public ActionResult<string> CreateSession()
         {
-            return _service.CreateSession(username);
-        }
-
-        // GET: /api/GetSessions/
-        [HttpGet]
-        public ActionResult<IEnumerable<GameSession>> GetSessions() // Kun for testing
-        {
-            return Ok(_service.GetSessions());
+            if (Authorized()) return Ok("Session already exists");
+            HttpContext.Session.SetInt32(_sessionId, _service.CreateSession());
+            HttpContext.Session.SetString(_valid, "valid");
+            Console.WriteLine(HttpContext.Session.GetInt32(_sessionId));
+            return Ok();
         }
 
         // POST: /api/SubmitTask/
@@ -35,21 +34,43 @@ namespace gamification_backend.Controllers
         [HttpPost]
         public ActionResult<TaskResult> SubmitTask(string input)
         {
-            return _service.SubmitTask(input);
+            if (!Authorized()) return Unauthorized();
+            return Ok(_service.SubmitTask(GetSessionId(), input));
         }
 
-        // GET: /api/SelectTask
+        // GET: /api/SelectTask/
         [HttpGet]
-        public GameTask SelectTask(int id)
+        public ActionResult<GameTask> SelectTask(int taskId)
         {
-            return _service.SelectTask(id);
+            if (!Authorized()) return Unauthorized();
+            return Ok(_service.SelectTask(GetSessionId(), taskId));
         }
 
         // GET: /api/GenerateTasks/
         [HttpGet]
-        public List<GameTask> GenerateTasks()
+        public ActionResult<List<GameTask>> GenerateTasks()
         {
-            return _service.GenerateTaskSet();
+            if (!Authorized()) return Unauthorized();
+            return Ok(_service.GenerateTaskSet(GetSessionId()));
+        }
+
+        // GET: /api/EndSession/
+        [HttpGet]
+        public ActionResult<string> EndSession()
+        {
+            HttpContext.Session.SetString(_valid, "");
+            return Ok();
+        }
+
+        private int GetSessionId()
+        {
+            return (int)HttpContext.Session.GetInt32(_sessionId);
+        }
+
+        private bool Authorized()
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_valid))) return false;
+            return true;
         }
     }
 }
