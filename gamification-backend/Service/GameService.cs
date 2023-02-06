@@ -20,26 +20,21 @@ public class GameService : IGameService
         return _manager.CreateSession();
     }
 
-    public Dictionary<int, GameSession> GetSessions()
-    {
-        return _manager.GetSessions();
-    }
-
-    public TaskResult SubmitTask(string input)
+    public TaskResult SubmitTask(int sessionId, string input)
     {
         _manager.CreateSession();
-        return _manager.SubmitTask(input);
+        return _manager.SubmitTask(sessionId, input);
     }
 
-    public List<GameTask> GenerateTaskSet()
+    public List<GameTask> GenerateTaskSet(int sessionId)
     {
         List<GameTask> tasks = _repo.GenerateTaskSet();
-        _manager.SaveTaskSet(tasks);
+        _manager.SaveTaskSet(sessionId, tasks);
         return tasks;
     }
 
-    public GameTask SelectTask(int id)
+    public GameTask SelectTask(int sessionId, int taskId)
     {
-        return _manager.SelectTask(id);
+        return _manager.SelectTask(sessionId, taskId);
     }
 }

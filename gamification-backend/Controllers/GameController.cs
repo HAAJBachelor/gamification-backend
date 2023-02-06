@@ -1,5 +1,4 @@
-﻿using gamification_backend.Game;
-using gamification_backend.Models;
+﻿using gamification_backend.Models;
 using gamification_backend.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -30,28 +29,21 @@ namespace gamification_backend.Controllers
             return Ok();
         }
 
-        // GET: /api/GetSessions/
-        [HttpGet]
-        public ActionResult<IEnumerable<GameSession>> GetSessions() // Kun for testing
-        {
-            return Ok(_service.GetSessions());
-        }
-
         // POST: /api/SubmitTask/
         // FIXME: FIX ME
         [HttpPost]
         public ActionResult<TaskResult> SubmitTask(string input)
         {
             if (!Authorized()) return Unauthorized();
-            return Ok(_service.SubmitTask(input));
+            return Ok(_service.SubmitTask(GetSessionId(), input));
         }
 
         // GET: /api/SelectTask/
         [HttpGet]
-        public ActionResult<GameTask> SelectTask(int id)
+        public ActionResult<GameTask> SelectTask(int taskId)
         {
             if (!Authorized()) return Unauthorized();
-            return Ok(_service.SelectTask(id));
+            return Ok(_service.SelectTask(GetSessionId(), taskId));
         }
 
         // GET: /api/GenerateTasks/
@@ -59,7 +51,7 @@ namespace gamification_backend.Controllers
         public ActionResult<List<GameTask>> GenerateTasks()
         {
             if (!Authorized()) return Unauthorized();
-            return Ok(_service.GenerateTaskSet());
+            return Ok(_service.GenerateTaskSet(GetSessionId()));
         }
 
         // GET: /api/EndSession/
@@ -68,6 +60,11 @@ namespace gamification_backend.Controllers
         {
             HttpContext.Session.SetString(_valid, "");
             return Ok();
+        }
+
+        private int GetSessionId()
+        {
+            return (int)HttpContext.Session.GetInt32(_sessionId);
         }
 
         private bool Authorized()

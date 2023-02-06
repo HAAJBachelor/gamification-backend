@@ -13,7 +13,6 @@ public class GameManager
     private GameManager()
     {
         _sessions = new Dictionary<int, GameSession>();
-        _idCounter = 0;
     }
 
     public static GameManager The()
@@ -26,29 +25,23 @@ public class GameManager
     {
         var session = new GameSession(_idCounter, 600);
         _sessions.Add(_idCounter, session);
-        Console.WriteLine("Making new session, {0}", _sessions.Count);
-        _idCounter++;
-        return _idCounter - 1;
+        Console.WriteLine("Creating new session with id{0}, total: {1}", _idCounter, _sessions.Count);
+        return _idCounter++;
     }
 
-    public Dictionary<int, GameSession> GetSessions()
+    public GameTask SelectTask(int sessionId, int taskId)
     {
-        return _sessions;
+        return _sessions[sessionId].StartNewTask(taskId);
     }
 
-    public GameTask SelectTask(int id)
+    public TaskResult SubmitTask(int sessionId, string input)
     {
-        return _sessions[0].StartNewTask(id);
-    }
-
-    public TaskResult SubmitTask(string input)
-    {
-        var session = _sessions[0];
+        var session = _sessions[sessionId];
         return session.SubmitTask(input);
     }
 
-    public void SaveTaskSet(List<GameTask> tasks)
+    public void SaveTaskSet(int sessionId, List<GameTask> tasks)
     {
-        _sessions[0].SaveGeneratedTaskSet(tasks);
+        _sessions[sessionId].SaveGeneratedTaskSet(tasks);
     }
 }
