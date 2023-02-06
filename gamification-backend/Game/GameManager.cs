@@ -25,7 +25,7 @@ public class GameManager
     {
         var session = new GameSession(_idCounter, 600);
         _sessions.Add(_idCounter, session);
-        Console.WriteLine("Creating new session with id{0}, total: {1}", _idCounter, _sessions.Count);
+        Console.WriteLine("Creating new session with id {0}, total: {1}", _idCounter, _sessions.Count);
         return _idCounter++;
     }
 
