@@ -22,7 +22,6 @@ public class GameService : IGameService
 
     public TaskResult SubmitTask(int sessionId, string input)
     {
-        _manager.CreateSession();
         return _manager.SubmitTask(sessionId, input);
     }
 
