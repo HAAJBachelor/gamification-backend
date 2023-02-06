@@ -47,6 +47,7 @@ public class GameSession
             //Update life and points in state
             _stateManager.AddTime(_currentTask.Time);
             _stateManager.UpdateLife(_currentTask.Lives);
+            _stateManager.UpdatePoints(_currentTask.Points);
         }
 
         return res;

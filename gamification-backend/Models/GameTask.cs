@@ -15,7 +15,8 @@ public class GameTask
     public List<TestCase> TestCases { get; set; }
 
     public int Lives { get; set; }
-    public int Time { get; set; } // Time as in time reward for completing task
+    public int Time { get; set; } // Time as in time awarded for completing task
+    public int Points { get; set; }
 
     public void AddSingleTestCase(TestCase testCase)
     {

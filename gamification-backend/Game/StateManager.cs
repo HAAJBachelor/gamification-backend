@@ -25,11 +25,13 @@ public class StateManager
 
     public void UpdatePoints(int amount)
     {
+        if (amount < 1) throw new ArgumentOutOfRangeException("Cannot award less than 1 point.");
         _points += amount;
     }
 
     public void AddTime(int seconds)
     {
+        if (seconds < 0) throw new ArgumentOutOfRangeException("Cannot award a negative amount of time");
         _timer.AddTime(seconds);
     }
 
