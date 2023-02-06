@@ -21,9 +21,9 @@ namespace gamification_backend.Controllers
 
         // GET: /api/CreateSession/
         [HttpGet]
-        public ActionResult<string> CreateSession(string username)
+        public ActionResult<string> CreateSession()
         {
-            if (!string.IsNullOrEmpty(HttpContext.Session.GetString(_valid))) return Ok("Session already exists");
+            if (Authorized()) return Ok("Session already exists");
             HttpContext.Session.SetInt32(_sessionId, _service.CreateSession());
             HttpContext.Session.SetString(_valid, "valid");
             Console.WriteLine(HttpContext.Session.GetInt32(_sessionId));
@@ -42,6 +42,7 @@ namespace gamification_backend.Controllers
         [HttpPost]
         public ActionResult<TaskResult> SubmitTask(string input)
         {
+            if (!Authorized()) return Unauthorized();
             return Ok(_service.SubmitTask(input));
         }
 
@@ -49,6 +50,7 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<GameTask> SelectTask(int id)
         {
+            if (!Authorized()) return Unauthorized();
             return Ok(_service.SelectTask(id));
         }
 
@@ -56,14 +58,7 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<List<GameTask>> GenerateTasks()
         {
-            var valid = HttpContext.Session.GetString(_valid);
-            if (string.IsNullOrEmpty(valid))
-            {
-                Console.WriteLine("Session is Invalid");
-                return Unauthorized();
-            }
-
-            Console.WriteLine(HttpContext.Session.GetInt32(_sessionId));
+            if (!Authorized()) return Unauthorized();
             return Ok(_service.GenerateTaskSet());
         }
 
@@ -73,6 +68,12 @@ namespace gamification_backend.Controllers
         {
             HttpContext.Session.SetString(_valid, "");
             return Ok();
+        }
+
+        private bool Authorized()
+        {
+            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_valid))) return false;
+            return true;
         }
     }
 }
