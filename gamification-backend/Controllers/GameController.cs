@@ -22,11 +22,11 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<string> CreateSession()
         {
-            if (Authorized()) return Ok("Session already exists");
+            if (Authorized()) return BadRequest("Session already exists");
             HttpContext.Session.SetInt32(_sessionId, _service.CreateSession());
             HttpContext.Session.SetString(_valid, "valid");
             Console.WriteLine(HttpContext.Session.GetInt32(_sessionId));
-            return Ok();
+            return Ok("A session was Created");
         }
 
         // POST: /api/SubmitTask/
@@ -59,7 +59,7 @@ namespace gamification_backend.Controllers
         public ActionResult<string> EndSession()
         {
             HttpContext.Session.SetString(_valid, "");
-            return Ok();
+            return Ok("The session was ended");
         }
 
         private int GetSessionId()
