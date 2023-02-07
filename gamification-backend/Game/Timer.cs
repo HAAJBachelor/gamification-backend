@@ -7,7 +7,7 @@ public class Timer : ITimer
 
     public Timer(int seconds)
     {
-        if (seconds < 60) seconds = 600; // Default value
+        if (seconds < 60) _seconds = 600; // Default value
         else _seconds = seconds;
         _count = false;
         Counter();
