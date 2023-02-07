@@ -1,0 +1,50 @@
+﻿[
+  {
+    "Description": "Description",
+    "TaskId": "1",
+    "UserCode": null,
+    "StubCode": "read n:int",
+    "TestCases": [
+      {
+        "Input": "1",
+        "Output": "1"
+      },
+      {
+        "Input": "2",
+        "Output": "2"
+      }
+    ]
+  },
+  {
+    "Description": "Description",
+    "TaskId": "2",
+    "UserCode": null,
+    "StubCode": "read n:int",
+    "TestCases": [
+      {
+        "Input": "1",
+        "Output": "1"
+      },
+      {
+        "Input": "2",
+        "Output": "2"
+      }
+    ]
+  },
+  {
+    "Description": "Description",
+    "TaskId": "3",
+    "UserCode": null,
+    "StubCode": "read n:int",
+    "TestCases": [
+      {
+        "Input": "1",
+        "Output": "1"
+      },
+      {
+        "Input": "2",
+        "Output": "2"
+      }
+    ]
+  }
+]

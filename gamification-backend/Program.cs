@@ -1,4 +1,5 @@
 using gamification_backend.DAL;
+using gamification_backend.Models;
 using gamification_backend.Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,11 @@ builder.Services.AddSession(options =>
     options.Cookie.MaxAge = TimeSpan.FromMinutes(120);
 });
 
+builder.Services.Configure<DatabaseSettings>(
+    builder.Configuration.GetSection("Database"));
+
+builder.Services.AddSingleton<TasksService>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -30,6 +36,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 
 app.UseHttpsRedirection();
 
