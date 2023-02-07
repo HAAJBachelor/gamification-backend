@@ -1,4 +1,5 @@
-﻿using gamification_backend.Models;
+﻿using gamification_backend.DTO;
+using gamification_backend.Models;
 using gamification_backend.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -40,7 +41,7 @@ namespace gamification_backend.Controllers
 
         // GET: /api/SelectTask/
         [HttpGet]
-        public ActionResult<GameTask> SelectTask(int taskId)
+        public ActionResult<GameTaskDTO> SelectTask(int taskId)
         {
             if (!Authorized()) return Unauthorized();
             return Ok(_service.SelectTask(GetSessionId(), taskId));
@@ -64,7 +65,7 @@ namespace gamification_backend.Controllers
 
         private int GetSessionId()
         {
-            return (int)HttpContext.Session.GetInt32(_sessionId);
+            return (int) HttpContext.Session.GetInt32(_sessionId);
         }
 
         private bool Authorized()

@@ -1,4 +1,5 @@
-﻿using gamification_backend.Models;
+﻿using gamification_backend.DTO;
+using gamification_backend.Models;
 
 namespace gamification_backend.Service;
 
@@ -8,7 +9,7 @@ public interface IGameService
 
     public TaskResult SubmitTask(int sessiondId, string input);
 
-    public List<GameTask> GenerateTaskSet(int sessionId);
+    public List<GameTaskDTO> GenerateTaskSet(int sessionId);
 
-    public GameTask SelectTask(int sessionId, int id);
+    public GameTaskDTO SelectTask(int sessionId, int id);
 }

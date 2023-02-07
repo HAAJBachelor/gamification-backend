@@ -1,4 +1,6 @@
-﻿namespace gamification_backend.Game;
+﻿using gamification_backend.DTO;
+
+namespace gamification_backend.Game;
 
 public class StateManager
 {
@@ -21,9 +23,9 @@ public class StateManager
     }
 
     //Returns state as a State-object containing all data.
-    public State GetState()
+    public StateDTO GetState()
     {
-        return new State(_points, _lives, _timer.GetTime());
+        return new StateDTO(_points, _lives, _timer.GetTime());
     }
 
     private void UpdateLife(int amount)

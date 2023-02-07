@@ -1,8 +1,8 @@
-﻿namespace gamification_backend.Game;
+﻿namespace gamification_backend.DTO;
 
-public class State
+public class StateDTO
 {
-    public State(int points, int score, int time)
+    public StateDTO(int points, int score, int time)
     {
         _points = points;
         _score = score;
