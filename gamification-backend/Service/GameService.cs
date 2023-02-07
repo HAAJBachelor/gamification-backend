@@ -1,4 +1,5 @@
 ﻿using gamification_backend.DAL;
+using gamification_backend.DTO;
 using gamification_backend.Game;
 using gamification_backend.Models;
 
@@ -25,15 +26,15 @@ public class GameService : IGameService
         return _manager.SubmitTask(sessionId, input);
     }
 
-    public List<GameTask> GenerateTaskSet(int sessionId)
+    public List<GameTaskDTO> GenerateTaskSet(int sessionId)
     {
-        List<GameTask> tasks = _repo.GenerateTaskSet();
+        var tasks = _repo.GenerateTaskSet();
         _manager.SaveTaskSet(sessionId, tasks);
-        return tasks;
+        return DTOMapper.GameTaskMapper(tasks);
     }
 
-    public GameTask SelectTask(int sessionId, int taskId)
+    public GameTaskDTO SelectTask(int sessionId, int taskId)
     {
-        return _manager.SelectTask(sessionId, taskId);
+        return DTOMapper.GameTaskMapper(_manager.SelectTask(sessionId, taskId));
     }
 }

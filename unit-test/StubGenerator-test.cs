@@ -15,7 +15,8 @@ public class UnitTest1
     [Fact]
     public void Stub()
     {
-        var value = StubService.GenerateCode("loop 5 m:string\nread n:int\nloopline 4 s:string n:int\nwrite 2 2");
+        var value = StubService.GenerateCode(
+            "read k:boolean\nloop 5 m:string\nread n:int\nloopline 4 s:string n:int\nwrite 2 2");
         _testOutputHelper.WriteLine(value);
     }
 }
