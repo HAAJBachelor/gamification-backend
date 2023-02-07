@@ -1,4 +1,5 @@
-﻿using gamification_backend.Models;
+﻿using gamification_backend.DTO;
+using gamification_backend.Models;
 using gamification_backend.Service;
 using Microsoft.AspNetCore.Mvc;
 
@@ -22,17 +23,17 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<string> CreateSession()
         {
-            if (Authorized()) return Ok("Session already exists");
+            if (Authorized()) return BadRequest("Session already exists");
             HttpContext.Session.SetInt32(_sessionId, _service.CreateSession());
             HttpContext.Session.SetString(_valid, "valid");
             Console.WriteLine(HttpContext.Session.GetInt32(_sessionId));
-            return Ok();
+            return Ok("A session was Created");
         }
 
         // POST: /api/SubmitTask/
         // FIXME: FIX ME
         [HttpPost]
-        public ActionResult<TaskResult> SubmitTask(string input)
+        public ActionResult<TaskResult> SubmitTask([FromBody] string input)
         {
             if (!Authorized()) return Unauthorized();
             return Ok(_service.SubmitTask(GetSessionId(), input));
@@ -40,7 +41,7 @@ namespace gamification_backend.Controllers
 
         // GET: /api/SelectTask/
         [HttpGet]
-        public ActionResult<GameTask> SelectTask(int taskId)
+        public ActionResult<GameTaskDTO> SelectTask(int taskId)
         {
             if (!Authorized()) return Unauthorized();
             return Ok(_service.SelectTask(GetSessionId(), taskId));
@@ -59,7 +60,7 @@ namespace gamification_backend.Controllers
         public ActionResult<string> EndSession()
         {
             HttpContext.Session.SetString(_valid, "");
-            return Ok();
+            return Ok("The session was ended");
         }
 
         private int GetSessionId()

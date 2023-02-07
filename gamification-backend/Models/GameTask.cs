@@ -1,4 +1,7 @@
-﻿namespace gamification_backend.Models;
+﻿using MongoDB.Bson;
+using MongoDB.Bson.Serialization.Attributes;
+
+namespace gamification_backend.Models;
 
 public class GameTask
 {
@@ -11,14 +14,21 @@ public class GameTask
         TestCases = new List<TestCase>();
     }
 
+    [BsonId]
+    [BsonRepresentation(BsonType.ObjectId)]
+    public string? Id { get; set; }
+
+    public int TaskId { get; set; }
+
     public string Description { get; set; }
     public string UserCode { get; set; }
+
+    public string StubCode { get; set; }
+
+    public string StartCode { get; set; }
     public List<TestCase> TestCases { get; set; }
 
-    public TaskRewards GetRewards()
-    {
-        return _rewards;
-    }
+    public TaskRewards Rewards { get; }
 
     public void AddSingleTestCase(TestCase testCase)
     {

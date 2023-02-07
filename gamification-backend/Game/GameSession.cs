@@ -1,4 +1,5 @@
 ﻿using gamification_backend.Models;
+using gamification_backend.Stub;
 
 namespace gamification_backend.Game;
 
@@ -19,14 +20,14 @@ public class GameSession
 
     public GameTask StartNewTask(int id)
     {
-        if (_taskSetToSelectFrom is not { Count: 3 })
+        if (_taskSetToSelectFrom is not {Count: 3})
         {
             throw new Exception("Error in GameSession.StartNewTask()");
         }
 
         _currentTask = _taskSetToSelectFrom[id];
+        _currentTask.StartCode = StubService.GenerateCode(_currentTask.StubCode);
         _taskSetToSelectFrom.Clear();
-
         return _currentTask;
     }
 
@@ -44,8 +45,11 @@ public class GameSession
 
         if (!res.Success) return res;
 
-        var rewards = _currentTask.GetRewards();
+
+        //TODO: Implement rewards in DB
+        /*var rewards = _currentTask.Rewards;
         _stateManager.UpdateState(rewards.Lives, rewards.Time, rewards.Points);
+        */
 
         return res;
     }
