@@ -98,7 +98,12 @@ public class StubParser
     public string RestOfLineAsString()
     {
         StringBuilder sb = new();
-        while (!_tokensList.Peek().IsNewLine()) sb.Append(Next().Value);
+        while (!_tokensList.Peek().IsNewLine())
+        {
+            sb.Append(Next().Value);
+            if (!_tokensList.Peek().IsNewLine())
+                sb.Append(' ');
+        }
 
         ConsumeOne();
         return sb.ToString();
