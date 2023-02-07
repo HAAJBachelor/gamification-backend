@@ -144,42 +144,42 @@ public static class StubGenerator
                         if (loop)
                             sb.AppendLine($"var {variable.Name} = int.Parse(inputs[i]);");
                         else
-                            sb.AppendLine($"var {variable.Name} = int.Parse(Console.Readline());");
+                            sb.AppendLine($"var {variable.Name} = int.Parse(Console.ReadLine());");
 
                         break;
                     case Variable.Type.Float:
                         if (loop)
                             sb.AppendLine($"var {variable.Name} = float.Parse(inputs[i]);");
                         else
-                            sb.AppendLine($"var {variable.Name} = float.Parse(Console.Readline());");
+                            sb.AppendLine($"var {variable.Name} = float.Parse(Console.ReadLine());");
 
                         break;
                     case Variable.Type.Double:
                         if (loop)
                             sb.AppendLine($"var {variable.Name} = double.Parse(inputs[i]);");
                         else
-                            sb.AppendLine($"var {variable.Name} = double.Parse(Console.Readline());");
+                            sb.AppendLine($"var {variable.Name} = double.Parse(Console.ReadLine());");
 
                         break;
                     case Variable.Type.Long:
                         if (loop)
                             sb.AppendLine($"var {variable.Name} = long.Parse(inputs[i]);");
                         else
-                            sb.AppendLine($"var {variable.Name} = long.Parse(Console.Readline());");
+                            sb.AppendLine($"var {variable.Name} = long.Parse(Console.ReadLine());");
 
                         break;
                     case Variable.Type.String:
                         if (loop)
                             sb.AppendLine($"var {variable.Name} = inputs[i];");
                         else
-                            sb.AppendLine($"var {variable.Name} = Console.Readline();");
+                            sb.AppendLine($"var {variable.Name} = Console.ReadLine();");
 
                         break;
                     case Variable.Type.Boolean:
                         if (loop)
                             sb.AppendLine($"var {variable.Name} = Boolean.Parse(inputs[i])");
                         else
-                            sb.AppendLine($"var {variable.Name} = Boolean.Parse(Console.Readline())");
+                            sb.AppendLine($"var {variable.Name} = Boolean.Parse(Console.ReadLine())");
 
                         break;
                     case Variable.Type.Undefined:
@@ -240,8 +240,6 @@ public static class StubGenerator
                     sb.Append(Tabs(2));
                     sb.AppendLine("}");
                     break;
-                case CodeTokenType.Variable:
-                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -283,7 +281,7 @@ public static class StubGenerator
                 case CodeTokenType.Loop:
                 case CodeTokenType.Loopline:
                     var loop = (Loop) token;
-                    var inputs = inputsUsed ? "inputs" : "string[] inputs";
+                    var inputs = inputsUsed ? "inputs" : "var inputs";
                     if (!inputsUsed)
                         inputsUsed = true;
                     sb.AppendLine($"{inputs} = Console.ReadLine().Split(' ');");
