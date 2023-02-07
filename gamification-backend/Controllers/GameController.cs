@@ -33,7 +33,7 @@ namespace gamification_backend.Controllers
         // POST: /api/SubmitTask/
         // FIXME: FIX ME
         [HttpPost]
-        public ActionResult<TaskResult> SubmitTask(string input)
+        public ActionResult<TaskResult> SubmitTask([FromBody] string input)
         {
             if (!Authorized()) return Unauthorized();
             return Ok(_service.SubmitTask(GetSessionId(), input));
@@ -65,7 +65,7 @@ namespace gamification_backend.Controllers
 
         private int GetSessionId()
         {
-            return (int) HttpContext.Session.GetInt32(_sessionId);
+            return (int)HttpContext.Session.GetInt32(_sessionId);
         }
 
         private bool Authorized()
