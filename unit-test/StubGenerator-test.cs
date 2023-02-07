@@ -13,10 +13,20 @@ public class UnitTest1
     }
 
     [Fact]
-    public void Stub()
+    public void Java()
     {
         var value = StubService.GenerateCode(
-            "read k:boolean\nloop 5 m:string\nread n:int\nloopline 4 s:string n:int\nwrite 2 2");
+            "read k:boolean\nloop 5 m:string\nread n:int\nloopline 4 s:string n:int\nwrite 2 2",
+            StubGenerator.Language.Java);
+        _testOutputHelper.WriteLine(value);
+    }
+
+    [Fact]
+    public void Csharp()
+    {
+        var value = StubService.GenerateCode(
+            "read k:boolean\nloop 5 m:string\nread n:int\nloopline 4 s:string n:int\nwrite 2 2",
+            StubGenerator.Language.Csharp);
         _testOutputHelper.WriteLine(value);
     }
 }
