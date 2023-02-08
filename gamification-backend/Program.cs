@@ -23,6 +23,17 @@ builder.Services.AddSession(options =>
     options.Cookie.MaxAge = TimeSpan.FromMinutes(120);
 });
 
+var myAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(myAllowSpecificOrigins,
+        policy =>
+        {
+            policy.WithOrigins("https://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+        });
+});
+
 builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("Database"));
 
