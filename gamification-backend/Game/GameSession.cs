@@ -1,4 +1,5 @@
-﻿using gamification_backend.Models;
+﻿using gamification_backend.DTO;
+using gamification_backend.Models;
 using gamification_backend.Stub;
 
 namespace gamification_backend.Game;
@@ -44,13 +45,15 @@ public class GameSession
         var res = GameLogic.Submit(_currentTask);
 
         if (!res.Success) return res;
-
-
-        //TODO: Implement rewards in DB
-        /*var rewards = _currentTask.Rewards;
+        
+        var rewards = _currentTask.Rewards;
         _stateManager.UpdateState(rewards.Lives, rewards.Time, rewards.Points);
-        */
 
         return res;
+    }
+
+    public StateDTO GetState()
+    {
+        return _stateManager.GetState();
     }
 }

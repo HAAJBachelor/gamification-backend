@@ -37,4 +37,9 @@ public class GameService : IGameService
     {
         return DTOMapper.GameTaskMapper(_manager.SelectTask(sessionId, taskId));
     }
+
+    public StateDTO GetState(int sessionId)
+    {
+        return _manager.GetState(sessionId);
+    }
 }
