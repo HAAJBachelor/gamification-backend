@@ -1,4 +1,5 @@
-﻿using gamification_backend.DTO;
+﻿using System.Net;
+using gamification_backend.DTO;
 using gamification_backend.Models;
 using gamification_backend.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -7,7 +8,7 @@ namespace gamification_backend.Controllers
 {
     [Route("api/[action]")]
     [ApiController]
-    public class GameController : Controller
+    public class GameController : Controller, IController
     {
         private readonly IGameService _service;
         private readonly string _sessionId = "sessionId";
@@ -61,6 +62,13 @@ namespace gamification_backend.Controllers
         {
             HttpContext.Session.SetString(_valid, "");
             return Ok("The session was ended");
+        }
+
+        // GET: /api/GetState
+        [HttpGet]
+        public ActionResult<StateDTO> GetState()
+        {
+            return Ok(_service.GetState(GetSessionId()));
         }
 
         private int GetSessionId()

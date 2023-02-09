@@ -2,15 +2,15 @@
 
 public class StateDTO
 {
-    public StateDTO(int points, int score, int time)
+    public StateDTO(int points, int lives, int time)
     {
         _points = points;
-        _score = score;
+        _lives = lives;
         _time = time;
     }
 
-    private int _points { get; set; }
-    private int _score { get; set; }
+    public int _points { get; set; }
+    public int _lives { get; set; }
 
-    private int _time { get; }
+    public int _time { get; }
 }

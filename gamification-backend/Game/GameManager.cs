@@ -1,4 +1,5 @@
-﻿using gamification_backend.Models;
+﻿using gamification_backend.DTO;
+using gamification_backend.Models;
 
 namespace gamification_backend.Game;
 
@@ -43,5 +44,11 @@ public class GameManager
     public void SaveTaskSet(int sessionId, List<GameTask> tasks)
     {
         _sessions[sessionId].SaveGeneratedTaskSet(tasks);
+    }
+
+    public StateDTO GetState(int sessionId)
+    {
+        Console.WriteLine("Fetching session state for {0}", sessionId);
+        return _sessions[sessionId].GetState();
     }
 }

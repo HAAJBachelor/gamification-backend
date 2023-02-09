@@ -25,6 +25,7 @@ public class StateManager
     //Returns state as a State-object containing all data.
     public StateDTO GetState()
     {
+        Console.WriteLine("Creating new StateDTO");
         return new StateDTO(_points, _lives, _timer.GetTime());
     }
 
@@ -40,7 +41,7 @@ public class StateManager
 
     private void UpdatePoints(int amount)
     {
-        if (amount < 1) throw new ArgumentOutOfRangeException("Cannot award less than 1 point.");
+        if (amount < 0) throw new ArgumentOutOfRangeException("Cannot award less than 0 points.");
         _points += amount;
     }
 
