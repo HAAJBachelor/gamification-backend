@@ -39,6 +39,8 @@ builder.Services.Configure<DatabaseSettings>(
 
 builder.Services.AddSingleton<TasksService>();
 
+builder.Configuration.AddUserSecrets<Program>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
