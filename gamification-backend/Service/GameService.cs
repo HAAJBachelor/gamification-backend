@@ -8,12 +8,12 @@ namespace gamification_backend.Service;
 public class GameService : IGameService
 {
     private readonly IGameRepository _repo;
-    private GameManager _manager;
+    private readonly GameManager _manager;
 
     public GameService(IGameRepository repo)
     {
         _repo = repo;
-        _manager = GameManager.The();
+        _manager = GameManager.Instance();
     }
 
     public int CreateSession()

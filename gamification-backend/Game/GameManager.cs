@@ -4,7 +4,7 @@ namespace gamification_backend.Game;
 
 public class GameManager
 {
-    private static GameManager _instance;
+    private static GameManager? _instance;
 
     //private static List<GameSession> sessions;
     private readonly Dictionary<int, GameSession> _sessions;
@@ -15,10 +15,9 @@ public class GameManager
         _sessions = new Dictionary<int, GameSession>();
     }
 
-    public static GameManager The()
+    public static GameManager Instance()
     {
-        if (_instance is null) _instance = new GameManager();
-        return _instance;
+        return _instance ??= new GameManager();
     }
 
     public int CreateSession()

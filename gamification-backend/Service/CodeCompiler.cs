@@ -7,7 +7,7 @@ namespace gamification_backend.Service;
 public class CodeCompiler
 {
     private static CodeCompiler? _instance;
-    private readonly HttpClient? _client;
+    private readonly HttpClient _client;
 
     private CodeCompiler()
     {
@@ -32,15 +32,17 @@ public class CodeCompiler
         var httpResponse = await _client.PostAsync("http://localhost:8000/compiler/", httpContent);
 
         // If the response contains content we want to read it!
-        if (httpResponse.Content != null)
-        {
-            var responseContent = await httpResponse.Content.ReadAsStringAsync();
+        if (httpResponse.Content == null) 
+            throw new Exception("Empty content from response");
+        
+        var responseContent = await httpResponse.Content.ReadAsStringAsync();
+        Console.WriteLine(responseContent);
 
-            // From here on you could deserialize the ResponseContent back again to a concrete C# type using Json.Net
-            var result = JsonSerializer.Deserialize<List<string>>(responseContent);
-            return result;
-        }
+        // From here on you could deserialize the ResponseContent back again to a concrete C# type using Json.Net
+        var result = JsonSerializer.Deserialize<List<string>>(responseContent);
+        if (result == null)
+            throw new Exception("Could not parse response");
+        return result;
 
-        throw new Exception();
     }
 }
