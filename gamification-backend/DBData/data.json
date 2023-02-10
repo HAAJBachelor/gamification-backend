@@ -13,7 +13,11 @@
         "Input": "2",
         "Output": "2"
       }
-    ]
+    ],
+    "Rewards": {
+      "Lives": "3",
+      "Time": "60"
+    }
   },
   {
     "Description": "Description",
@@ -29,7 +33,11 @@
         "Input": "2",
         "Output": "2"
       }
-    ]
+    ],
+    "Rewards": {
+      "Lives": "3",
+      "Time": "60"
+    }
   },
   {
     "Description": "Description",
@@ -45,6 +53,10 @@
         "Input": "2",
         "Output": "2"
       }
-    ]
+    ],
+    "Rewards": {
+      "Lives": "3",
+      "Time": "60"
+    }
   }
 ]

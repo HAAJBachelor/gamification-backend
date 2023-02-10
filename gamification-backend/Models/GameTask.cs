@@ -28,7 +28,7 @@ public class GameTask
     public string StartCode { get; set; }
     public List<TestCase> TestCases { get; set; }
 
-    public TaskRewards Rewards { get; }
+    public TaskRewards Rewards { get; set; }
 
     public void AddSingleTestCase(TestCase testCase)
     {

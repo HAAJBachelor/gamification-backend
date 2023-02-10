@@ -12,4 +12,6 @@ public interface IGameService
     public List<GameTaskDTO> GenerateTaskSet(int sessionId);
 
     public GameTaskDTO SelectTask(int sessionId, int id);
+
+    public StateDTO GetState(int sessionId);
 }
