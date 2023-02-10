@@ -2,18 +2,19 @@
 using gamification_backend.DTO;
 using gamification_backend.Game;
 using gamification_backend.Models;
+using gamification_backend.Utility;
 
 namespace gamification_backend.Service;
 
 public class GameService : IGameService
 {
-    private readonly IGameRepository _repo;
     private readonly GameManager _manager;
+    private readonly IGameRepository _repo;
 
     public GameService(IGameRepository repo)
     {
-        _repo = repo;
         _manager = GameManager.Instance();
+        _repo = repo;
     }
 
     public int CreateSession()
@@ -29,13 +30,13 @@ public class GameService : IGameService
     public List<GameTaskDTO> GenerateTaskSet(int sessionId)
     {
         var tasks = _repo.GenerateTaskSet();
-        _manager.SaveTaskSet(sessionId, tasks);
-        return DTOMapper.GameTaskMapper(tasks);
+        _manager.SaveTaskSet(sessionId, tasks.Result);
+        return Mapper.GameTaskMapper(tasks.Result);
     }
 
     public GameTaskDTO SelectTask(int sessionId, int taskId)
     {
-        return DTOMapper.GameTaskMapper(_manager.SelectTask(sessionId, taskId));
+        return Mapper.GameTaskMapper(_manager.SelectTask(sessionId, taskId));
     }
 
     public StateDTO GetState(int sessionId)

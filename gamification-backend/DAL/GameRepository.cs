@@ -46,7 +46,7 @@ public class GameRepository : IGameRepository
         var taskList = await set.ToListAsync();
         var tasks = new List<GameTask>();
         Console.WriteLine($"Fetched {taskList.Count} tasks from sanity");
-        taskList.ForEach(t => tasks.Add(TaskMapper.FromSanityTaskToGameTask(t)));
+        taskList.ForEach(t => tasks.Add(Mapper.FromSanityTaskToGameTask(t)));
         return tasks;
     }
 }

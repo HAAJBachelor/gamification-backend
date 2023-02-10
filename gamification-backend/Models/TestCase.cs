@@ -8,6 +8,6 @@ public struct TestCase
         Output = output;
     }
 
-    public string Input { get; }
-    public string Output { get; }
+    public string Input { get; set; }
+    public string Output { get; set; }
 }
