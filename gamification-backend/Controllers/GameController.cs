@@ -1,5 +1,4 @@
-﻿using System.Net;
-using gamification_backend.DTO;
+﻿using gamification_backend.DTO;
 using gamification_backend.Models;
 using gamification_backend.Service;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +18,7 @@ namespace gamification_backend.Controllers
         {
             _service = service;
         }
+
 
         // GET: /api/CreateSession/
         [HttpGet]
@@ -73,7 +73,7 @@ namespace gamification_backend.Controllers
 
         private int GetSessionId()
         {
-            return (int)HttpContext.Session.GetInt32(_sessionId);
+            return (int) HttpContext.Session.GetInt32(_sessionId);
         }
 
         private bool Authorized()
