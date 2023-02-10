@@ -7,13 +7,13 @@ namespace gamification_backend.Service;
 
 public class GameService : IGameService
 {
-    private readonly IGameRepository _repo;
     private readonly GameManager _manager;
+    private readonly IGameRepository _repo;
 
     public GameService(IGameRepository repo)
     {
-        _repo = repo;
         _manager = GameManager.Instance();
+        _repo = repo;
     }
 
     public int CreateSession()
@@ -29,8 +29,8 @@ public class GameService : IGameService
     public List<GameTaskDTO> GenerateTaskSet(int sessionId)
     {
         var tasks = _repo.GenerateTaskSet();
-        _manager.SaveTaskSet(sessionId, tasks);
-        return DTOMapper.GameTaskMapper(tasks);
+        _manager.SaveTaskSet(sessionId, tasks.Result);
+        return DTOMapper.GameTaskMapper(tasks.Result);
     }
 
     public GameTaskDTO SelectTask(int sessionId, int taskId)

@@ -7,6 +7,10 @@ public class GameTask
 {
     private readonly TaskRewards _rewards;
 
+    public GameTask()
+    {
+    }
+
     public GameTask(string description, int lives, int time)
     {
         Description = description;

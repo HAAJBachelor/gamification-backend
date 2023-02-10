@@ -23,7 +23,8 @@ public class GameSession
     {
         if (_taskSetToSelectFrom is not {Count: 3})
         {
-            throw new Exception("Error in GameSession.StartNewTask()");
+            throw new Exception(
+                $"Error in GameSession.StartNewTask(), expected 3 tasks got {_taskSetToSelectFrom.Count}");
         }
 
         _currentTask = _taskSetToSelectFrom[id];
@@ -45,7 +46,7 @@ public class GameSession
         var res = GameLogic.Submit(_currentTask);
 
         if (!res.Success) return res;
-        
+
         var rewards = _currentTask.Rewards;
         _stateManager.UpdateState(rewards.Lives, rewards.Time, rewards.Points);
 
