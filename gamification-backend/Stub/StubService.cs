@@ -2,7 +2,7 @@
 
 public static class StubService
 {
-    public static string GenerateCode(string stub)
+    public static string GenerateCode(string stub, StubGenerator.Language language)
     {
         StubParser parser = new();
         try
@@ -15,7 +15,7 @@ public static class StubService
             throw;
         }
 
-        var code = StubGenerator.GenerateCode(StubGenerator.Language.Java, parser);
+        var code = StubGenerator.GenerateCode(language, parser);
         return code;
     }
 }
