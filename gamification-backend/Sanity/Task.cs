@@ -12,6 +12,12 @@ public class Task : SanityDocument
     public string Description { get; set; }
     public Case[] TestCases { get; set; }
     public string Stub { get; set; }
+
+    public Reward[] Rewards { get; set; }
+
+    public string Difficulty { get; set; }
+
+    public string Category { get; set; }
 }
 
 public class Case : SanityDocument
@@ -24,4 +30,14 @@ public class Case : SanityDocument
     public string TestCaseOutput { get; set; }
     public string ValidatorInput { get; set; }
     public string ValidatorOutput { get; set; }
+}
+
+public class Reward : SanityDocument
+{
+    public Reward() : base()
+    {
+    }
+
+    public string Type { get; set; }
+    public int Amount { get; set; }
 }
