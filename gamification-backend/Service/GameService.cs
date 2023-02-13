@@ -31,12 +31,12 @@ public class GameService : IGameService
     {
         var tasks = _repo.GenerateTaskSet();
         _manager.SaveTaskSet(sessionId, tasks.Result);
-        return Mapper.GameTaskMapper(tasks.Result);
+        return DTOMapper.GameTaskMapper(tasks.Result);
     }
 
     public GameTaskDTO SelectTask(int sessionId, int taskId)
     {
-        return Mapper.GameTaskMapper(_manager.SelectTask(sessionId, taskId));
+        return DTOMapper.GameTaskMapper(_manager.SelectTask(sessionId, taskId));
     }
 
     public StateDTO GetState(int sessionId)
