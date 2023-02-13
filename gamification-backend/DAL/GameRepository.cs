@@ -1,15 +1,35 @@
 ﻿using gamification_backend.Models;
 using gamification_backend.Service;
+using gamification_backend.Utility;
+using Sanity.Linq;
+using Task = gamification_backend.Sanity.Task;
 
 namespace gamification_backend.DAL;
 
 public class GameRepository : IGameRepository
 {
+    private readonly SanityDataContext _sanity;
     private readonly TasksService _tasksService;
 
-    public GameRepository(TasksService tasksService)
+
+    public GameRepository(TasksService tasksService, IConfiguration configuration)
     {
+        if (_tasksService != null)
+            return;
         _tasksService = tasksService;
+        if (_sanity != null)
+            return;
+        var token = configuration["CMS:Token"];
+        var projectId = configuration["CMS:ProjectID"];
+        var options = new SanityOptions
+        {
+            ProjectId = projectId,
+            Dataset = "production",
+            Token = token,
+            UseCdn = false,
+            ApiVersion = "v1"
+        };
+        _sanity = new SanityDataContext(options);
     }
 
     /*public GameTask GetTask()
@@ -20,22 +40,13 @@ public class GameRepository : IGameRepository
         return task;
     }
 */
-    public List<GameTask> GenerateTaskSet()
+    public async Task<List<GameTask>> GenerateTaskSet()
     {
-        var t = _tasksService.GetAsync();
-        return t.Result;
-
-        // Makes 3 GameTask objects and returns a List<GameTask> containing all 3 objects
-
-        var taskset = new List<GameTask>();
-
-        for (int i = 0; i < 3; i++)
-        {
-            var task = new GameTask("Description " + i, 2, 180);
-            task.AddSingleTestCase(new TestCase("input" + i, "input" + i));
-            taskset.Add(task);
-        }
-
-        return taskset;
+        var set = _sanity.DocumentSet<Task>();
+        var taskList = await set.ToListAsync();
+        var tasks = new List<GameTask>();
+        Console.WriteLine($"Fetched {taskList.Count} tasks from sanity");
+        taskList.ForEach(t => tasks.Add(TaskMapper.FromSanityTaskToGameTask(t)));
+        return tasks;
     }
 }

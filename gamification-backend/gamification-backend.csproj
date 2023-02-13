@@ -5,14 +5,16 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>gamification_backend</RootNamespace>
+    <UserSecretsId>ae11725d-32e8-47c1-869c-a4db9a9f2d11</UserSecretsId>
   </PropertyGroup>
 
-  <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
-      <PackageReference Include="MongoDB.Bson" Version="2.19.0" />
-      <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
-      <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
+        <PackageReference Include="MongoDB.Bson" Version="2.19.0" />
+        <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
+        <PackageReference Include="Sanity.Linq" Version="1.7.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+    </ItemGroup>
 
   <ItemGroup>
       <Folder Include="Models\" />

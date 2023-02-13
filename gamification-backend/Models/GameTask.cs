@@ -7,6 +7,10 @@ public class GameTask
 {
     private readonly TaskRewards _rewards;
 
+    public GameTask()
+    {
+    }
+
     public GameTask(string description, int lives, int time)
     {
         Description = description;
@@ -27,6 +31,7 @@ public class GameTask
 
     public string StartCode { get; set; }
     public List<TestCase> TestCases { get; set; }
+    public List<TestCase> ValidatorCases { get; set; }
 
     public TaskRewards Rewards { get; set; }
 
