@@ -11,10 +11,21 @@ public static class TaskMapper
         {
             TaskId = 0,
             Description = task.Description,
+            InputDescription = task.InputDescription,
+            OutputDescription = task.OutputDescription,
+            Constraints = task.Constraints,
             TestCases = task.TestCases
                 .Select(taskTestCase => new TestCase(taskTestCase.TestCaseInput, taskTestCase.ValidatorOutput))
                 .ToList(),
             StubCode = task.Stub,
+            Category = task.Category,
+            Difficulty = task.Difficulty,
+            Rewards = new TaskRewards
+            {
+                Lives = task.Rewards.Where(reward => reward.Type == "lives").Sum(r => r.Amount),
+                Points = task.Rewards.Where(reward => reward.Type == "points").Sum(r => r.Amount),
+                Time = task.Rewards.Where(reward => reward.Type == "time").Sum(r => r.Amount),
+            }
         };
         return gt;
     }
