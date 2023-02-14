@@ -14,7 +14,11 @@ public class GameTask
     public GameTask(string description, int lives, int time)
     {
         Description = description;
-        _rewards = new TaskRewards(lives, time);
+        _rewards = new TaskRewards
+        {
+            Lives = lives,
+            Time = time
+        };
         TestCases = new List<TestCase>();
     }
 
@@ -25,6 +29,9 @@ public class GameTask
     public int TaskId { get; set; }
 
     public string Description { get; set; }
+    public string InputDescription { get; set; }
+    public string OutputDescription { get; set; }
+    public string Constraints { get; set; }
     public string UserCode { get; set; }
 
     public string StubCode { get; set; }
@@ -32,7 +39,9 @@ public class GameTask
     public string StartCode { get; set; }
     public List<TestCase> TestCases { get; set; }
     public List<TestCase> ValidatorCases { get; set; }
+    public string Difficulty { get; set; }
 
+    public string Category { get; set; }
     public TaskRewards Rewards { get; set; }
 
     public void AddSingleTestCase(TestCase testCase)
