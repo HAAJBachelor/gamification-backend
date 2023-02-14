@@ -6,7 +6,7 @@ public class Timer : ITimer
 
     public Timer(int seconds, GameSession.SessionDelegate handler)
     {
-        if (seconds < 60) _seconds = 5; // Default value
+        if (seconds < 60) _seconds = 600; // Default value
         else _seconds = seconds;
         _count = false;
         Counter(handler);

@@ -46,9 +46,10 @@ public class GameService : IGameService
         return _manager.GetState(sessionId);
     }
 
-    private void SaveSession(SessionRecord s)
+    private void SaveSession(SessionRecord session)
     {
         // Call repo to save the record
         Console.WriteLine("SaveSession in service");
+        _manager.RemoveSession(session.Id);
     }
 }
