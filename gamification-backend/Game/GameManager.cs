@@ -4,7 +4,7 @@ using gamification_backend.Service;
 
 namespace gamification_backend.Game;
 
-public class GameManager
+public class GameManager : IGameManager
 {
     private static GameManager? _instance;
     private readonly Dictionary<int, GameSession> _sessions;
