@@ -46,7 +46,7 @@ public class GameManager
     {
         if (_sessions.ContainsKey(sessionId))
             _sessions[sessionId].SaveGeneratedTaskSet(tasks);
-        throw new ArgumentException("Invalid session Id");
+        else throw new ArgumentException("Invalid session Id " + sessionId);
     }
 
     public StateDTO GetState(int sessionId)

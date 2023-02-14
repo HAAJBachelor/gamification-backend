@@ -6,7 +6,7 @@ namespace gamification_backend.Service;
 
 public class TasksService
 {
-    private readonly IMongoCollection<GameTask> _tasksCollection;
+    private readonly IMongoCollection<SessionRecord> _tasksCollection;
 
     public TasksService(IOptions<DatabaseSettings> databaseSettings)
     {
@@ -16,32 +16,32 @@ public class TasksService
         var mongoDatabase = mongoClient.GetDatabase(
             databaseSettings.Value.DatabaseName);
 
-        _tasksCollection = mongoDatabase.GetCollection<GameTask>(
+        _tasksCollection = mongoDatabase.GetCollection<SessionRecord>(
             databaseSettings.Value.TasksCollectionName);
     }
 
-    public async Task<List<GameTask>> GetAsync()
+    public async Task<List<SessionRecord>> GetAsync()
     {
         return await _tasksCollection.Find(_ => true).ToListAsync();
     }
 
-    public async Task<GameTask?> GetAsync(string id)
+    public async Task<SessionRecord?> GetAsync(int id)
     {
-        return await _tasksCollection.Find(x => x.Id == id).FirstOrDefaultAsync();
+        return await _tasksCollection.Find(x => x.Id == Convert.ToInt32(id)).FirstOrDefaultAsync();
     }
 
-    public async Task CreateAsync(GameTask newBook)
+    public async Task CreateAsync(SessionRecord newBook)
     {
         await _tasksCollection.InsertOneAsync(newBook);
     }
 
-    public async Task UpdateAsync(string id, GameTask updatedBook)
+    public async Task UpdateAsync(int id, SessionRecord updatedBook)
     {
-        await _tasksCollection.ReplaceOneAsync(x => x.Id == id, updatedBook);
+        await _tasksCollection.ReplaceOneAsync(x => x.Id == Convert.ToInt32(id), updatedBook);
     }
 
-    public async Task RemoveAsync(string id)
+    public async Task RemoveAsync(int id)
     {
-        await _tasksCollection.DeleteOneAsync(x => x.Id == id);
+        await _tasksCollection.DeleteOneAsync(x => x.Id == Convert.ToInt32(id));
     }
 }

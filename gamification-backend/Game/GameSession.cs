@@ -27,7 +27,7 @@ public class GameSession
 
     public GameTask StartNewTask(int id)
     {
-        if (_taskSetToSelectFrom is not { Count: 3 })
+        if (_taskSetToSelectFrom is not { Count: 2 })
         {
             throw new Exception(
                 $"Error in GameSession.StartNewTask(), expected 3 tasks got {_taskSetToSelectFrom.Count}");
