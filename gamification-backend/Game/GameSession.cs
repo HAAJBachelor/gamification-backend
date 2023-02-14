@@ -5,7 +5,7 @@ using gamification_backend.Stub;
 
 namespace gamification_backend.Game;
 
-public class GameSession
+public class GameSession : IGameSession
 {
     public delegate void SessionDelegate();
 
