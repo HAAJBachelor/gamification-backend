@@ -31,23 +31,39 @@ public class GameManager
 
     public GameTask SelectTask(int sessionId, int taskId)
     {
-        return _sessions[sessionId].StartNewTask(taskId);
+        if (_sessions.ContainsKey(sessionId))
+            return _sessions[sessionId].StartNewTask(taskId);
+        throw new ArgumentException("Invalid session Id");
     }
 
     public TaskResult SubmitTask(int sessionId, string input)
     {
-        var session = _sessions[sessionId];
-        return session.SubmitTask(input);
+        if (_sessions.ContainsKey(sessionId))
+        {
+            var session = _sessions[sessionId];
+            return session.SubmitTask(input);
+        }
+
+        throw new ArgumentException("Invalid session Id");
     }
 
     public void SaveTaskSet(int sessionId, List<GameTask> tasks)
     {
-        _sessions[sessionId].SaveGeneratedTaskSet(tasks);
+        if (_sessions.ContainsKey(sessionId))
+            _sessions[sessionId].SaveGeneratedTaskSet(tasks);
+        throw new ArgumentException("Invalid session Id");
     }
 
     public StateDTO GetState(int sessionId)
     {
         Console.WriteLine("Fetching session state for {0}", sessionId);
-        return _sessions[sessionId].GetState();
+        if (_sessions.ContainsKey(sessionId))
+            return _sessions[sessionId].GetState();
+        throw new ArgumentException("Invalid session Id");
+    }
+
+    public void RemoveSession(int sessionId)
+    {
+        _sessions.Remove(sessionId);
     }
 }
