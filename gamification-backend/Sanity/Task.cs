@@ -10,6 +10,9 @@ public class Task : SanityDocument
 
     public string Name { get; set; }
     public string Description { get; set; }
+    public string InputDescription { get; set; }
+    public string OutputDescription { get; set; }
+    public string Constraints { get; set; }
     public Case[] TestCases { get; set; }
     public string Stub { get; set; }
 
