@@ -2,7 +2,7 @@
 
 namespace gamification_backend.Game;
 
-public class StateManager
+public class StateManager : IStateManager
 {
     private readonly Timer _timer;
     private int _lives;
