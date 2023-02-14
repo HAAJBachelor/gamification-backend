@@ -1,27 +1,33 @@
 ﻿using gamification_backend.DTO;
 using gamification_backend.Models;
+using gamification_backend.Service;
 using gamification_backend.Stub;
 
 namespace gamification_backend.Game;
 
 public class GameSession
 {
+    public delegate void SessionDelegate();
+
+    private readonly GameService.MyDel _del;
+    private readonly int _id;
     private readonly StateManager _stateManager;
     private GameTask? _currentTask;
-    private int _id; // Unique identifier for each session
     private List<GameTask>? _taskSetToSelectFrom;
     private string _user; // User class?
 
-    public GameSession(int id, int startTime, string name = "placeholder")
+    public GameSession(int id, int startTime, GameService.MyDel del, string name = "placeholder")
     {
         _user = name;
         _id = id;
-        _stateManager = new StateManager(startTime);
+        _del = del;
+        SessionDelegate sessionDelegate = EndSession;
+        _stateManager = new StateManager(startTime, sessionDelegate);
     }
 
     public GameTask StartNewTask(int id)
     {
-        if (_taskSetToSelectFrom is not {Count: 3})
+        if (_taskSetToSelectFrom is not { Count: 3 })
         {
             throw new Exception(
                 $"Error in GameSession.StartNewTask(), expected 3 tasks got {_taskSetToSelectFrom.Count}");
@@ -56,5 +62,11 @@ public class GameSession
     public StateDTO GetState()
     {
         return _stateManager.GetState();
+    }
+
+    private void EndSession()
+    {
+        var record = new SessionRecord(1, 3, 6);
+        _del(record);
     }
 }

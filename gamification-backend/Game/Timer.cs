@@ -5,12 +5,12 @@ public class Timer : ITimer
     private bool _count;
     private int _seconds;
 
-    public Timer(int seconds)
+    public Timer(int seconds, GameSession.SessionDelegate handler)
     {
-        if (seconds < 60) _seconds = 600; // Default value
+        if (seconds < 60) _seconds = 5; // Default value
         else _seconds = seconds;
         _count = false;
-        Counter();
+        Counter(handler);
     }
 
     public int GetTime()
@@ -34,12 +34,20 @@ public class Timer : ITimer
         _count = false;
     }
 
-    private async void Counter()
+    private async void Counter(GameSession.SessionDelegate handler)
     {
         var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
+        Start();
         while (await timer.WaitForNextTickAsync())
         {
-            if (_count) _seconds--;
+            if (!_count) continue;
+            Console.WriteLine(_seconds);
+            _seconds--;
+            if (_seconds <= 0)
+            {
+                handler();
+                Pause();
+            }
         }
     }
 

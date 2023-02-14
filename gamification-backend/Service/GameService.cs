@@ -2,12 +2,13 @@
 using gamification_backend.DTO;
 using gamification_backend.Game;
 using gamification_backend.Models;
-using gamification_backend.Utility;
 
 namespace gamification_backend.Service;
 
 public class GameService : IGameService
 {
+    public delegate void MyDel(SessionRecord s);
+
     private readonly GameManager _manager;
     private readonly IGameRepository _repo;
 
@@ -19,7 +20,8 @@ public class GameService : IGameService
 
     public int CreateSession()
     {
-        return _manager.CreateSession();
+        MyDel del = SaveSession;
+        return _manager.CreateSession(del);
     }
 
     public TaskResult SubmitTask(int sessionId, string input)
@@ -42,5 +44,11 @@ public class GameService : IGameService
     public StateDTO GetState(int sessionId)
     {
         return _manager.GetState(sessionId);
+    }
+
+    private void SaveSession(SessionRecord s)
+    {
+        // Call repo to save the record
+        Console.WriteLine("SaveSession in service");
     }
 }

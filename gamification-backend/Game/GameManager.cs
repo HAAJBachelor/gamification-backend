@@ -1,5 +1,6 @@
 ﻿using gamification_backend.DTO;
 using gamification_backend.Models;
+using gamification_backend.Service;
 
 namespace gamification_backend.Game;
 
@@ -7,7 +8,6 @@ public class GameManager
 {
     private static GameManager? _instance;
 
-    //private static List<GameSession> sessions;
     private readonly Dictionary<int, GameSession> _sessions;
     private int _idCounter;
 
@@ -21,9 +21,9 @@ public class GameManager
         return _instance ??= new GameManager();
     }
 
-    public int CreateSession()
+    public int CreateSession(GameService.MyDel del)
     {
-        var session = new GameSession(_idCounter, 600);
+        var session = new GameSession(_idCounter, 600, del);
         _sessions.Add(_idCounter, session);
         Console.WriteLine("Creating new session with id {0}, total: {1}", _idCounter, _sessions.Count);
         return _idCounter++;
