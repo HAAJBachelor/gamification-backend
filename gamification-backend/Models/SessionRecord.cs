@@ -12,4 +12,5 @@ public class SessionRecord
     public int Id { get; }
     public int Score { get; }
     public int Time { get; }
+    public int Username { get; }
 }

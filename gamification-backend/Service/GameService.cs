@@ -48,8 +48,8 @@ public class GameService : IGameService
 
     private void SaveSession(SessionRecord session)
     {
-        // Call repo to save the record
         Console.WriteLine("SaveSession in service");
         _manager.RemoveSession(session.Id);
+        _repo.SaveSession(session);
     }
 }

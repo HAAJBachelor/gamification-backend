@@ -7,7 +7,6 @@ namespace gamification_backend.Game;
 public class GameManager
 {
     private static GameManager? _instance;
-
     private readonly Dictionary<int, GameSession> _sessions;
     private int _idCounter;
 

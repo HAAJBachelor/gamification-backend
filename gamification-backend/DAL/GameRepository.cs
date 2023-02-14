@@ -49,4 +49,9 @@ public class GameRepository : IGameRepository
         taskList.ForEach(t => tasks.Add(TaskMapper.FromSanityTaskToGameTask(t)));
         return tasks;
     }
+
+    public void SaveSession(SessionRecord sessionRecord)
+    {
+        Console.WriteLine("Saving session from repo");
+    }
 }
