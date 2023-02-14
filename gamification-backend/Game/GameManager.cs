@@ -38,13 +38,9 @@ public class GameManager
 
     public TaskResult SubmitTask(int sessionId, string input)
     {
-        if (_sessions.ContainsKey(sessionId))
-        {
-            var session = _sessions[sessionId];
-            return session.SubmitTask(input);
-        }
-
-        throw new ArgumentException("Invalid session Id");
+        if (!_sessions.ContainsKey(sessionId)) throw new ArgumentException("Invalid session Id");
+        var session = _sessions[sessionId];
+        return session.SubmitTask(input);
     }
 
     public void SaveTaskSet(int sessionId, List<GameTask> tasks)
