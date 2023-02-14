@@ -26,7 +26,7 @@ public class StateManager
     public StateDTO GetState()
     {
         Console.WriteLine("Creating new StateDTO");
-        return new StateDTO(_points, _lives, _timer.GetTime());
+        return new StateDTO(_points, _lives, _timer._seconds, _timer._timeElapsed);
     }
 
     private void UpdateLife(int amount)

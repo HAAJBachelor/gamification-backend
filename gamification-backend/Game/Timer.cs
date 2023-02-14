@@ -3,7 +3,6 @@
 public class Timer : ITimer
 {
     private bool _count;
-    private int _seconds;
 
     public Timer(int seconds, GameSession.SessionDelegate handler)
     {
@@ -13,10 +12,8 @@ public class Timer : ITimer
         Counter(handler);
     }
 
-    public int GetTime()
-    {
-        return _seconds;
-    }
+    public int _seconds { get; set; }
+    public int _timeElapsed { get; set; }
 
     public void AddTime(int seconds)
     {
@@ -43,6 +40,7 @@ public class Timer : ITimer
             if (!_count) continue;
             Console.WriteLine(_seconds);
             _seconds--;
+            _timeElapsed++;
             if (_seconds <= 0)
             {
                 handler();

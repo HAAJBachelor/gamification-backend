@@ -66,7 +66,8 @@ public class GameSession
 
     private void EndSession()
     {
-        var record = new SessionRecord(1, 3, 6);
+        var state = GetState();
+        var record = new SessionRecord(_id, state._points, state._elapsed);
         _del(record);
     }
 }
