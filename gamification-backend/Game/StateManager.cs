@@ -8,7 +8,7 @@ public class StateManager : IStateManager
     private int _lives;
     private int _points;
 
-    public StateManager(int seconds, GameSession.SessionDelegate handler)
+    public StateManager(int seconds, GameSession.EventHandler handler)
     {
         _timer = new Timer(62, handler);
         _points = 0;

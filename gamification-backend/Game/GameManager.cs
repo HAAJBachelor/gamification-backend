@@ -1,6 +1,6 @@
 ﻿using gamification_backend.DTO;
 using gamification_backend.Models;
-using gamification_backend.Service;
+using gamification_backend.Utility;
 
 namespace gamification_backend.Game;
 
@@ -15,14 +15,9 @@ public class GameManager : IGameManager
         _sessions = new Dictionary<int, GameSession>();
     }
 
-    public static GameManager Instance()
+    public int CreateSession(EventHandler<TimerDepletedEventArgs> eventHandler)
     {
-        return _instance ??= new GameManager();
-    }
-
-    public int CreateSession(GameService.MyDel del)
-    {
-        var session = new GameSession(_idCounter, 600, del);
+        var session = new GameSession(_idCounter, 600, eventHandler);
         _sessions.Add(_idCounter, session);
         Console.WriteLine("Creating new session with id {0}, total: {1}", _idCounter, _sessions.Count);
         return _idCounter++;
@@ -60,5 +55,10 @@ public class GameManager : IGameManager
     public void RemoveSession(int sessionId)
     {
         _sessions.Remove(sessionId);
+    }
+
+    public static GameManager Instance()
+    {
+        return _instance ??= new GameManager();
     }
 }
