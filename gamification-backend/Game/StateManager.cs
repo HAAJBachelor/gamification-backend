@@ -10,7 +10,7 @@ public class StateManager : IStateManager
 
     public StateManager(int seconds, GameSession.EventHandler handler)
     {
-        _timer = new Timer(62, handler);
+        _timer = new Timer(600, handler);
         _points = 0;
         _lives = 3; // Example amount
     }
