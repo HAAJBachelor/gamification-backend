@@ -1,5 +1,6 @@
 ﻿using gamification_backend.DTO;
 using gamification_backend.Models;
+using gamification_backend.Stub;
 
 namespace gamification_backend.Service;
 
@@ -14,5 +15,5 @@ public interface IGameService
     public GameTaskDTO SelectTask(int sessionId, int id);
 
     public StateDTO GetState(int sessionId);
-    public string GetStartCode(int sessionId, string language);
+    public string GetStartCode(int sessionId, StubGenerator.Language language);
 }

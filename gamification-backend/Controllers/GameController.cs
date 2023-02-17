@@ -1,6 +1,7 @@
 ﻿using gamification_backend.DTO;
 using gamification_backend.Models;
 using gamification_backend.Service;
+using gamification_backend.Stub;
 using Microsoft.AspNetCore.Mvc;
 
 namespace gamification_backend.Controllers
@@ -73,7 +74,9 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<string> GetStartCode(string language)
         {
-            return Ok(_service.GetStartCode(GetSessionId(), language));
+            if (Enum.TryParse(language, true, out StubGenerator.Language lang))
+                return Ok(_service.GetStartCode(GetSessionId(), lang));
+            return NotFound($"Could not find language {language}");
         }
 
         private int GetSessionId()

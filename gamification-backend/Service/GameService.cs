@@ -49,12 +49,9 @@ public class GameService : IGameService
     }
 
 
-    public string GetStartCode(int sessionId, string language)
+    public string GetStartCode(int sessionId, StubGenerator.Language language)
     {
-        StubGenerator.Language lang;
-        if (Enum.TryParse<StubGenerator.Language>(language, true, out lang))
-            return _manager.GetStartCode(sessionId, lang);
-        return $"Could not parse selected language: {lang}";
+        return _manager.GetStartCode(sessionId, language);
     }
 
     public event EventHandler<TimerDepletedEventArgs> SaveSessionEventHandler;
