@@ -4,7 +4,7 @@ public class Timer : ITimer
 {
     private bool _count;
 
-    public Timer(int seconds, GameSession.SessionDelegate handler)
+    public Timer(int seconds, GameSession.EventHandler handler)
     {
         if (seconds < 60) _seconds = 600; // Default value
         else _seconds = seconds;
@@ -31,7 +31,7 @@ public class Timer : ITimer
         _count = false;
     }
 
-    private async void Counter(GameSession.SessionDelegate handler)
+    private async void Counter(GameSession.EventHandler handler)
     {
         var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
         Start();
@@ -43,7 +43,7 @@ public class Timer : ITimer
             _timeElapsed++;
             if (_seconds <= 0)
             {
-                handler();
+                handler(this, EventArgs.Empty);
                 Pause();
             }
         }

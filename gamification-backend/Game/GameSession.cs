@@ -7,22 +7,23 @@ namespace gamification_backend.Game;
 
 public class GameSession : IGameSession
 {
-    public delegate void SessionDelegate();
+    public delegate void EventHandler(object? sender, EventArgs args);
 
-    private readonly GameService.MyDel _del;
+    private readonly EventHandler<TimerDepletedEventArgs> _del;
     private readonly int _id;
     private readonly StateManager _stateManager;
     private GameTask? _currentTask;
     private List<GameTask>? _taskSetToSelectFrom;
     private string _user; // User class?
 
-    public GameSession(int id, int startTime, GameService.MyDel del, string name = "placeholder")
+    public GameSession(int id, int startTime, EventHandler<TimerDepletedEventArgs> eventHandler,
+        string name = "placeholder")
     {
         _user = name;
         _id = id;
-        _del = del;
-        SessionDelegate sessionDelegate = EndSession;
-        _stateManager = new StateManager(startTime, sessionDelegate);
+        _del = eventHandler;
+        TimerDepletedEvent += EndSession;
+        _stateManager = new StateManager(startTime, TimerDepletedEvent);
     }
 
     public GameTask StartNewTask(int id)
@@ -64,6 +65,9 @@ public class GameSession : IGameSession
         return _stateManager.GetState();
     }
 
+    public event EventHandler TimerDepletedEvent;
+
+    private void EndSession(object? sender, EventArgs args)
     public GameTask? GetCurrentTask()
     {
         return _currentTask;
@@ -73,6 +77,7 @@ public class GameSession : IGameSession
     {
         var state = GetState();
         var record = new SessionRecord(_id, state._points, state._elapsed);
-        _del(record);
+        Console.WriteLine("here");
+        _del(this, new TimerDepletedEventArgs(record));
     }
 }
