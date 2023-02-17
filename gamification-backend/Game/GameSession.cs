@@ -64,6 +64,11 @@ public class GameSession : IGameSession
         return _stateManager.GetState();
     }
 
+    public GameTask? GetCurrentTask()
+    {
+        return _currentTask;
+    }
+
     private void EndSession()
     {
         var state = GetState();

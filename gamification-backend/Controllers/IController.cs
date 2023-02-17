@@ -12,4 +12,5 @@ public interface IController
     public ActionResult<List<GameTask>> GenerateTasks();
     public ActionResult<string> EndSession();
     public ActionResult<StateDTO> GetState();
+    public ActionResult<string> GetStartCode(string language);
 }

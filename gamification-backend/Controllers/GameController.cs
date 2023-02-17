@@ -70,6 +70,12 @@ namespace gamification_backend.Controllers
             return Ok(_service.GetState(GetSessionId()));
         }
 
+        [HttpGet]
+        public ActionResult<string> GetStartCode(string language)
+        {
+            return Ok(_service.GetStartCode(GetSessionId(), language));
+        }
+
         private int GetSessionId()
         {
             return (int)HttpContext.Session.GetInt32(_sessionId);
