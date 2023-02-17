@@ -1,7 +1,7 @@
 ﻿using gamification_backend.DTO;
 using gamification_backend.Models;
-using gamification_backend.Service;
 using gamification_backend.Stub;
+using gamification_backend.Utility;
 
 namespace gamification_backend.Game;
 
@@ -28,7 +28,7 @@ public class GameSession : IGameSession
 
     public GameTask StartNewTask(int id)
     {
-        if (_taskSetToSelectFrom is not { Count: 2 })
+        if (_taskSetToSelectFrom is not {Count: 2})
         {
             throw new Exception(
                 $"Error in GameSession.StartNewTask(), expected 3 tasks got {_taskSetToSelectFrom.Count}");
@@ -65,15 +65,15 @@ public class GameSession : IGameSession
         return _stateManager.GetState();
     }
 
-    public event EventHandler TimerDepletedEvent;
 
-    private void EndSession(object? sender, EventArgs args)
     public GameTask? GetCurrentTask()
     {
         return _currentTask;
     }
 
-    private void EndSession()
+    public event EventHandler TimerDepletedEvent;
+
+    private void EndSession(object? sender, EventArgs args)
     {
         var state = GetState();
         var record = new SessionRecord(_id, state._points, state._elapsed);

@@ -2,6 +2,7 @@
 using gamification_backend.DTO;
 using gamification_backend.Game;
 using gamification_backend.Models;
+using gamification_backend.Stub;
 using gamification_backend.Utility;
 
 namespace gamification_backend.Service;
@@ -45,6 +46,15 @@ public class GameService : IGameService
     public StateDTO GetState(int sessionId)
     {
         return _manager.GetState(sessionId);
+    }
+
+
+    public string GetStartCode(int sessionId, string language)
+    {
+        StubGenerator.Language lang;
+        if (Enum.TryParse<StubGenerator.Language>(language, true, out lang))
+            return _manager.GetStartCode(sessionId, lang);
+        return $"Could not parse selected language: {lang}";
     }
 
     public event EventHandler<TimerDepletedEventArgs> SaveSessionEventHandler;
