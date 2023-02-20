@@ -48,7 +48,7 @@ public class GameSession : IGameSession
     public TaskResult SubmitTask(string input)
     {
         if (_currentTask == null) throw new NullReferenceException("Error in GameSession.SubmitTask()");
-
+        _currentTask.SessionId = _id;
         _currentTask.UserCode = input;
         var res = GameLogic.Submit(_currentTask);
 

@@ -27,7 +27,8 @@ public class GameTask
     public string? Id { get; set; }
 
     public int TaskId { get; set; }
-    
+
+    public int SessionId { get; set; }
     public string Language { get; set; }
     public string Description { get; set; }
     public string InputDescription { get; set; }
