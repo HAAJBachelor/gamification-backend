@@ -39,6 +39,11 @@ public class GameManager : IGameManager
         return session.SubmitTask(input);
     }
 
+    public TestCaseResult SubmitTestCase(int sessionId, string input, int id)
+    {
+        return _sessions[sessionId].SubmitTestCase(input, id);
+    }
+
     public void SaveTaskSet(int sessionId, List<GameTask> tasks)
     {
         if (_sessions.ContainsKey(sessionId))

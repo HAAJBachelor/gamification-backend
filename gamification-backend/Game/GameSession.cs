@@ -60,6 +60,14 @@ public class GameSession : IGameSession
         return res;
     }
 
+    public TestCaseResult SubmitTestCase(string input, int index)
+    {
+        if (_currentTask == null) throw new NullReferenceException("Error in GameSession.SubmitTask()");
+        _currentTask.UserCode = input;
+        var res = GameLogic.RunTestCase(_currentTask, index);
+        return res;
+    }
+
     public StateDTO GetState()
     {
         return _stateManager.GetState();

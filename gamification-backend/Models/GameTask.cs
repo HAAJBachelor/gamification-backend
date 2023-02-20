@@ -51,9 +51,9 @@ public class GameTask
         TestCases.Add(testCase);
     }
 
-    public TestCase SingleTestCase()
+    public TestCase SingleTestCase(int index)
     {
-        return TestCases[0];
+        return TestCases[index];
     }
 
     public void SetPoints(int points)

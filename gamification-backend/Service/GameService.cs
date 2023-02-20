@@ -31,6 +31,11 @@ public class GameService : IGameService
         return _manager.SubmitTask(sessionId, input);
     }
 
+    public TestCaseResult SubmitTestCase(int sessionId, string input, int index)
+    {
+        return _manager.SubmitTestCase(sessionId, input, index);
+    }
+
     public List<GameTaskDTO> GenerateTaskSet(int sessionId)
     {
         var tasks = _repo.GenerateTaskSet();

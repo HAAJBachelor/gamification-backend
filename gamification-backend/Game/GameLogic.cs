@@ -6,10 +6,10 @@ namespace gamification_backend.Game;
 
 public static class GameLogic
 {
-    public static TestCaseResult RunTestCase(GameTask task)
+    public static TestCaseResult RunTestCase(GameTask task, int index)
     {
         var output = CodeCompiler.Instance().RunTask(task).Result;
-        var result = ValidateTestCase(task.SingleTestCase().Output, output[0]);
+        var result = ValidateTestCase(task.SingleTestCase(index).Output, output[index]);
         return result;
     }
 

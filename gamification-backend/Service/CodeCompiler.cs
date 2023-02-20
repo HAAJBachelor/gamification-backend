@@ -21,7 +21,7 @@ public class CodeCompiler
 
     public async Task<List<string>> RunTask(GameTask task)
     {
-        task.Language = "csharp";
+        task.Language = "java";
         // Serialize our concrete class into a JSON String
         var stringPayload = JsonSerializer.Serialize(task);
 

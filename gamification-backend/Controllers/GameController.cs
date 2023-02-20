@@ -40,6 +40,12 @@ namespace gamification_backend.Controllers
             return Ok(_service.SubmitTask(GetSessionId(), input));
         }
 
+        [HttpPost]
+        public ActionResult<TestCaseResult> SubmitTestCase([FromBody] string input, int index)
+        {
+            return _service.SubmitTestCase(GetSessionId(), input, index);
+        }
+
         // GET: /api/SelectTask/
         [HttpGet]
         public ActionResult<GameTaskDTO> SelectTask(int taskId)
