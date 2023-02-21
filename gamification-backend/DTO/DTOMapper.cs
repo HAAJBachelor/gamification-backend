@@ -12,7 +12,8 @@ public static class DTOMapper
             TaskId = gameTask.TaskId,
             StartCode = gameTask.StartCode,
             TestCases = gameTask.TestCases,
-            Rewards = gameTask.Rewards
+            Rewards = gameTask.Rewards,
+            Difficulty = gameTask.Difficulty
         };
         return dto;
     }
