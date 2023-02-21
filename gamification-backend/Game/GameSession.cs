@@ -28,11 +28,11 @@ public class GameSession : IGameSession
 
     public GameTask StartNewTask(int id)
     {
-        /*if (_taskSetToSelectFrom is not {Count: 2})
+        if (_taskSetToSelectFrom is not {Count: 3})
         {
             throw new Exception(
                 $"Error in GameSession.StartNewTask(), expected 3 tasks got {_taskSetToSelectFrom.Count}");
-        }*/
+        }
 
         _currentTask = _taskSetToSelectFrom[id];
         _currentTask.StartCode = StubService.GenerateCode(_currentTask.StubCode, StubGenerator.Language.Java);
