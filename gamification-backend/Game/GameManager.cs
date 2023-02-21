@@ -79,7 +79,7 @@ public class GameManager : IGameManager
             return currentTask.StartCode;
         var code = StubService.GenerateCode(currentTask.StubCode, language);
         currentTask.StartCode = code;
-        currentTask.Language = language.ToString();
+        currentTask.Language = language.ToString().ToLower();
         return code;
     }
 }
