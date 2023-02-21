@@ -52,7 +52,6 @@ public class GameRepository : IGameRepository
 
     public async void SaveSession(SessionRecord sessionRecord)
     {
-        Console.WriteLine("Saving session from repo");
         await _tasksService.CreateAsync(sessionRecord);
         var s = await _tasksService.GetAsync(sessionRecord.Id);
     }
