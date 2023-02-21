@@ -38,7 +38,6 @@ public class Timer : ITimer
         while (await timer.WaitForNextTickAsync())
         {
             if (!_count) continue;
-            Console.WriteLine(_seconds);
             _seconds--;
             _timeElapsed++;
             if (_seconds <= 0)
