@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using gamification_backend.DTO;
 using gamification_backend.Models;
 
 namespace gamification_backend.Service;
@@ -19,9 +20,8 @@ public class CodeCompiler
         return _instance ??= new CodeCompiler();
     }
 
-    public async Task<List<string>> RunTask(GameTask task)
+    public async Task<CompilerResultsDTO> RunTask(GameTask task)
     {
-        task.Language = "java";
         // Serialize our concrete class into a JSON String
         var stringPayload = JsonSerializer.Serialize(task);
 
@@ -33,17 +33,16 @@ public class CodeCompiler
         var httpResponse = await _client.PostAsync("http://localhost:8000/compiler/", httpContent);
 
         // If the response contains content we want to read it!
-        if (httpResponse.Content == null) 
+        if (httpResponse.Content == null)
             throw new Exception("Empty content from response");
-        
+
         var responseContent = await httpResponse.Content.ReadAsStringAsync();
         Console.WriteLine(responseContent);
 
         // From here on you could deserialize the ResponseContent back again to a concrete C# type using Json.Net
-        var result = JsonSerializer.Deserialize<List<string>>(responseContent);
+        var result = JsonSerializer.Deserialize<CompilerResultsDTO>(responseContent);
         if (result == null)
             throw new Exception("Could not parse response");
         return result;
-
     }
 }
