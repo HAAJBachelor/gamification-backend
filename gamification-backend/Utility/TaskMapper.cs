@@ -17,6 +17,9 @@ public static class TaskMapper
             TestCases = task.TestCases
                 .Select(taskTestCase => new TestCase(taskTestCase.TestCaseInput, taskTestCase.TestCaseOutput))
                 .ToList(),
+            ValidatorCases = task.TestCases
+                .Select(taskTestCase => new TestCase(taskTestCase.ValidatorInput, taskTestCase.ValidatorOutput))
+                .ToList(),
             StubCode = task.Stub,
             Category = task.Category,
             Difficulty = task.Difficulty,

@@ -55,7 +55,7 @@ public class UnitTest1
             if (res.Error)
                 _testOutputHelper.WriteLine(res.Error_message);
             else
-                _testOutputHelper.WriteLine(res.Results[0]);
+                _testOutputHelper.WriteLine(res.Results[0].Description);
         }
     }
 }
