@@ -30,7 +30,7 @@ public static class GameLogic
         var outputs = CodeCompiler.Instance().RunTaskValidators(task).Result;
         var testCaseResults = outputs.Results
             .Select((t, i) =>
-                ValidateTestCase(task.TestCases[i].Output, t))
+                ValidateTestCase(task.ValidatorCases[i].Output, t))
             .ToList();
         var success = testCaseResults.All(testCaseResult => testCaseResult.Success);
         return new TaskResult(testCaseResults, success, outputs.Error);
@@ -39,7 +39,11 @@ public static class GameLogic
     private static TestCaseResult ValidateTestCase(string expected, TestCaseResult result)
     {
         if (result.Error)
+        {
+            result.Description = ConsolidateOutput(result.Description);
             return result;
+        }
+
         var output = result.Description;
         if (expected == output)
         {
