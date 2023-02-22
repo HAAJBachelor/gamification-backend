@@ -20,12 +20,21 @@ public class CodeCompiler
         return _instance ??= new CodeCompiler();
     }
 
+    public async Task<CompilerResultsDTO> RunTaskValidators(GameTask task)
+    {
+        var payLoad = DTOMapper.FromGameTaskToCompilerTask(task, -1, true);
+        return await RunTaskImpl(payLoad);
+    }
+
     public async Task<CompilerResultsDTO> RunTask(GameTask task, int testcaseIndex = -1)
     {
         var payLoad = DTOMapper.FromGameTaskToCompilerTask(task, testcaseIndex);
-        // Serialize our concrete class into a JSON String
-        var stringPayload = JsonSerializer.Serialize(task);
+        return await RunTaskImpl(payLoad);
+    }
 
+    private async Task<CompilerResultsDTO> RunTaskImpl(CompilerTaskDTO payload)
+    {
+        var stringPayload = JsonSerializer.Serialize(payload);
         // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
         var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
 

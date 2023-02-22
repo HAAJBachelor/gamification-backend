@@ -23,18 +23,26 @@ public static class DTOMapper
         return gameTasks.Select(GameTaskMapper).ToList();
     }
 
-    public static CompilerTaskDTO FromGameTaskToCompilerTask(GameTask gameTask, int testcaseIndex)
+    public static CompilerTaskDTO FromGameTaskToCompilerTask(GameTask gameTask, int testcaseIndex,
+        bool validator = false)
     {
-        List<TestCase> singleCase = new(1);
-        if (testcaseIndex != -1)
-            singleCase.Add(gameTask.SingleTestCase(testcaseIndex));
-        CompilerTaskDTO dto = new()
+        if (validator)
+            return new CompilerTaskDTO
+            {
+                SessionId = gameTask.SessionId,
+                Language = gameTask.Language,
+                TestCases = gameTask.ValidatorCases,
+                UserCode = gameTask.UserCode
+            };
+        List<TestCase>? singleCase = null;
+        if (testcaseIndex != -1) singleCase = new List<TestCase>(1) {gameTask.SingleTestCase(testcaseIndex)};
+
+        return new CompilerTaskDTO
         {
             SessionId = gameTask.SessionId,
             Language = gameTask.Language,
-            TestCases = testcaseIndex == -1 ? gameTask.TestCases : singleCase,
+            TestCases = singleCase ?? gameTask.TestCases,
             UserCode = gameTask.UserCode
         };
-        return dto;
     }
 }

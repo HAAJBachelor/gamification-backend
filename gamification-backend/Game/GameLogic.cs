@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using gamification_backend.DTO;
 using gamification_backend.Models;
 using gamification_backend.Service;
 
@@ -9,37 +10,41 @@ public static class GameLogic
     public static TestCaseResult RunTestCase(GameTask task, int index)
     {
         var output = CodeCompiler.Instance().RunTask(task).Result;
-        if (output.Error) Console.WriteLine(output.Error_message);
+        if (output.Error) return GenerateError(output);
         var result = ValidateTestCase(task.SingleTestCase(index).Output, output.Results[index]);
         return result;
     }
 
+    private static TestCaseResult GenerateError(CompilerResultsDTO output)
+    {
+        return new TestCaseResult
+        {
+            Success = false,
+            Error = true,
+            Description = ConsolidateOutput(output.Error_message)
+        };
+    }
+
     public static TaskResult Submit(GameTask task)
     {
-        var outputs = CodeCompiler.Instance().RunTask(task).Result;
+        var outputs = CodeCompiler.Instance().RunTaskValidators(task).Result;
         var testCaseResults = outputs.Results
             .Select((t, i) =>
                 ValidateTestCase(task.TestCases[i].Output, t))
             .ToList();
         var success = testCaseResults.All(testCaseResult => testCaseResult.Success);
-        return new TaskResult(testCaseResults, success);
+        return new TaskResult(testCaseResults, success, outputs.Error);
     }
 
-    private static TestCaseResult ValidateTestCase(string expected, string output)
+    private static TestCaseResult ValidateTestCase(string expected, TestCaseResult result)
     {
-        var result = new TestCaseResult();
+        if (result.Error)
+            return result;
+        var output = result.Description;
         if (expected == output)
         {
             result.Success = true;
             result.Description = expected;
-            return result;
-        }
-
-        //FIXME: We need to figure out how to know if we got an error
-        if (expected.Contains("error"))
-        {
-            result.Error = true;
-            result.Description = ConsolidateOutput(output);
             return result;
         }
 
@@ -55,7 +60,7 @@ public static class GameLogic
             return output;
         var builder = new StringBuilder();
         for (var i = 0; i < maxLineLength; i++) builder.Append(lines[i]).AppendLine();
-        builder.Append("...");
+        builder.Append($"{lines.Length - maxLineLength} more lines...");
         return builder.ToString();
     }
 }

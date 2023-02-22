@@ -10,7 +10,6 @@ public class GameTaskDTO
     public string Description { get; set; }
     public string StartCode { get; set; }
     public List<TestCase> TestCases { get; set; }
-
     public TaskRewards Rewards { get; set; }
     public string Difficulty { get; set; }
 }
