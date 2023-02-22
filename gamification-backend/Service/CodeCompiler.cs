@@ -20,8 +20,9 @@ public class CodeCompiler
         return _instance ??= new CodeCompiler();
     }
 
-    public async Task<CompilerResultsDTO> RunTask(GameTask task)
+    public async Task<CompilerResultsDTO> RunTask(GameTask task, int testcaseIndex = -1)
     {
+        var payLoad = DTOMapper.FromGameTaskToCompilerTask(task, testcaseIndex);
         // Serialize our concrete class into a JSON String
         var stringPayload = JsonSerializer.Serialize(task);
 

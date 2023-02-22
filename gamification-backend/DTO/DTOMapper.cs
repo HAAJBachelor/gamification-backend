@@ -22,4 +22,19 @@ public static class DTOMapper
     {
         return gameTasks.Select(GameTaskMapper).ToList();
     }
+
+    public static CompilerTaskDTO FromGameTaskToCompilerTask(GameTask gameTask, int testcaseIndex)
+    {
+        List<TestCase> singleCase = new(1);
+        if (testcaseIndex != -1)
+            singleCase.Add(gameTask.SingleTestCase(testcaseIndex));
+        CompilerTaskDTO dto = new()
+        {
+            SessionId = gameTask.SessionId,
+            Language = gameTask.Language,
+            TestCases = testcaseIndex == -1 ? gameTask.TestCases : singleCase,
+            UserCode = gameTask.UserCode
+        };
+        return dto;
+    }
 }
