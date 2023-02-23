@@ -22,7 +22,7 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<string> CreateSession()
         {
-            if (Authorized()) return Ok();
+            if (Authorized()) return Ok("Already authorized");
             HttpContext.Session.SetInt32(_sessionId, _service.CreateSession());
             return Ok("A session was Created");
         }
@@ -62,7 +62,7 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<string> EndSession()
         {
-            HttpContext.Session.SetInt32(_sessionId, -1);
+            HttpContext.Session.Remove(_sessionId);
             return Ok("The session was ended");
         }
 
@@ -88,7 +88,7 @@ namespace gamification_backend.Controllers
 
         private bool Authorized()
         {
-            return HttpContext.Session.GetInt32(_sessionId) != -1;
+            return HttpContext.Session.GetInt32(_sessionId) != null;
         }
     }
 }
