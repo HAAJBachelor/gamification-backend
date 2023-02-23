@@ -1,6 +1,8 @@
 ﻿using gamification_backend.DTO;
 using gamification_backend.Models;
 using gamification_backend.Utility;
+using gamification_backend.Service;
+using gamification_backend.Stub;
 
 namespace gamification_backend.Game;
 
@@ -37,6 +39,11 @@ public class GameManager : IGameManager
         return session.SubmitTask(input);
     }
 
+    public TestCaseResult SubmitTestCase(int sessionId, string input, int id)
+    {
+        return _sessions[sessionId].SubmitTestCase(input, id);
+    }
+
     public void SaveTaskSet(int sessionId, List<GameTask> tasks)
     {
         if (_sessions.ContainsKey(sessionId))
@@ -60,5 +67,19 @@ public class GameManager : IGameManager
     public static GameManager Instance()
     {
         return _instance ??= new GameManager();
+    }
+
+    public string GetStartCode(int sessionId, StubGenerator.Language language)
+    {
+        var session = _sessions[sessionId];
+        var currentTask = session.GetCurrentTask();
+        if (currentTask == null)
+            return "No current task";
+        if (currentTask.Language == language.ToString())
+            return currentTask.StartCode;
+        var code = StubService.GenerateCode(currentTask.StubCode, language);
+        currentTask.StartCode = code;
+        currentTask.Language = language.ToString().ToLower();
+        return code;
     }
 }

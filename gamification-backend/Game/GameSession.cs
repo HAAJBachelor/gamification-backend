@@ -31,7 +31,7 @@ public class GameSession : IGameSession
 
     public GameTask StartNewTask(int id)
     {
-        if (_taskSetToSelectFrom is { Count: 0 })
+        if (_taskSetToSelectFrom is not {Count: 3})
         {
             throw new Exception(
                 $"Error in GameSession.StartNewTask(), expected 3 tasks got {_taskSetToSelectFrom.Count}");
@@ -51,7 +51,7 @@ public class GameSession : IGameSession
     public TaskResult SubmitTask(string input)
     {
         if (_currentTask == null) throw new NullReferenceException("Error in GameSession.SubmitTask()");
-
+        _currentTask.SessionId = _id;
         _currentTask.UserCode = input;
         var res = GameLogic.Submit(_currentTask);
 
@@ -68,13 +68,27 @@ public class GameSession : IGameSession
         return _stateManager.GetState();
     }
 
+    public TestCaseResult SubmitTestCase(string input, int index)
+    {
+        if (_currentTask == null) throw new NullReferenceException("Error in GameSession.SubmitTask()");
+        _currentTask.UserCode = input;
+        var res = GameLogic.RunTestCase(_currentTask, index);
+        return res;
+    }
+
+
+    public GameTask? GetCurrentTask()
+    {
+        return _currentTask;
+    }
+
     public event EventHandler TimerDepletedEvent;
 
     private void EndSession(object? sender, EventArgs args)
     {
         var state = GetState();
         var record = new SessionRecord(_id, state._points, state._elapsed);
-        Console.WriteLine("here");
+        Console.WriteLine("Session expired");
         _del(this, new TimerDepletedEventArgs(record));
     }
 }

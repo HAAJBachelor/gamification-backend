@@ -31,6 +31,7 @@ public class GameTask
 
     public int TaskId { get; set; }
 
+    public int SessionId { get; set; }
     public string Language { get; set; }
     public string Description { get; set; }
     public string InputDescription { get; set; }
@@ -53,9 +54,9 @@ public class GameTask
         TestCases.Add(testCase);
     }
 
-    public TestCase SingleTestCase()
+    public TestCase SingleTestCase(int index)
     {
-        return TestCases[0];
+        return TestCases[index];
     }
 
     public void SetPoints(int points)

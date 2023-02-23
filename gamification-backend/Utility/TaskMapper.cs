@@ -15,7 +15,10 @@ public static class TaskMapper
             OutputDescription = task.OutputDescription,
             Constraints = task.Constraints,
             TestCases = task.TestCases
-                .Select(taskTestCase => new TestCase(taskTestCase.TestCaseInput, taskTestCase.ValidatorOutput))
+                .Select(taskTestCase => new TestCase(taskTestCase.TestCaseInput, taskTestCase.TestCaseOutput))
+                .ToList(),
+            ValidatorCases = task.TestCases
+                .Select(taskTestCase => new TestCase(taskTestCase.ValidatorInput, taskTestCase.ValidatorOutput))
                 .ToList(),
             StubCode = task.Stub,
             Category = task.Category,

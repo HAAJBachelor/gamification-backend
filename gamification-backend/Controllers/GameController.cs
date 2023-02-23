@@ -1,6 +1,7 @@
 ﻿using gamification_backend.DTO;
 using gamification_backend.Models;
 using gamification_backend.Service;
+using gamification_backend.Stub;
 using Microsoft.AspNetCore.Mvc;
 
 namespace gamification_backend.Controllers
@@ -35,6 +36,12 @@ namespace gamification_backend.Controllers
             return Ok(_service.SubmitTask(GetSessionId(), input));
         }
 
+        [HttpPost]
+        public ActionResult<TestCaseResult> SubmitTestCase([FromBody] string input, int index)
+        {
+            return _service.SubmitTestCase(GetSessionId(), input, index);
+        }
+
         // GET: /api/SelectTask/
         [HttpGet]
         public ActionResult<GameTaskDTO> SelectTask(int taskId)
@@ -64,6 +71,14 @@ namespace gamification_backend.Controllers
         public ActionResult<StateDTO> GetState()
         {
             return Ok(_service.GetState(GetSessionId()));
+        }
+
+        [HttpGet]
+        public ActionResult<string> GetStartCode(string language)
+        {
+            if (Enum.TryParse(language, true, out StubGenerator.Language lang))
+                return Ok(_service.GetStartCode(GetSessionId(), lang));
+            return NotFound($"Could not find language {language}");
         }
 
         private int GetSessionId()

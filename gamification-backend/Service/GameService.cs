@@ -2,6 +2,7 @@
 using gamification_backend.DTO;
 using gamification_backend.Game;
 using gamification_backend.Models;
+using gamification_backend.Stub;
 using gamification_backend.Utility;
 
 namespace gamification_backend.Service;
@@ -30,6 +31,11 @@ public class GameService : IGameService
         return _manager.SubmitTask(sessionId, input);
     }
 
+    public TestCaseResult SubmitTestCase(int sessionId, string input, int index)
+    {
+        return _manager.SubmitTestCase(sessionId, input, index);
+    }
+
     public List<GameTaskDTO> GenerateTaskSet(int sessionId)
     {
         var tasks = _repo.GenerateTaskSet();
@@ -45,6 +51,12 @@ public class GameService : IGameService
     public StateDTO GetState(int sessionId)
     {
         return _manager.GetState(sessionId);
+    }
+
+
+    public string GetStartCode(int sessionId, StubGenerator.Language language)
+    {
+        return _manager.GetStartCode(sessionId, language);
     }
 
     public event EventHandler<TimerDepletedEventArgs> SaveSessionEventHandler;
