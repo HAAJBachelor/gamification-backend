@@ -28,7 +28,6 @@ namespace gamification_backend.Controllers
         }
 
         // POST: /api/SubmitTask/
-        // FIXME: FIX ME
         [HttpPost]
         public ActionResult<TaskResult> SubmitTask([FromBody] string input)
         {
@@ -36,6 +35,7 @@ namespace gamification_backend.Controllers
             return Ok(_service.SubmitTask(GetSessionId(), input));
         }
 
+        //POST: /api/SubmitTestCase/
         [HttpPost]
         public ActionResult<TestCaseResult> SubmitTestCase([FromBody] string input, int index)
         {
@@ -66,13 +66,14 @@ namespace gamification_backend.Controllers
             return Ok("The session was ended");
         }
 
-        // GET: /api/GetState
+        // GET: /api/GetState/
         [HttpGet]
         public ActionResult<StateDTO> GetState()
         {
             return Ok(_service.GetState(GetSessionId()));
         }
 
+        // GET: /api/GetStartCode/
         [HttpGet]
         public ActionResult<string> GetStartCode(string language)
         {
