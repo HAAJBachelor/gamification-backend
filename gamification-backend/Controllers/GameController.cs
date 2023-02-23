@@ -39,6 +39,7 @@ namespace gamification_backend.Controllers
         [HttpPost]
         public ActionResult<TestCaseResult> SubmitTestCase([FromBody] string input, int index)
         {
+            if (!Authorized()) return Unauthorized();
             return _service.SubmitTestCase(GetSessionId(), input, index);
         }
 
@@ -70,6 +71,7 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<StateDTO> GetState()
         {
+            if (!Authorized()) return Unauthorized();
             return Ok(_service.GetState(GetSessionId()));
         }
 
@@ -77,6 +79,7 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<string> GetStartCode(string language)
         {
+            if (!Authorized()) return Unauthorized();
             if (Enum.TryParse(language, true, out StubGenerator.Language lang))
                 return Ok(_service.GetStartCode(GetSessionId(), lang));
             return NotFound($"Could not find language {language}");
