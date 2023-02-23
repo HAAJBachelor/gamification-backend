@@ -5,6 +5,9 @@ using gamification_backend.Utility;
 
 namespace gamification_backend.Game;
 
+/// <summary>
+///     An instance of a game for each user. Keeps track of everything related to that "playthrough".
+/// </summary>
 public class GameSession : IGameSession
 {
     public delegate void EventHandler(object? sender, EventArgs args);

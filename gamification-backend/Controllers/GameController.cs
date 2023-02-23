@@ -11,22 +11,18 @@ namespace gamification_backend.Controllers
     {
         private readonly IGameService _service;
         private readonly string _sessionId = "sessionId";
-        private readonly string _valid = "valid";
-
 
         public GameController(IGameService service)
         {
             _service = service;
         }
 
-
         // GET: /api/CreateSession/
         [HttpGet]
         public ActionResult<string> CreateSession()
         {
-            if (Authorized()) return BadRequest("Session already exists");
+            if (Authorized()) return Ok();
             HttpContext.Session.SetInt32(_sessionId, _service.CreateSession());
-            HttpContext.Session.SetString(_valid, "valid");
             return Ok("A session was Created");
         }
 
@@ -59,7 +55,7 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<string> EndSession()
         {
-            HttpContext.Session.SetString(_valid, "");
+            HttpContext.Session.SetInt32(_sessionId, -1);
             return Ok("The session was ended");
         }
 
@@ -77,8 +73,7 @@ namespace gamification_backend.Controllers
 
         private bool Authorized()
         {
-            if (string.IsNullOrEmpty(HttpContext.Session.GetString(_valid))) return false;
-            return true;
+            return HttpContext.Session.GetInt32(_sessionId) != -1;
         }
     }
 }

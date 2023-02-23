@@ -3,6 +3,9 @@ using MongoDB.Bson.Serialization.Attributes;
 
 namespace gamification_backend.Models;
 
+/// <summary>
+///     A task given to a user. Has a list of testcases.
+/// </summary>
 public class GameTask
 {
     private readonly TaskRewards _rewards;
@@ -27,7 +30,7 @@ public class GameTask
     public string? Id { get; set; }
 
     public int TaskId { get; set; }
-    
+
     public string Language { get; set; }
     public string Description { get; set; }
     public string InputDescription { get; set; }
