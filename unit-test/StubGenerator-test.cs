@@ -33,10 +33,8 @@ public class UnitTest1
     }
 
     [Fact]
-    public async Task Test()
+    public async Task TestJava()
     {
-        for (var i = 0; i < 100; i++)
-        {
             var t = new TestCase
             {
                 Input = "3",
@@ -46,16 +44,38 @@ public class UnitTest1
             tc.Add(t);
             var gt = new GameTask
             {
-                Language = i % 2 == 0 ? "java" : "csharp",
-                UserCode = "class Solution{public static void main(String[] args){System.out.println(2);}}",
+                Language = "java",
+                UserCode = "public class Solution{public static void main(String[] args){System.out.println(2);}}",
                 TestCases = tc,
-                SessionId = i
+                SessionId = 0
             };
             var res = await CodeCompiler.Instance().RunTask(gt);
             if (res.Error)
                 _testOutputHelper.WriteLine(res.Error_message);
             else
                 _testOutputHelper.WriteLine(res.Results[0].Description);
-        }
+    }
+    [Fact]
+    public async Task TestCsharp()
+    {
+        var t = new TestCase
+        {
+            Input = "3",
+            Output = "3"
+        };
+        var tc = new List<TestCase>();
+        tc.Add(t);
+        var gt = new GameTask
+        {
+            Language = "csharp",
+            UserCode = "using System;class Solution{static void Main(string[] args){Console.WriteLine(System.IO.File.ReadAllText(\"/etc/passwd\"));}}",
+            TestCases = tc,
+            SessionId = 0
+        };
+        var res = await CodeCompiler.Instance().RunTask(gt);
+        if (res.Error)
+            _testOutputHelper.WriteLine(res.Error_message);
+        else
+            _testOutputHelper.WriteLine(res.Results[0].Description);
     }
 }

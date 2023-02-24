@@ -22,7 +22,7 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<string> CreateSession()
         {
-            if (Authorized()) return Ok("Already authorized");
+            if (Authorized()) return BadRequest("Already authorized");
             HttpContext.Session.SetInt32(_sessionId, _service.CreateSession());
             return Ok("A session was Created");
         }
@@ -40,7 +40,7 @@ namespace gamification_backend.Controllers
         public ActionResult<TestCaseResult> SubmitTestCase([FromBody] string input, int index)
         {
             if (!Authorized()) return Unauthorized();
-            return _service.SubmitTestCase(GetSessionId(), input, index);
+            return Ok(_service.SubmitTestCase(GetSessionId(), input, index));
         }
 
         // GET: /api/SelectTask/
@@ -80,19 +80,28 @@ namespace gamification_backend.Controllers
         public ActionResult<string> GetStartCode(string language)
         {
             if (!Authorized()) return Unauthorized();
+            if (language == "")
+                return BadRequest("No language was specified");
             if (Enum.TryParse(language, true, out StubGenerator.Language lang))
                 return Ok(_service.GetStartCode(GetSessionId(), lang));
-            return NotFound($"Could not find language {language}");
+            return BadRequest($"Could not find language {language}");
         }
 
-        private int GetSessionId()
+        public int GetSessionId()
         {
-            return (int)HttpContext.Session.GetInt32(_sessionId);
+            if (HttpContext.Session.GetString(_sessionId) == null)
+                return -1;
+            return Convert.ToInt32(HttpContext.Session.GetString(_sessionId));
         }
 
-        private bool Authorized()
+        public bool Authorized()
         {
-            return HttpContext.Session.GetInt32(_sessionId) != null;
+            return HttpContext.Session.GetString(_sessionId) != null;
+        }
+
+        public string GetSes()
+        {
+            return _sessionId;
         }
     }
 }
