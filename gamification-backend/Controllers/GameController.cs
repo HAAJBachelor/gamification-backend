@@ -10,8 +10,8 @@ namespace gamification_backend.Controllers
     [ApiController]
     public class GameController : Controller, IController
     {
+        private const string SessionId = "sessionId";
         private readonly IGameService _service;
-        private readonly string _sessionId = "sessionId";
 
         public GameController(IGameService service)
         {
@@ -23,7 +23,7 @@ namespace gamification_backend.Controllers
         public ActionResult<string> CreateSession()
         {
             if (Authorized()) return Ok("Already authorized");
-            HttpContext.Session.SetInt32(_sessionId, _service.CreateSession());
+            HttpContext.Session.SetInt32(SessionId, _service.CreateSession());
             return Ok("A session was Created");
         }
 
@@ -53,7 +53,7 @@ namespace gamification_backend.Controllers
 
         // GET: /api/GenerateTasks/
         [HttpGet]
-        public ActionResult<List<GameTask>> GenerateTasks()
+        public ActionResult<List<GameTaskDTO>> GenerateTasks()
         {
             if (!Authorized()) return Unauthorized();
             return Ok(_service.GenerateTaskSet(GetSessionId()));
@@ -63,7 +63,7 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<string> EndSession()
         {
-            HttpContext.Session.Remove(_sessionId);
+            HttpContext.Session.Remove(SessionId);
             return Ok("The session was ended");
         }
 
@@ -87,12 +87,12 @@ namespace gamification_backend.Controllers
 
         private int GetSessionId()
         {
-            return (int)HttpContext.Session.GetInt32(_sessionId);
+            return (int)HttpContext.Session.GetInt32(SessionId);
         }
 
         private bool Authorized()
         {
-            return HttpContext.Session.GetInt32(_sessionId) != null;
+            return HttpContext.Session.GetInt32(SessionId) != null;
         }
     }
 }
