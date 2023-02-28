@@ -9,8 +9,6 @@ namespace gamification_backend.Service;
 
 public class GameService : IGameService
 {
-    public delegate void EventHandler(object? source, TimerDepletedEventArgs args);
-
     private readonly GameManager _manager;
     private readonly IGameRepository _repo;
 
@@ -59,6 +57,7 @@ public class GameService : IGameService
         return _manager.GetStartCode(sessionId, language);
     }
 
+    //public delegate void EventHandler(object? source, TimerDepletedEventArgs args);
     public event EventHandler<TimerDepletedEventArgs> SaveSessionEventHandler;
 
     private void SaveSession(object? source, TimerDepletedEventArgs args)

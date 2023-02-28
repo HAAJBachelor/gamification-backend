@@ -12,8 +12,9 @@ public class GameSession : IGameSession
 {
     public delegate void EventHandler(object? sender, EventArgs args);
 
-    private readonly EventHandler<TimerDepletedEventArgs> _del;
     private readonly int _id;
+
+    private readonly EventHandler<TimerDepletedEventArgs> _myEvent;
     private readonly StateManager _stateManager;
     private GameTask? _currentTask;
     private List<GameTask>? _taskSetToSelectFrom;
@@ -24,14 +25,14 @@ public class GameSession : IGameSession
     {
         _user = name;
         _id = id;
-        _del = eventHandler;
+        _myEvent = eventHandler;
         TimerDepletedEvent += EndSession;
         _stateManager = new StateManager(startTime, TimerDepletedEvent);
     }
 
     public GameTask StartNewTask(int id)
     {
-        if (_taskSetToSelectFrom is not {Count: 3})
+        if (_taskSetToSelectFrom is not { Count: 3 })
         {
             throw new Exception(
                 $"Error in GameSession.StartNewTask(), expected 3 tasks got {_taskSetToSelectFrom.Count}");
@@ -68,6 +69,8 @@ public class GameSession : IGameSession
         return _stateManager.GetState();
     }
 
+    public event EventHandler TimerDepletedEvent;
+
     public TestCaseResult SubmitTestCase(string input, int index)
     {
         if (_currentTask == null) throw new NullReferenceException("Error in GameSession.SubmitTask()");
@@ -82,13 +85,11 @@ public class GameSession : IGameSession
         return _currentTask;
     }
 
-    public event EventHandler TimerDepletedEvent;
-
     private void EndSession(object? sender, EventArgs args)
     {
         var state = GetState();
         var record = new SessionRecord(_id, state._points, state._elapsed);
         Console.WriteLine("Session expired");
-        _del(this, new TimerDepletedEventArgs(record));
+        _myEvent.Invoke(this, new TimerDepletedEventArgs(record));
     }
 }

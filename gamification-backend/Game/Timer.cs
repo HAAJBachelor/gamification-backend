@@ -44,7 +44,7 @@ public class Timer : ITimer
             Seconds--;
             if (Seconds > 0) continue;
             Pause();
-            handler(this, EventArgs.Empty);
+            handler.Invoke(this, EventArgs.Empty);
         }
     }
 
