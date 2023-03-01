@@ -9,6 +9,9 @@ public static class DTOMapper
         GameTaskDTO dto = new()
         {
             Description = gameTask.Description,
+            InputDescription = gameTask.InputDescription,
+            OutputDescription = gameTask.OutputDescription,
+            Constraints = gameTask.Constraints,
             TaskId = gameTask.TaskId,
             StartCode = gameTask.StartCode,
             TestCases = gameTask.TestCases,
