@@ -8,6 +8,7 @@ namespace gamification_backend.DAL;
 
 public class GameRepository : IGameRepository
 {
+    private readonly SanityClient _client;
     private readonly SanityDataContext _sanity;
     private readonly TasksService _tasksService;
 
@@ -30,6 +31,7 @@ public class GameRepository : IGameRepository
             ApiVersion = "v1"
         };
         _sanity = new SanityDataContext(options);
+        _client = new SanityClient(options);
     }
 
     /*public GameTask GetTask()
@@ -42,8 +44,8 @@ public class GameRepository : IGameRepository
 */
     public async Task<List<GameTask>> GenerateTaskSet()
     {
-        var set = _sanity.DocumentSet<Task>();
-        var taskList = await set.ToListAsync();
+        var response = await _client.FetchAsync<List<Task>>("*[!(_id in path('drafts.**')) && _type == \"task\"]");
+        var taskList = response.Result;
         var tasks = new List<GameTask>();
         Console.WriteLine($"Fetched {taskList.Count} tasks from sanity");
         taskList.ForEach(t => tasks.Add(TaskMapper.FromSanityTaskToGameTask(t)));
@@ -52,6 +54,7 @@ public class GameRepository : IGameRepository
 
     public async void SaveSession(SessionRecord sessionRecord)
     {
+        return;
         await _tasksService.CreateAsync(sessionRecord);
         var s = await _tasksService.GetAsync(sessionRecord.Id);
     }
