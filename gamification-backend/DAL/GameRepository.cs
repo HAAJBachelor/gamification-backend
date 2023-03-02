@@ -1,6 +1,5 @@
 ﻿using gamification_backend.DBData;
 using gamification_backend.Models;
-using gamification_backend.Service;
 using gamification_backend.Utility;
 using Sanity.Linq;
 using Task = gamification_backend.Sanity.Task;
@@ -12,14 +11,10 @@ public class GameRepository : IGameRepository
     private readonly SanityClient _client;
     private readonly ApplicationDbContext _db;
     private readonly SanityDataContext _sanity;
-    private readonly TasksService _tasksService;
 
 
-    public GameRepository(TasksService tasksService, IConfiguration configuration, ApplicationDbContext db)
+    public GameRepository(IConfiguration configuration, ApplicationDbContext db)
     {
-        if (_tasksService != null)
-            return;
-        _tasksService = tasksService;
         if (_sanity != null)
             return;
         var token = configuration["CMS:Token"];
