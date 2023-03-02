@@ -21,7 +21,7 @@ public static class GameLogic
         {
             Success = false,
             Error = true,
-            Description = ConsolidateOutput(output.Error_message)
+            Description = FormatOutput(output.Error_message)
         };
     }
 
@@ -40,7 +40,7 @@ public static class GameLogic
     {
         if (result.Error)
         {
-            result.Description = ConsolidateOutput(result.Description);
+            result.Description = FormatOutput(result.Description);
             return result;
         }
 
@@ -56,8 +56,16 @@ public static class GameLogic
         return result;
     }
 
-    private static string ConsolidateOutput(string output)
+    private static string FormatOutput(string output)
     {
+        const string internalTimeoutMessage = "timelimit: sending warning signal 15";
+        const string clientTimeoutMessage = "Timeout! Execution timed out after 3 seconds.\n Make your code faster :)";
+        if (output.Contains(internalTimeoutMessage))
+        {
+            output = output.Replace(internalTimeoutMessage, clientTimeoutMessage);
+            return output;
+        }
+
         const int maxLineLength = 20;
         var lines = output.Split("\n");
         if (lines.Length <= maxLineLength)
