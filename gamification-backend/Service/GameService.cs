@@ -62,8 +62,7 @@ public class GameService : IGameService
 
     private void SaveSession(object? source, TimerDepletedEventArgs args)
     {
-        Console.WriteLine("SaveSession in service");
         _manager.RemoveSession(args.record.Id);
-        _repo.SaveSession(args.record);
+        var x = _repo.SaveSession(args.record);
     }
 }
