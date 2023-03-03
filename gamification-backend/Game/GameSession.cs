@@ -32,6 +32,7 @@ public class GameSession : IGameSession
 
     public GameTask StartNewTask(int id)
     {
+        Console.WriteLine("Index: " + id);
         if (_taskSetToSelectFrom is not { Count: 3 })
         {
             throw new Exception(
@@ -88,7 +89,11 @@ public class GameSession : IGameSession
     private void EndSession(object? sender, EventArgs args)
     {
         var state = GetState();
-        var record = new SessionRecord(_id, state._points, state._elapsed);
+        var record = new SessionRecord();
+        record.Time = state._elapsed;
+        record.Score = state._points;
+        record.Id = _id;
+        record.Username = 0;
         Console.WriteLine("Session expired");
         _myEvent.Invoke(this, new TimerDepletedEventArgs(record));
     }

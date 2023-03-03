@@ -2,15 +2,8 @@
 
 public class SessionRecord
 {
-    public SessionRecord(int id, int score, int time)
-    {
-        Id = id;
-        Score = score;
-        Time = time;
-    }
-
-    public int Id { get; }
-    public int Score { get; }
-    public int Time { get; }
-    public int Username { get; }
+    public int Id { get; set; }
+    public int Score { get; set; }
+    public int Time { get; set; }
+    public int Username { get; set; }
 }
