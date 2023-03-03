@@ -1,6 +1,9 @@
+using System.Reflection;
 using gamification_backend.DAL;
 using gamification_backend.Models;
 using gamification_backend.Service;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +27,14 @@ builder.Services.AddSession(options =>
 });
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
+Log.Logger = new LoggerConfiguration()
+    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+    .Enrich.FromLogContext()
+    .WriteTo.File($"Logs/{Assembly.GetExecutingAssembly().GetName().Name}.log")
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog();
 
 builder.Services.AddCors(options =>
 {
