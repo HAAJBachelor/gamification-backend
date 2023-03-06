@@ -10,8 +10,8 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.2" />
-        <PackageReference Include="MongoDB.Bson" Version="2.19.0" />
-        <PackageReference Include="MongoDB.Driver" Version="2.19.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="7.0.2"/>
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="7.0.2"/>
         <PackageReference Include="Sanity.Linq" Version="1.7.0" />
         <PackageReference Include="Serilog.AspNetCore" Version="6.1.1-dev-00295" />
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />

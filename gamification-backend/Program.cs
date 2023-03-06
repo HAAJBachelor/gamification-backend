@@ -1,9 +1,11 @@
 using System.Reflection;
 using gamification_backend.DAL;
+using gamification_backend.DBData;
 using gamification_backend.Models;
 using gamification_backend.Service;
 using Serilog;
 using Serilog.Events;
+using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +13,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-/*builder.Services.AddDbContext<GameMasterContext>(opt =>
-    opt.UseInMemoryDatabase("Games"));*/
+builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data source=myDb.db"),
+    ServiceLifetime.Singleton);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IGameRepository, GameRepository>();
@@ -48,8 +50,6 @@ builder.Services.AddCors(options =>
 builder.Services.Configure<DatabaseSettings>(
     builder.Configuration.GetSection("Database"));
 
-builder.Services.AddSingleton<TasksService>();
-
 builder.Configuration.AddUserSecrets<Program>();
 
 var app = builder.Build();
@@ -69,5 +69,7 @@ app.UseAuthorization();
 app.UseSession();
 
 app.MapControllers();
+
+DbInitializer.Initialize(app);
 
 app.Run();
