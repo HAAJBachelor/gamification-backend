@@ -9,7 +9,7 @@ namespace gamification_backend.Service;
 
 public class GameService : IGameService
 {
-    private readonly GameManager _manager;
+    private readonly IGameManager _manager;
     private readonly IGameRepository _repo;
 
     public GameService(IGameRepository repo)
