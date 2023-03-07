@@ -16,7 +16,7 @@ public class DbInitializer
         var record = new SessionRecord();
         record.Id = 100;
         record.Score = 10;
-        record.Username = 0;
+        record.Username = "Anon";
         record.Time = 50;
 
         context.SessionRecords.Add(record);

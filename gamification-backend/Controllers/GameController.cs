@@ -71,7 +71,6 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<string> EndSession()
         {
-            HttpContext.Session.Remove(SessionId);
             _logger.LogInformation("Ending session with id: " + GetSessionId());
             return Ok("The session was ended");
         }
@@ -97,6 +96,14 @@ namespace gamification_backend.Controllers
             }
 
             return NotFound($"Could not find language {language}");
+        }
+
+        // GET: /api/SubmitUsername
+        [HttpGet]
+        public ActionResult<string> SubmitUsername(string username)
+        {
+            _service.SaveUsername(GetSessionId(), username);
+            return Ok("Done");
         }
 
         private int GetSessionId()
