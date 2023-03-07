@@ -68,6 +68,8 @@ app.UseAuthorization();
 
 app.UseSession();
 
+app.UseWebSockets();
+
 app.MapControllers();
 
 DbInitializer.Initialize(app);

@@ -15,7 +15,6 @@ public class GameSession : IGameSession
     private readonly int _id;
 
     private readonly EventHandler<TimerDepletedEventArgs> _myEvent;
-    private readonly StateManager _stateManager;
     private GameTask? _currentTask;
     private List<GameTask>? _taskSetToSelectFrom;
     private string _user; // User class?
@@ -27,8 +26,11 @@ public class GameSession : IGameSession
         _id = id;
         _myEvent = eventHandler;
         TimerDepletedEvent += EndSession;
-        _stateManager = new StateManager(startTime, TimerDepletedEvent);
+        StateManager = new StateManager(startTime, TimerDepletedEvent);
+        StateManager.StartSession();
     }
+
+    public StateManager StateManager { get; }
 
     public GameTask StartNewTask(int id)
     {
@@ -60,14 +62,14 @@ public class GameSession : IGameSession
         if (!res.Success) return res;
 
         var rewards = _currentTask.Rewards;
-        _stateManager.UpdateState(rewards.Lives, rewards.Time, rewards.Points);
+        StateManager.UpdateState(rewards.Lives, rewards.Time, rewards.Points);
 
         return res;
     }
 
     public StateDTO GetState()
     {
-        return _stateManager.GetState();
+        return StateManager.GetState();
     }
 
     public event EventHandler TimerDepletedEvent;
@@ -88,6 +90,7 @@ public class GameSession : IGameSession
 
     private void EndSession(object? sender, EventArgs args)
     {
+        StateManager.EndSession();
         var state = GetState();
         var record = new SessionRecord();
         record.Time = state._elapsed;

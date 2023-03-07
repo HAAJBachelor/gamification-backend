@@ -10,9 +10,8 @@ namespace gamification_backend.Controllers
     [ApiController]
     public class GameController : Controller, IController
     {
-        private const string SessionId = "sessionId";
-        private readonly IGameService _service;
         private readonly ILogger<GameController> _logger;
+        private readonly IGameService _service;
 
         public GameController(IGameService service, ILogger<GameController> logger)
         {
@@ -20,13 +19,15 @@ namespace gamification_backend.Controllers
             _logger = logger;
         }
 
+        public static string SessionId { get; } = "sessionId";
+
         // GET: /api/CreateSession/
         [HttpGet]
         public ActionResult<string> CreateSession()
         {
             if (Authorized()) return Ok("Already authorized");
             HttpContext.Session.SetInt32(SessionId, _service.CreateSession());
-            _logger.LogInformation("Created new session with id "+GetSessionId());
+            _logger.LogInformation("Created new session with id " + GetSessionId());
             return Ok("A session was Created");
         }
 
@@ -35,7 +36,7 @@ namespace gamification_backend.Controllers
         public ActionResult<TaskResult> SubmitTask([FromBody] string input)
         {
             if (!Authorized()) return Unauthorized();
-            _logger.LogInformation("Submitting task for session "+GetSessionId());
+            _logger.LogInformation("Submitting task for session " + GetSessionId());
             return Ok(_service.SubmitTask(GetSessionId(), input));
         }
 
@@ -44,7 +45,7 @@ namespace gamification_backend.Controllers
         public ActionResult<TestCaseResult> SubmitTestCase([FromBody] string input, int index)
         {
             if (!Authorized()) return Unauthorized();
-            _logger.LogInformation("Submitting testcase for session "+GetSessionId());
+            _logger.LogInformation("Submitting testcase for session " + GetSessionId());
             return _service.SubmitTestCase(GetSessionId(), input, index);
         }
 
@@ -53,7 +54,7 @@ namespace gamification_backend.Controllers
         public ActionResult<GameTaskDTO> SelectTask(int taskId)
         {
             if (!Authorized()) return Unauthorized();
-            _logger.LogInformation("Selecting task for session "+GetSessionId());
+            _logger.LogInformation("Selecting task for session " + GetSessionId());
             return Ok(_service.SelectTask(GetSessionId(), taskId));
         }
 
@@ -62,7 +63,7 @@ namespace gamification_backend.Controllers
         public ActionResult<List<GameTaskDTO>> GenerateTasks()
         {
             if (!Authorized()) return Unauthorized();
-            _logger.LogInformation("Generating taskset for session "+GetSessionId());
+            _logger.LogInformation("Generating taskset for session " + GetSessionId());
             return Ok(_service.GenerateTaskSet(GetSessionId()));
         }
 
@@ -71,7 +72,7 @@ namespace gamification_backend.Controllers
         public ActionResult<string> EndSession()
         {
             HttpContext.Session.Remove(SessionId);
-            _logger.LogInformation("Ending session with id: "+GetSessionId());
+            _logger.LogInformation("Ending session with id: " + GetSessionId());
             return Ok("The session was ended");
         }
 
@@ -80,7 +81,7 @@ namespace gamification_backend.Controllers
         public ActionResult<StateDTO> GetState()
         {
             if (!Authorized()) return Unauthorized();
-            _logger.LogInformation("Fetching state for session "+GetSessionId());
+            _logger.LogInformation("Fetching state for session " + GetSessionId());
             return Ok(_service.GetState(GetSessionId()));
         }
 
@@ -91,9 +92,10 @@ namespace gamification_backend.Controllers
             if (!Authorized()) return Unauthorized();
             if (Enum.TryParse(language, true, out StubGenerator.Language lang))
             {
-                _logger.LogInformation("Getting startcode for session "+GetSessionId());
+                _logger.LogInformation("Getting startcode for session " + GetSessionId());
                 return Ok(_service.GetStartCode(GetSessionId(), lang));
             }
+
             return NotFound($"Could not find language {language}");
         }
 
