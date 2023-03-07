@@ -52,7 +52,27 @@ public static class GameLogic
             return result;
         }
 
-        result.Description = $"You got {output}, expected {expected}";
+        var lines = result.Description.Split("\n");
+        var expectedLines = expected.Split("\n");
+        var builder = new StringBuilder();
+        for (var i = 0; i < expected.Length; i++)
+        {
+            if (i == lines.Length)
+            {
+                builder.AppendLine($"Wrong answer on line {i + 1}: Missing output, expected {expectedLines[i]}");
+                break;
+            }
+
+            builder.AppendLine($"> {lines[i]}");
+            if (lines[i] != expectedLines[i])
+            {
+                builder.AppendLine($"Wrong answer on line {i + 1}: You got {lines[i]}, expected {expectedLines[i]}");
+                break;
+            }
+        }
+
+        Console.WriteLine(builder.ToString());
+        result.Description = builder.ToString();
         return result;
     }
 
