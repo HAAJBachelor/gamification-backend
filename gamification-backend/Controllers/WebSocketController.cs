@@ -24,18 +24,19 @@ public class WebSocketController : Controller
     {
         var buffer = new byte[1024 * 4];
         var id = HttpContext.Session.GetInt32(GameController.SessionId);
-        while (true)
+        if (!id.HasValue)
         {
-            if (!id.HasValue)
-            {
-                id = HttpContext.Session.GetInt32(GameController.SessionId);
-                Thread.Sleep(100);
-                continue;
-            }
+            Console.WriteLine("Could not find session id");
+            return;
+        }
 
-            var state = GameManager.Instance().GetState(id.Value);
-            buffer = BitConverter.GetBytes(state._time);
+        while (GameManager.Instance().SessionIsRunning(id.Value))
+        {
+            //Getting state from the session
+            var time = GameManager.Instance().GetSessionTime(id.Value);
+            buffer = BitConverter.GetBytes(time);
 
+            //Sends time to client
             await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, sizeof(int)),
                 WebSocketMessageType.Binary,
                 true,

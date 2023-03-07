@@ -19,7 +19,7 @@ public class StateManager : IStateManager
 
     public StateManager(int seconds, GameSession.EventHandler handler)
     {
-        _timer = new Timer(600, handler);
+        _timer = new Timer(seconds, handler);
         _points = 0;
         _lives = 3; // Example amount
     }
@@ -72,6 +72,11 @@ public class StateManager : IStateManager
     public bool IsEnded()
     {
         return _runningState == RunningState.Ended;
+    }
+
+    public int GetTime()
+    {
+        return _timer.Seconds;
     }
 
     private void UpdateLife(int amount)
