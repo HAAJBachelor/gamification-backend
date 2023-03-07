@@ -1,32 +1,46 @@
-﻿using gamification_backend.Models;
+﻿using gamification_backend.DTO;
+using gamification_backend.Models;
 using gamification_backend.Stub;
+using gamification_backend.Utility;
 
 namespace gamification_backend.Game;
 
-public class GameSession
+/// <summary>
+///     An instance of a game for each user. Keeps track of everything related to that "playthrough".
+/// </summary>
+public class GameSession : IGameSession
 {
+    public delegate void EventHandler(object? sender, EventArgs args);
+
+    private readonly int _id;
+
+    private readonly EventHandler<TimerDepletedEventArgs> _myEvent;
     private readonly StateManager _stateManager;
     private GameTask? _currentTask;
-    private int _id; // Unique identifier for each session
     private List<GameTask>? _taskSetToSelectFrom;
     private string _user; // User class?
 
-    public GameSession(int id, int startTime, string name = "placeholder")
+    public GameSession(int id, int startTime, EventHandler<TimerDepletedEventArgs> eventHandler,
+        string name = "placeholder")
     {
         _user = name;
         _id = id;
-        _stateManager = new StateManager(startTime);
+        _myEvent = eventHandler;
+        TimerDepletedEvent += EndSession;
+        _stateManager = new StateManager(startTime, TimerDepletedEvent);
     }
 
     public GameTask StartNewTask(int id)
     {
-        if (_taskSetToSelectFrom is not {Count: 3})
+        Console.WriteLine("Index: " + id);
+        if (_taskSetToSelectFrom is not { Count: 3 })
         {
-            throw new Exception("Error in GameSession.StartNewTask()");
+            throw new Exception(
+                $"Error in GameSession.StartNewTask(), expected 3 tasks got {_taskSetToSelectFrom.Count}");
         }
 
         _currentTask = _taskSetToSelectFrom[id];
-        _currentTask.StartCode = StubService.GenerateCode(_currentTask.StubCode);
+        _currentTask.StartCode = StubService.GenerateCode(_currentTask.StubCode, StubGenerator.Language.Java);
         _taskSetToSelectFrom.Clear();
         return _currentTask;
     }
@@ -39,18 +53,48 @@ public class GameSession
     public TaskResult SubmitTask(string input)
     {
         if (_currentTask == null) throw new NullReferenceException("Error in GameSession.SubmitTask()");
-
+        _currentTask.SessionId = _id;
         _currentTask.UserCode = input;
         var res = GameLogic.Submit(_currentTask);
 
         if (!res.Success) return res;
 
-
-        //TODO: Implement rewards in DB
-        /*var rewards = _currentTask.Rewards;
+        var rewards = _currentTask.Rewards;
         _stateManager.UpdateState(rewards.Lives, rewards.Time, rewards.Points);
-        */
 
         return res;
+    }
+
+    public StateDTO GetState()
+    {
+        return _stateManager.GetState();
+    }
+
+    public event EventHandler TimerDepletedEvent;
+
+    public TestCaseResult SubmitTestCase(string input, int index)
+    {
+        if (_currentTask == null) throw new NullReferenceException("Error in GameSession.SubmitTask()");
+        _currentTask.UserCode = input;
+        var res = GameLogic.RunTestCase(_currentTask, index);
+        return res;
+    }
+
+
+    public GameTask? GetCurrentTask()
+    {
+        return _currentTask;
+    }
+
+    private void EndSession(object? sender, EventArgs args)
+    {
+        var state = GetState();
+        var record = new SessionRecord();
+        record.Time = state._elapsed;
+        record.Score = state._points;
+        record.Id = _id;
+        record.Username = 0;
+        Console.WriteLine("Session expired");
+        _myEvent.Invoke(this, new TimerDepletedEventArgs(record));
     }
 }

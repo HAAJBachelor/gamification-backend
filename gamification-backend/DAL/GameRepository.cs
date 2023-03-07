@@ -1,15 +1,35 @@
-﻿using gamification_backend.Models;
-using gamification_backend.Service;
+﻿using gamification_backend.DBData;
+using gamification_backend.Models;
+using gamification_backend.Utility;
+using Sanity.Linq;
+using Task = gamification_backend.Sanity.Task;
 
 namespace gamification_backend.DAL;
 
 public class GameRepository : IGameRepository
 {
-    private readonly TasksService _tasksService;
+    private readonly SanityClient _client;
+    private readonly ApplicationDbContext _db;
+    private readonly SanityDataContext _sanity;
 
-    public GameRepository(TasksService tasksService)
+
+    public GameRepository(IConfiguration configuration, ApplicationDbContext db)
     {
-        _tasksService = tasksService;
+        if (_sanity != null)
+            return;
+        var token = configuration["CMS:Token"];
+        var projectId = configuration["CMS:ProjectID"];
+        var options = new SanityOptions
+        {
+            ProjectId = projectId,
+            Dataset = "production",
+            Token = token,
+            UseCdn = false,
+            ApiVersion = "v1"
+        };
+        _sanity = new SanityDataContext(options);
+        _client = new SanityClient(options);
+        _db = db;
     }
 
     /*public GameTask GetTask()
@@ -20,22 +40,28 @@ public class GameRepository : IGameRepository
         return task;
     }
 */
-    public List<GameTask> GenerateTaskSet()
+    public async Task<List<GameTask>> GenerateTaskSet()
     {
-        var t = _tasksService.GetAsync();
-        return t.Result;
+        var response = await _client.FetchAsync<List<Task>>("*[!(_id in path('drafts.**')) && _type == \"task\"]");
+        var taskList = response.Result;
+        var tasks = new List<GameTask>();
+        Console.WriteLine($"Fetched {taskList.Count} tasks from sanity");
+        taskList.ForEach(t => tasks.Add(TaskMapper.FromSanityTaskToGameTask(t)));
+        return tasks;
+    }
 
-        // Makes 3 GameTask objects and returns a List<GameTask> containing all 3 objects
-
-        var taskset = new List<GameTask>();
-
-        for (int i = 0; i < 3; i++)
+    public async Task<bool> SaveSession(SessionRecord sessionRecord)
+    {
+        try
         {
-            var task = new GameTask("Description " + i, 2, 180);
-            task.AddSingleTestCase(new TestCase("input" + i, "input" + i));
-            taskset.Add(task);
+            _db.SessionRecords.Add(sessionRecord);
+            await _db.SaveChangesAsync();
+            return true;
         }
-
-        return taskset;
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
     }
 }

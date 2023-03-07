@@ -2,23 +2,26 @@
 using gamification_backend.DTO;
 using gamification_backend.Game;
 using gamification_backend.Models;
+using gamification_backend.Stub;
+using gamification_backend.Utility;
 
 namespace gamification_backend.Service;
 
 public class GameService : IGameService
 {
+    private readonly IGameManager _manager;
     private readonly IGameRepository _repo;
-    private GameManager _manager;
 
     public GameService(IGameRepository repo)
     {
+        _manager = GameManager.Instance();
         _repo = repo;
-        _manager = GameManager.The();
     }
 
     public int CreateSession()
     {
-        return _manager.CreateSession();
+        SaveSessionEventHandler += SaveSession;
+        return _manager.CreateSession(SaveSessionEventHandler);
     }
 
     public TaskResult SubmitTask(int sessionId, string input)
@@ -26,15 +29,40 @@ public class GameService : IGameService
         return _manager.SubmitTask(sessionId, input);
     }
 
+    public TestCaseResult SubmitTestCase(int sessionId, string input, int index)
+    {
+        return _manager.SubmitTestCase(sessionId, input, index);
+    }
+
     public List<GameTaskDTO> GenerateTaskSet(int sessionId)
     {
         var tasks = _repo.GenerateTaskSet();
-        _manager.SaveTaskSet(sessionId, tasks);
-        return DTOMapper.GameTaskMapper(tasks);
+        _manager.SaveTaskSet(sessionId, tasks.Result);
+        return DTOMapper.GameTaskMapper(tasks.Result);
     }
 
     public GameTaskDTO SelectTask(int sessionId, int taskId)
     {
         return DTOMapper.GameTaskMapper(_manager.SelectTask(sessionId, taskId));
+    }
+
+    public StateDTO GetState(int sessionId)
+    {
+        return _manager.GetState(sessionId);
+    }
+
+
+    public string GetStartCode(int sessionId, StubGenerator.Language language)
+    {
+        return _manager.GetStartCode(sessionId, language);
+    }
+
+    //public delegate void EventHandler(object? source, TimerDepletedEventArgs args);
+    public event EventHandler<TimerDepletedEventArgs> SaveSessionEventHandler;
+
+    private void SaveSession(object? source, TimerDepletedEventArgs args)
+    {
+        _manager.RemoveSession(args.record.Id);
+        var x = _repo.SaveSession(args.record);
     }
 }

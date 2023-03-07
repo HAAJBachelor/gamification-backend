@@ -1,27 +1,27 @@
 ﻿namespace gamification_backend.Game;
 
+/// <summary>
+///     Keeps track of time left and time elapsed
+/// </summary>
 public class Timer : ITimer
 {
     private bool _count;
-    private int _seconds;
 
-    public Timer(int seconds)
+    public Timer(int seconds, GameSession.EventHandler handler)
     {
-        if (seconds < 60) _seconds = 600; // Default value
-        else _seconds = seconds;
+        StartTime = seconds;
+        Seconds = StartTime;
         _count = false;
-        Counter();
+        Counter(handler);
     }
 
-    public int GetTime()
-    {
-        return _seconds;
-    }
+    public int Seconds { get; set; }
+    public int StartTime { get; set; }
 
     public void AddTime(int seconds)
     {
         if (seconds < 0) seconds = 0;
-        _seconds += seconds;
+        Seconds += seconds;
     }
 
     public void Start()
@@ -34,12 +34,17 @@ public class Timer : ITimer
         _count = false;
     }
 
-    private async void Counter()
+    private async void Counter(GameSession.EventHandler handler)
     {
         var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
+        Start();
         while (await timer.WaitForNextTickAsync())
         {
-            if (_count) _seconds--;
+            if (!_count) continue;
+            Seconds--;
+            if (Seconds > 0) continue;
+            Pause();
+            handler.Invoke(this, EventArgs.Empty);
         }
     }
 

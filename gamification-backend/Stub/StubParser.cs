@@ -48,7 +48,7 @@ public class StubParser
     {
         return word switch
         {
-            _ when new Regex("^[a-z]*$").IsMatch(word) => TokenType.String,
+            _ when new Regex("^[a-zA-ZæøåÆØÅ]*$").IsMatch(word) => TokenType.String,
             _ when new Regex("^[\\d]*$").IsMatch(word) => TokenType.Number,
             _ when new Regex("^[\\w*:\\w*]*$").IsMatch(word) => TokenType.Separator,
             _ => throw new Exception($"Can't parse {word}")
@@ -98,7 +98,12 @@ public class StubParser
     public string RestOfLineAsString()
     {
         StringBuilder sb = new();
-        while (!_tokensList.Peek().IsNewLine()) sb.Append(Next().Value);
+        while (!_tokensList.Peek().IsNewLine())
+        {
+            sb.Append(Next().Value);
+            if (!_tokensList.Peek().IsNewLine())
+                sb.Append(' ');
+        }
 
         ConsumeOne();
         return sb.ToString();
