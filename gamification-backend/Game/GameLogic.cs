@@ -67,6 +67,7 @@ public static class GameLogic
         }
 
         const int maxLineLength = 20;
+        output = output.Replace("/tmp/Solutions/Solution0/", "");
         var lines = output.Split("\n");
         if (lines.Length <= maxLineLength)
             return output;

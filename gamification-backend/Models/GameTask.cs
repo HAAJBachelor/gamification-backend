@@ -1,7 +1,4 @@
-﻿using MongoDB.Bson;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace gamification_backend.Models;
+﻿namespace gamification_backend.Models;
 
 /// <summary>
 ///     A task given to a user. Has a list of testcases.
@@ -25,8 +22,6 @@ public class GameTask
         TestCases = new List<TestCase>();
     }
 
-    [BsonId]
-    [BsonRepresentation(BsonType.ObjectId)]
     public string? Id { get; set; }
 
     public int TaskId { get; set; }

@@ -9,7 +9,7 @@ namespace gamification_backend.Service;
 
 public class GameService : IGameService
 {
-    private readonly GameManager _manager;
+    private readonly IGameManager _manager;
     private readonly IGameRepository _repo;
 
     public GameService(IGameRepository repo)
@@ -62,8 +62,7 @@ public class GameService : IGameService
 
     private void SaveSession(object? source, TimerDepletedEventArgs args)
     {
-        Console.WriteLine("SaveSession in service");
         _manager.RemoveSession(args.record.Id);
-        _repo.SaveSession(args.record);
+        var x = _repo.SaveSession(args.record);
     }
 }

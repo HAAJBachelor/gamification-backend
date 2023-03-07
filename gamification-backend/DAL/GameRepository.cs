@@ -1,5 +1,5 @@
-﻿using gamification_backend.Models;
-using gamification_backend.Service;
+﻿using gamification_backend.DBData;
+using gamification_backend.Models;
 using gamification_backend.Utility;
 using Sanity.Linq;
 using Task = gamification_backend.Sanity.Task;
@@ -9,15 +9,12 @@ namespace gamification_backend.DAL;
 public class GameRepository : IGameRepository
 {
     private readonly SanityClient _client;
+    private readonly ApplicationDbContext _db;
     private readonly SanityDataContext _sanity;
-    private readonly TasksService _tasksService;
 
 
-    public GameRepository(TasksService tasksService, IConfiguration configuration)
+    public GameRepository(IConfiguration configuration, ApplicationDbContext db)
     {
-        if (_tasksService != null)
-            return;
-        _tasksService = tasksService;
         if (_sanity != null)
             return;
         var token = configuration["CMS:Token"];
@@ -32,6 +29,7 @@ public class GameRepository : IGameRepository
         };
         _sanity = new SanityDataContext(options);
         _client = new SanityClient(options);
+        _db = db;
     }
 
     /*public GameTask GetTask()
@@ -52,10 +50,18 @@ public class GameRepository : IGameRepository
         return tasks;
     }
 
-    public async void SaveSession(SessionRecord sessionRecord)
+    public async Task<bool> SaveSession(SessionRecord sessionRecord)
     {
-        return;
-        await _tasksService.CreateAsync(sessionRecord);
-        var s = await _tasksService.GetAsync(sessionRecord.Id);
+        try
+        {
+            _db.SessionRecords.Add(sessionRecord);
+            await _db.SaveChangesAsync();
+            return true;
+        }
+        catch (Exception e)
+        {
+            Console.WriteLine(e);
+            return false;
+        }
     }
 }

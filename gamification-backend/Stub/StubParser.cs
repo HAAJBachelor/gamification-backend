@@ -48,7 +48,7 @@ public class StubParser
     {
         return word switch
         {
-            _ when new Regex("^[a-z]*$").IsMatch(word) => TokenType.String,
+            _ when new Regex("^[a-zA-ZæøåÆØÅ]*$").IsMatch(word) => TokenType.String,
             _ when new Regex("^[\\d]*$").IsMatch(word) => TokenType.Number,
             _ when new Regex("^[\\w*:\\w*]*$").IsMatch(word) => TokenType.Separator,
             _ => throw new Exception($"Can't parse {word}")
