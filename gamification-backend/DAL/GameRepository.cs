@@ -79,4 +79,12 @@ public class GameRepository : IGameRepository
             return false;
         }
     }
+
+    public void SaveUsername(int sessionId, string username)
+    {
+        var record = _db.SessionRecords.Find(sessionId);
+        record.Username = username;
+        _db.SessionRecords.Update(record);
+        _db.SaveChangesAsync();
+    }
 }

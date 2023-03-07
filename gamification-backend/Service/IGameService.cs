@@ -13,4 +13,5 @@ public interface IGameService
     public GameTaskDTO SelectTask(int sessionId, int id);
     public StateDTO GetState(int sessionId);
     public string GetStartCode(int sessionId, StubGenerator.Language language);
+    void SaveUsername(int sessionId, string username);
 }

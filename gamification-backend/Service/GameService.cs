@@ -57,6 +57,11 @@ public class GameService : IGameService
         return _manager.GetStartCode(sessionId, language);
     }
 
+    public void SaveUsername(int sessionId, string username)
+    {
+        _repo.SaveUsername(sessionId, username);
+    }
+
     //public delegate void EventHandler(object? source, TimerDepletedEventArgs args);
     public event EventHandler<TimerDepletedEventArgs> SaveSessionEventHandler;
 

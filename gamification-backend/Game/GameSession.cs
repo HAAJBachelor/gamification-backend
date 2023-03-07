@@ -26,7 +26,7 @@ public class GameSession : IGameSession
         _id = id;
         _myEvent = eventHandler;
         TimerDepletedEvent += EndSession;
-        StateManager = new StateManager(startTime, TimerDepletedEvent);
+        StateManager = new StateManager(30, TimerDepletedEvent);
         StateManager.StartSession();
     }
 
@@ -96,7 +96,7 @@ public class GameSession : IGameSession
         record.Time = state._elapsed;
         record.Score = state._points;
         record.Id = _id;
-        record.Username = 0;
+        record.Username = "Anon";
         Console.WriteLine("Session expired");
         _myEvent.Invoke(this, new TimerDepletedEventArgs(record));
     }
