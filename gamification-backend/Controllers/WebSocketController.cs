@@ -1,11 +1,12 @@
 ﻿using System.Net.WebSockets;
+using gamification_backend.Game;
 using Microsoft.AspNetCore.Mvc;
 
 namespace gamification_backend.Controllers;
 
-public class WebSocketController : ControllerBase
+public class WebSocketController : Controller
 {
-    [Route("/timer")]
+    [Route("/ws")]
     public async Task Get()
     {
         if (HttpContext.WebSockets.IsWebSocketRequest)
@@ -19,28 +20,27 @@ public class WebSocketController : ControllerBase
         }
     }
 
-    private static async Task Echo(WebSocket webSocket)
+    private async Task Echo(WebSocket webSocket)
     {
         var buffer = new byte[1024 * 4];
-        var receiveResult = await webSocket.ReceiveAsync(
-            new ArraySegment<byte>(buffer), CancellationToken.None);
-
-        while (!receiveResult.CloseStatus.HasValue)
+        var id = HttpContext.Session.GetInt32(GameController.SessionId);
+        while (true)
         {
-            await webSocket.SendAsync(
-                new ArraySegment<byte>(buffer, 0, receiveResult.Count),
-                receiveResult.MessageType,
-                receiveResult.EndOfMessage,
+            if (!id.HasValue)
+            {
+                id = HttpContext.Session.GetInt32(GameController.SessionId);
+                Thread.Sleep(100);
+                continue;
+            }
+
+            var state = GameManager.Instance().GetState(id.Value);
+            buffer = BitConverter.GetBytes(state._time);
+
+            await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, sizeof(int)),
+                WebSocketMessageType.Binary,
+                true,
                 CancellationToken.None);
-
-
-            receiveResult = await webSocket.ReceiveAsync(
-                new ArraySegment<byte>(buffer), CancellationToken.None);
+            Thread.Sleep(1000);
         }
-
-        await webSocket.CloseAsync(
-            receiveResult.CloseStatus.Value,
-            receiveResult.CloseStatusDescription,
-            CancellationToken.None);
     }
 }
