@@ -28,12 +28,13 @@ public class GameSession : IGameSession
         _myEvent = eventHandler;
         TimerDepletedEvent += EndSession;
         _stateManager = new StateManager(startTime, TimerDepletedEvent);
+        _stateManager.StartSession();
     }
 
     public GameTask StartNewTask(int id)
     {
         Console.WriteLine("Index: " + id);
-        if (_taskSetToSelectFrom is not { Count: 3 })
+        if (_taskSetToSelectFrom is not {Count: 3})
         {
             throw new Exception(
                 $"Error in GameSession.StartNewTask(), expected 3 tasks got {_taskSetToSelectFrom.Count}");
@@ -88,6 +89,7 @@ public class GameSession : IGameSession
 
     private void EndSession(object? sender, EventArgs args)
     {
+        _stateManager.EndSession();
         var state = GetState();
         var record = new SessionRecord();
         record.Time = state._elapsed;

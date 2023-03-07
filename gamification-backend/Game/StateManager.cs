@@ -4,9 +4,18 @@ namespace gamification_backend.Game;
 
 public class StateManager : IStateManager
 {
+    public enum RunningState
+    {
+        Running,
+        Paused,
+        Ended
+    }
+
     private readonly Timer _timer;
     private int _lives;
     private int _points;
+
+    private RunningState _runningState;
 
     public StateManager(int seconds, GameSession.EventHandler handler)
     {
@@ -22,12 +31,47 @@ public class StateManager : IStateManager
         UpdatePoints(points);
     }
 
-    //Returns state as a State-object containing all data.
+    //Returns state as a RunningState-object containing all data.
     public StateDTO GetState()
     {
         Console.WriteLine("Creating new StateDTO");
         var elapsed = _timer.StartTime - _timer.Seconds;
-        return new StateDTO(_points, _lives, _timer.Seconds, elapsed);
+        return new StateDTO(_points, _lives, _timer.Seconds, elapsed, _runningState);
+    }
+
+    public void EndSession()
+    {
+        _runningState = RunningState.Ended;
+    }
+
+    public void PauseSession()
+    {
+        _runningState = RunningState.Paused;
+    }
+
+    public void StartSession()
+    {
+        _runningState = RunningState.Running;
+    }
+
+    public void ResumeSession()
+    {
+        _runningState = RunningState.Running;
+    }
+
+    public bool IsRunning()
+    {
+        return _runningState == RunningState.Running;
+    }
+
+    public bool IsPaused()
+    {
+        return _runningState == RunningState.Paused;
+    }
+
+    public bool IsEnded()
+    {
+        return _runningState == RunningState.Ended;
     }
 
     private void UpdateLife(int amount)
