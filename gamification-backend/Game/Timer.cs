@@ -42,7 +42,7 @@ public class Timer : ITimer
         {
             if (!_count) continue;
             Seconds--;
-            if (Seconds > 0) continue;
+            if (Seconds >= 0) continue;
             Pause();
             handler.Invoke(this, EventArgs.Empty);
         }
