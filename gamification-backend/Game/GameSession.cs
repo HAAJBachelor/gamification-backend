@@ -26,7 +26,7 @@ public class GameSession : IGameSession
         _id = id;
         _myEvent = eventHandler;
         TimerDepletedEvent += EndSession;
-        StateManager = new StateManager(30, TimerDepletedEvent);
+        StateManager = new StateManager(startTime, TimerDepletedEvent);
         StateManager.StartSession();
     }
 
@@ -35,7 +35,7 @@ public class GameSession : IGameSession
     public GameTask StartNewTask(int id)
     {
         Console.WriteLine("Index: " + id);
-        if (_taskSetToSelectFrom is not { Count: 3 })
+        if (_taskSetToSelectFrom is not {Count: 3})
         {
             throw new Exception(
                 $"Error in GameSession.StartNewTask(), expected 3 tasks got {_taskSetToSelectFrom.Count}");
