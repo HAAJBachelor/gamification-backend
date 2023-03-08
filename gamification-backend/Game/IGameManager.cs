@@ -15,4 +15,5 @@ public interface IGameManager
     public StateDTO GetState(int sessionId);
     public void RemoveSession(int sessionId);
     public string GetStartCode(int sessionId, StubGenerator.Language language);
+    bool IsGameSessionActive(int id);
 }

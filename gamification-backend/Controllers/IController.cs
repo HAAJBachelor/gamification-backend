@@ -14,4 +14,6 @@ public interface IController
     public ActionResult<string> EndSession();
     public ActionResult<StateDTO> GetState();
     public ActionResult<string> GetStartCode(string language);
+
+    public ActionResult<bool> IsGameSessionActive();
 }
