@@ -1,5 +1,4 @@
-﻿using System.Security.Cryptography;
-using gamification_backend.DBData;
+﻿using gamification_backend.DBData;
 using gamification_backend.Models;
 using gamification_backend.Utility;
 using Sanity.Linq;
@@ -49,19 +48,7 @@ public class GameRepository : IGameRepository
         Console.WriteLine($"Fetched {taskList.Count} tasks from sanity");
         var rnd = new Random();
         var randomIndexes = Enumerable.Range(0, taskList.Count).OrderBy(x => rnd.Next()).Take(3).ToArray();
-        Console.WriteLine("Random numbers:");
-        foreach (var i in randomIndexes)
-        {
-            Console.WriteLine(i);
-        }
-
         tasks.AddRange(randomIndexes.Select(index => TaskMapper.FromSanityTaskToGameTask(taskList[index])));
-        foreach (var gameTask in tasks)
-        {
-            Console.WriteLine(gameTask.Description);
-        }
-
-        Console.WriteLine("returning tasks");
         return tasks;
     }
 
