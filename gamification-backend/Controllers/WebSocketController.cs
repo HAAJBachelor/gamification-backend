@@ -7,6 +7,7 @@ namespace gamification_backend.Controllers;
 public class WebSocketController : Controller
 {
     [Route("/ws")]
+    [HttpGet]
     public async Task Get()
     {
         if (HttpContext.WebSockets.IsWebSocketRequest)
