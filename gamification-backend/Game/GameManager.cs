@@ -77,6 +77,11 @@ public class GameManager : IGameManager
         return code;
     }
 
+    public bool IsGameSessionActive(int id)
+    {
+        return _sessions[id].StateManager.IsRunning();
+    }
+
     public static GameManager Instance()
     {
         return _instance ??= new GameManager();

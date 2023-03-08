@@ -98,6 +98,15 @@ namespace gamification_backend.Controllers
             return NotFound($"Could not find language {language}");
         }
 
+        // GET: /api/IsGameSessionActive
+        [HttpGet]
+        public ActionResult<bool> IsGameSessionActive()
+        {
+            if (!Authorized())
+                return Unauthorized(false);
+            return Ok(_service.IsGameSessionActive(GetSessionId()));
+        }
+
         // GET: /api/SubmitUsername
         [HttpGet]
         public ActionResult<string> SubmitUsername(string username)

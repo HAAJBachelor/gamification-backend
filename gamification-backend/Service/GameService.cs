@@ -62,6 +62,11 @@ public class GameService : IGameService
         _repo.SaveUsername(sessionId, username);
     }
 
+    public bool IsGameSessionActive(int sessionId)
+    {
+        return _manager.IsGameSessionActive(sessionId);
+    }
+
     //public delegate void EventHandler(object? source, TimerDepletedEventArgs args);
     public event EventHandler<TimerDepletedEventArgs> SaveSessionEventHandler;
 
