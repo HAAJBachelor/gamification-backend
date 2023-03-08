@@ -31,15 +31,7 @@ public class GameRepository : IGameRepository
         _client = new SanityClient(options);
         _db = db;
     }
-
-    /*public GameTask GetTask()
-    {
-        var task = new GameTask();
-        task.Description = "Print a string to console";
-        task.AddSingleTestCase(new TestCase("hey", "hey"));
-        return task;
-    }
-*/
+    
     public async Task<List<GameTask>> GenerateTaskSet()
     {
         var response = await _client.FetchAsync<List<Task>>("*[!(_id in path('drafts.**')) && _type == \"task\"]");

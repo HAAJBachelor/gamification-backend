@@ -34,7 +34,6 @@ public class GameSession : IGameSession
 
     public GameTask StartNewTask(int id)
     {
-        Console.WriteLine("Index: " + id);
         if (_taskSetToSelectFrom is not {Count: 3})
         {
             throw new Exception(

@@ -34,7 +34,6 @@ public class StateManager : IStateManager
     //Returns state as a RunningState-object containing all data.
     public StateDTO GetState()
     {
-        Console.WriteLine("Creating new StateDTO");
         var elapsed = _timer.StartTime - _timer.Seconds;
         return new StateDTO(_points, _lives, _timer.Seconds, elapsed, _runningState);
     }
