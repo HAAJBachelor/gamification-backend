@@ -95,9 +95,10 @@ public class StateManager : IStateManager
         _points += amount;
     }
 
-    private void AddTime(int seconds)
+    private void AddTime(int minutes)
     {
-        if (seconds < 0) throw new ArgumentOutOfRangeException("Cannot award a negative amount of time");
+        if (minutes < 0) throw new ArgumentOutOfRangeException("Cannot award a negative amount of time");
+        var seconds = minutes * 60;
         _timer.AddTime(seconds);
     }
 }
