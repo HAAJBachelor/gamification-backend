@@ -48,9 +48,6 @@ builder.Services.AddCors(options =>
         });
 });
 
-builder.Services.Configure<DatabaseSettings>(
-    builder.Configuration.GetSection("Database"));
-
 builder.Configuration.AddUserSecrets<Program>();
 
 var app = builder.Build();
