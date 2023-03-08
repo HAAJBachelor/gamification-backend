@@ -69,7 +69,7 @@ public class GameRepository : IGameRepository
 
     public void SaveUsername(int sessionId, string username)
     {
-        var record = _db.SessionRecords.Find(sessionId);
+        var record = _db.SessionRecords.Last(x=> x.SessionId == sessionId);
         record.Username = username;
         _db.SessionRecords.Update(record);
         _db.SaveChangesAsync();

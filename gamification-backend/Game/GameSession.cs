@@ -95,8 +95,8 @@ public class GameSession : IGameSession
         var record = new SessionRecord();
         record.Time = state._elapsed;
         record.Score = state._points;
-        record.Id = _id;
-        record.Username = "Anon";
+        record.SessionId = _id;
+        record.Username = "Anonymous";
         Console.WriteLine("Session expired");
         _myEvent.Invoke(this, new TimerDepletedEventArgs(record));
     }
