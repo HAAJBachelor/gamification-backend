@@ -52,7 +52,6 @@ public class GameManager : IGameManager
 
     public StateDTO GetState(int sessionId)
     {
-        Console.WriteLine("Fetching session state for {0}", sessionId);
         if (_sessions.ContainsKey(sessionId))
             return _sessions[sessionId].GetState();
         throw new ArgumentException("Invalid session Id");

@@ -32,6 +32,7 @@ var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
 Log.Logger = new LoggerConfiguration()
     .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+    .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)
     .Enrich.FromLogContext()
     .WriteTo.File($"Logs/{Assembly.GetExecutingAssembly().GetName().Name}.log")
     .CreateLogger();
@@ -46,9 +47,6 @@ builder.Services.AddCors(options =>
             policy.WithOrigins("https://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
         });
 });
-
-builder.Services.Configure<DatabaseSettings>(
-    builder.Configuration.GetSection("Database"));
 
 builder.Configuration.AddUserSecrets<Program>();
 
