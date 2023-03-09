@@ -6,13 +6,13 @@ namespace gamification_backend.Service;
 
 public interface IGameService
 {
-    public int CreateSession();
-    public TaskResult SubmitTask(int sessiondId, string input);
-    public TestCaseResult SubmitTestCase(int sessionId, string input, int index);
-    public List<GameTaskDTO> GenerateTaskSet(int sessionId);
-    public GameTaskDTO SelectTask(int sessionId, int id);
-    public StateDTO GetState(int sessionId);
-    public string GetStartCode(int sessionId, StubGenerator.Language language);
-    void SaveUsername(int sessionId, string username);
-    bool IsGameSessionActive(int sessionId);
+    public void CreateSession(string id);
+    public TaskResult SubmitTask(string sessiondId, string input);
+    public TestCaseResult SubmitTestCase(string sessionId, string input, int index);
+    public List<GameTaskDTO> GenerateTaskSet(string sessionId);
+    public GameTaskDTO SelectTask(string sessionId, int id);
+    public StateDTO GetState(string sessionId);
+    public string GetStartCode(string sessionId, StubGenerator.Language language);
+    void SaveUsername(string sessionId, string username);
+    bool IsGameSessionActive(string sessionId);
 }

@@ -10,12 +10,12 @@ namespace gamification_backend.Game;
 /// </summary>
 public class GameSession : IGameSession
 {
-    private readonly int _id;
+    private readonly string _id;
     private readonly EventHandler<TimerDepletedEventArgs> _myEvent;
     private GameTask? _currentTask;
     private List<GameTask>? _taskSetToSelectFrom;
 
-    public GameSession(int id, int startTime, EventHandler<TimerDepletedEventArgs> eventHandler)
+    public GameSession(string id, int startTime, EventHandler<TimerDepletedEventArgs> eventHandler)
     {
         _id = id;
         _myEvent = eventHandler;
@@ -89,7 +89,7 @@ public class GameSession : IGameSession
         var elapsed = args.StartTime - args.Seconds - 1;
         record.Time = elapsed;
         record.Score = state._points;
-        record.Id = _id;
+        record.SessionId = _id;
         record.Username = "Anonym";
         Console.WriteLine("Session expired");
         _myEvent.Invoke(this, new TimerDepletedEventArgs(record));

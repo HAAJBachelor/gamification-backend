@@ -8,61 +8,59 @@ namespace gamification_backend.Game;
 public class GameManager : IGameManager
 {
     private static GameManager? _instance;
-    private readonly Dictionary<int, GameSession> _sessions;
-    private int _idCounter;
+    private readonly Dictionary<string, GameSession> _sessions;
 
     private GameManager()
     {
-        _sessions = new Dictionary<int, GameSession>();
+        _sessions = new Dictionary<string, GameSession>();
     }
 
-    public int CreateSession(EventHandler<TimerDepletedEventArgs> eventHandler)
+    public void CreateSession(string id, EventHandler<TimerDepletedEventArgs> eventHandler)
     {
-        var session = new GameSession(_idCounter, 600, eventHandler);
-        _sessions.Add(_idCounter, session);
-        Console.WriteLine("Creating new session with id {0}, total: {1}", _idCounter, _sessions.Count);
-        return _idCounter++;
+        var session = new GameSession(id, 300, eventHandler);
+        _sessions.Add(id, session);
+        Console.WriteLine("Creating new session with id {0}, total: {1}", id, _sessions.Count);
     }
 
-    public GameTask SelectTask(int sessionId, int taskId)
+    public GameTask SelectTask(string sessionId, int taskId)
     {
         if (_sessions.ContainsKey(sessionId))
             return _sessions[sessionId].StartNewTask(taskId);
-        throw new ArgumentException("Invalid session Id");
+        throw new ArgumentException("Invalid session Id. GameManager.SelectTask");
     }
 
-    public TaskResult SubmitTask(int sessionId, string input)
+    public TaskResult SubmitTask(string sessionId, string input)
     {
         if (!_sessions.ContainsKey(sessionId)) throw new ArgumentException("Invalid session Id");
         var session = _sessions[sessionId];
         return session.SubmitTask(input);
     }
 
-    public TestCaseResult SubmitTestCase(int sessionId, string input, int id)
+    public TestCaseResult SubmitTestCase(string sessionId, string input, int id)
     {
         return _sessions[sessionId].SubmitTestCase(input, id);
     }
 
-    public void SaveTaskSet(int sessionId, List<GameTask> tasks)
+    public void SaveTaskSet(string sessionId, List<GameTask> tasks)
     {
         if (_sessions.ContainsKey(sessionId))
             _sessions[sessionId].SaveGeneratedTaskSet(tasks);
         else throw new ArgumentException("Invalid session Id " + sessionId);
     }
 
-    public StateDTO GetState(int sessionId)
+    public StateDTO GetState(string sessionId)
     {
         if (_sessions.ContainsKey(sessionId))
             return _sessions[sessionId].GetState();
         throw new ArgumentException("Invalid session Id");
     }
 
-    public void RemoveSession(int sessionId)
+    public void RemoveSession(string sessionId)
     {
         _sessions.Remove(sessionId);
     }
 
-    public string GetStartCode(int sessionId, StubGenerator.Language language)
+    public string GetStartCode(string sessionId, StubGenerator.Language language)
     {
         var session = _sessions[sessionId];
         var currentTask = session.GetCurrentTask();
@@ -76,7 +74,7 @@ public class GameManager : IGameManager
         return code;
     }
 
-    public bool IsGameSessionActive(int id)
+    public bool IsGameSessionActive(string id)
     {
         return _sessions[id].StateManager.IsRunning();
     }
@@ -86,13 +84,13 @@ public class GameManager : IGameManager
         return _instance ??= new GameManager();
     }
 
-    public bool SessionIsRunning(int id)
+    public bool SessionIsRunning(string id)
     {
         var session = _sessions[id];
         return session.StateManager.IsRunning();
     }
 
-    public int GetSessionTime(int id)
+    public int GetSessionTime(string id)
     {
         return _sessions[id].StateManager.GetTime();
     }

@@ -26,8 +26,8 @@ public class WebSocketController : Controller
     private void Echo(WebSocket webSocket)
     {
         var buffer = new byte[1024 * 4];
-        var id = HttpContext.Session.GetInt32(GameController.SessionId);
-        if (!id.HasValue)
+        var id = HttpContext.Session.GetString(GameController.SessionId);
+        if (string.IsNullOrEmpty(id))
         {
             Console.WriteLine("Could not find session id");
             return;
@@ -36,7 +36,7 @@ public class WebSocketController : Controller
         var prevTime = -1;
         while (true)
         {
-            var running = GameManager.Instance().SessionIsRunning(id.Value);
+            var running = GameManager.Instance().SessionIsRunning(id);
             Message data;
             if (!running)
             {
@@ -45,7 +45,7 @@ public class WebSocketController : Controller
             else
             {
                 //Getting state from the session
-                var time = GameManager.Instance().GetSessionTime(id.Value);
+                var time = GameManager.Instance().GetSessionTime(id);
                 if (time == prevTime)
                     continue;
                 prevTime = time;

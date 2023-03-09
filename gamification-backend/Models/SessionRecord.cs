@@ -9,6 +9,6 @@ public class SessionRecord
     public int Score { get; set; }
     public int Time { get; set; }
     [Required]
-    public int SessionId { get; set; }
+    public string SessionId { get; set; }
     public string? Username { get; set; }
 }
