@@ -20,12 +20,14 @@ namespace gamification_backend.Controllers
         }
 
         public static string SessionId { get; } = "sessionId";
+        private string Active = "Active";
 
         // GET: /api/CreateSession/
         [HttpGet]
         public ActionResult<string> CreateSession()
         {
             if (Authorized()) return Ok("Already authorized");
+            HttpContext.Session.SetString(Active, "Active");
             HttpContext.Session.SetInt32(SessionId, _service.CreateSession());
             _logger.LogInformation("Created new session with id " + GetSessionId());
             return Ok("A session was Created");
@@ -67,14 +69,6 @@ namespace gamification_backend.Controllers
             return Ok(_service.GenerateTaskSet(GetSessionId()));
         }
 
-        // GET: /api/EndSession/
-        [HttpGet]
-        public ActionResult<string> EndSession()
-        {
-            _logger.LogInformation("Ending session with id: " + GetSessionId());
-            return Ok("The session was ended");
-        }
-
         // GET: /api/GetState/
         [HttpGet]
         public ActionResult<StateDTO> GetState()
@@ -111,7 +105,9 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<string> SubmitUsername(string username)
         {
+            if (!Authorized()) return Unauthorized();
             _service.SaveUsername(GetSessionId(), username);
+            EndSession();
             return Ok("Done");
         }
 
@@ -122,7 +118,13 @@ namespace gamification_backend.Controllers
 
         private bool Authorized()
         {
-            return HttpContext.Session.GetInt32(SessionId) != null;
+            return !string.IsNullOrEmpty(HttpContext.Session.GetString(Active));
+        }
+        
+        private void EndSession()
+        {
+            _logger.LogInformation("Ending session with id: " + GetSessionId());
+            HttpContext.Session.SetString(Active, "");
         }
     }
 }

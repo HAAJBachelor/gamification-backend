@@ -10,23 +10,17 @@ namespace gamification_backend.Game;
 /// </summary>
 public class GameSession : IGameSession
 {
-    public delegate void EventHandler(object? sender, EventArgs args);
-
     private readonly int _id;
-
     private readonly EventHandler<TimerDepletedEventArgs> _myEvent;
     private GameTask? _currentTask;
     private List<GameTask>? _taskSetToSelectFrom;
-    private string _user; // User class?
 
-    public GameSession(int id, int startTime, EventHandler<TimerDepletedEventArgs> eventHandler,
-        string name = "placeholder")
+    public GameSession(int id, int startTime, EventHandler<TimerDepletedEventArgs> eventHandler)
     {
-        _user = name;
         _id = id;
         _myEvent = eventHandler;
-        TimerDepletedEvent += EndSession;
-        StateManager = new StateManager(startTime, TimerDepletedEvent);
+        _timerEvent += EndSession;
+        StateManager = new StateManager(startTime, _timerEvent);
         StateManager.StartSession();
     }
 
@@ -71,7 +65,7 @@ public class GameSession : IGameSession
         return StateManager.GetState();
     }
 
-    public event EventHandler TimerDepletedEvent;
+    public event EventHandler<EventArgsFromTimer> _timerEvent;
 
     public TestCaseResult SubmitTestCase(string input, int index)
     {
@@ -87,12 +81,13 @@ public class GameSession : IGameSession
         return _currentTask;
     }
 
-    private void EndSession(object? sender, EventArgs args)
+    private void EndSession(object? sender, EventArgsFromTimer args)
     {
         StateManager.EndSession();
         var state = GetState();
         var record = new SessionRecord();
-        record.Time = state._elapsed;
+        var elapsed = args.StartTime - args.Seconds - 1;
+        record.Time = elapsed;
         record.Score = state._points;
         record.Id = _id;
         record.Username = "Anonym";

@@ -1,4 +1,5 @@
 ﻿using gamification_backend.DTO;
+using gamification_backend.Utility;
 
 namespace gamification_backend.Game;
 
@@ -17,7 +18,7 @@ public class StateManager : IStateManager
 
     private RunningState _runningState;
 
-    public StateManager(int seconds, GameSession.EventHandler handler)
+    public StateManager(int seconds, EventHandler<EventArgsFromTimer> handler)
     {
         _timer = new Timer(seconds, handler);
         _points = 0;
@@ -34,8 +35,7 @@ public class StateManager : IStateManager
     //Returns state as a RunningState-object containing all data.
     public StateDTO GetState()
     {
-        var elapsed = _timer.StartTime - _timer.Seconds;
-        return new StateDTO(_points, _lives, _timer.Seconds, elapsed, _runningState);
+        return new StateDTO(_points, _lives, _runningState);
     }
 
     public void EndSession()
