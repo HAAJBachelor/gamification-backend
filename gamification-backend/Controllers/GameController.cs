@@ -10,8 +10,16 @@ namespace gamification_backend.Controllers
     [ApiController]
     public class GameController : Controller, IController
     {
+        private readonly List<char> _charsAndNumbers = new()
+        {
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
+            'v', 'w', 'x', 'y', 'z', 'A', 'B', 'C', 'D', 'E', 'F', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p',
+            'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+        };
+
         private readonly ILogger<GameController> _logger;
         private readonly IGameService _service;
+        private string Active = "Active";
 
         public GameController(IGameService service, ILogger<GameController> logger)
         {
@@ -20,7 +28,6 @@ namespace gamification_backend.Controllers
         }
 
         public static string SessionId { get; } = "sessionId";
-        private string Active = "Active";
 
         // GET: /api/CreateSession/
         [HttpGet]
@@ -120,11 +127,18 @@ namespace gamification_backend.Controllers
         {
             return !string.IsNullOrEmpty(HttpContext.Session.GetString(Active));
         }
-        
+
         private void EndSession()
         {
             _logger.LogInformation("Ending session with id: " + GetSessionId());
             HttpContext.Session.SetString(Active, "");
+        }
+
+        private string GenKey(int length)
+        {
+            var newKey = "";
+            for (var i = 0; i < length; i++) newKey += _charsAndNumbers[new Random().Next(0, _charsAndNumbers.Count)];
+            return newKey;
         }
     }
 }
