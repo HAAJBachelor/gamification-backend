@@ -1,4 +1,6 @@
 ﻿using System.Net.WebSockets;
+using System.Text;
+using System.Text.Json;
 using gamification_backend.Game;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,7 +15,7 @@ public class WebSocketController : Controller
         if (HttpContext.WebSockets.IsWebSocketRequest)
         {
             using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-            await Echo(webSocket);
+            Echo(webSocket);
         }
         else
         {
@@ -21,7 +23,7 @@ public class WebSocketController : Controller
         }
     }
 
-    private async Task Echo(WebSocket webSocket)
+    private void Echo(WebSocket webSocket)
     {
         var buffer = new byte[1024 * 4];
         var id = HttpContext.Session.GetInt32(GameController.SessionId);
@@ -31,18 +33,67 @@ public class WebSocketController : Controller
             return;
         }
 
-        while (GameManager.Instance().SessionIsRunning(id.Value))
+        var prevTime = -1;
+        while (true)
         {
-            //Getting state from the session
-            var time = GameManager.Instance().GetSessionTime(id.Value);
-            buffer = BitConverter.GetBytes(time);
+            var running = GameManager.Instance().SessionIsRunning(id.Value);
+            Message data;
+            if (!running)
+            {
+                data = Message.CreateStateChange("Game is not running");
+            }
+            else
+            {
+                //Getting state from the session
+                var time = GameManager.Instance().GetSessionTime(id.Value);
+                if (time == prevTime)
+                    continue;
+                prevTime = time;
+                data = Message.CreateUpdate(time.ToString());
+            }
 
-            //Sends time to client
-            await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, sizeof(int)),
-                WebSocketMessageType.Binary,
+            var json = JsonSerializer.Serialize(data);
+            var bytes = Encoding.UTF8.GetBytes(json);
+            var size = Encoding.UTF8.GetByteCount(json);
+            webSocket.SendAsync(new ArraySegment<byte>(bytes, 0, size),
+                WebSocketMessageType.Text,
                 true,
                 CancellationToken.None);
-            Thread.Sleep(1000);
+        }
+    }
+
+
+    private class Message
+    {
+        private Type _type;
+
+        private Message(Type type, string message)
+        {
+            _type = type;
+            data = message;
+        }
+
+        public string type
+        {
+            get => _type.ToString();
+        }
+
+        public string data { get; set; }
+
+        public static Message CreateUpdate(string data)
+        {
+            return new Message(Type.Update, data);
+        }
+
+        public static Message CreateStateChange(string data)
+        {
+            return new Message(Type.StateChange, data);
+        }
+
+        internal enum Type
+        {
+            Update,
+            StateChange,
         }
     }
 }
