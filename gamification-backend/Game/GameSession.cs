@@ -34,7 +34,7 @@ public class GameSession : IGameSession
 
     public GameTask StartNewTask(int id)
     {
-        if (_taskSetToSelectFrom is not {Count: 3})
+        if (_taskSetToSelectFrom is not { Count: 3 })
         {
             throw new Exception(
                 $"Error in GameSession.StartNewTask(), expected 3 tasks got {_taskSetToSelectFrom.Count}");
@@ -95,7 +95,7 @@ public class GameSession : IGameSession
         record.Time = state._elapsed;
         record.Score = state._points;
         record.Id = _id;
-        record.Username = "Anon";
+        record.Username = "Anonym";
         Console.WriteLine("Session expired");
         _myEvent.Invoke(this, new TimerDepletedEventArgs(record));
     }
