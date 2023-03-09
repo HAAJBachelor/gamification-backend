@@ -1,4 +1,6 @@
-﻿namespace gamification_backend.Game;
+﻿using gamification_backend.Utility;
+
+namespace gamification_backend.Game;
 
 /// <summary>
 ///     Keeps track of time left and time elapsed
@@ -7,7 +9,7 @@ public class Timer : ITimer
 {
     private bool _count;
 
-    public Timer(int seconds, GameSession.EventHandler handler)
+    public Timer(int seconds, EventHandler<EventArgsFromTimer> handler)
     {
         StartTime = seconds;
         Seconds = StartTime;
@@ -34,7 +36,7 @@ public class Timer : ITimer
         _count = false;
     }
 
-    private async void Counter(GameSession.EventHandler handler)
+    private async void Counter(EventHandler<EventArgsFromTimer> handler)
     {
         var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
         Start();
@@ -44,9 +46,8 @@ public class Timer : ITimer
             Seconds--;
             if (Seconds > 0) continue;
             Pause();
-            handler.Invoke(this, EventArgs.Empty);
+
+            handler.Invoke(this, new EventArgsFromTimer(Seconds, StartTime));
         }
     }
-
-    //GetFormattedTime?
 }
