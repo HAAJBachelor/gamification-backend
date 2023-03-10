@@ -8,6 +8,9 @@ namespace gamification_backend.Game;
 public class GameManager : IGameManager
 {
     private static GameManager? _instance;
+    private readonly Dictionary<int, GameSession> _sessions;
+    private int _idCounter;
+    private GameTask? _testTask;
     private readonly Dictionary<Guid, GameSession> _sessions;
 
     private GameManager()
@@ -47,6 +50,20 @@ public class GameManager : IGameManager
             _sessions[sessionId].SaveGeneratedTaskSet(tasks);
         else throw new ArgumentException("Invalid session Id " + sessionId);
     }
+    
+    public TestCaseResult SubmitTestTaskTestCase(string input, int index)
+    {
+        if (TestTask == null) throw new ArgumentException("Test task is not set");
+        TestTask.UserCode = input;
+        return GameLogic.RunTestCase(TestTask, index);
+    }
+
+    public void SaveTaskSet(int sessionId, List<GameTask> tasks)
+    {
+        if (_sessions.ContainsKey(sessionId))
+            _sessions[sessionId].SaveGeneratedTaskSet(tasks);
+        else throw new ArgumentException("Invalid session Id " + sessionId);
+    }
 
     public StateDTO GetState(Guid sessionId)
     {
@@ -74,9 +91,37 @@ public class GameManager : IGameManager
         return code;
     }
 
+    public string GetTestTaskStartCode(StubGenerator.Language language)
+    {
+        if (_testTask == null)
+            throw new ArgumentException("Test task is not set");
+        var code = StubService.GenerateCode(_testTask.StubCode, language);
+        _testTask.StartCode = code;
+        _testTask.Language = language.ToString().ToLower();
+        return code;
+    }
+    
     public bool IsGameSessionActive(Guid id)
     {
         return _sessions[id].StateManager.IsRunning();
+    }
+
+    public GameTask? TestTask
+    {
+        get => _testTask;
+        set
+        {
+            if (_testTask is null)
+            {
+                _testTask = value;
+                return;
+            }
+
+            var lang = _testTask.Language;
+            _testTask = value;
+            if (lang != "")
+                _testTask.Language = lang;
+        }
     }
 
     public static GameManager Instance()

@@ -7,13 +7,16 @@ namespace gamification_backend.Game;
 
 public interface IGameManager
 {
-    public void CreateSession(Guid id, EventHandler<TimerDepletedEventArgs> eventHandler);
+    public GameTask? TestTask { get; set; }
+    public int CreateSession(Guid id, EventHandler<TimerDepletedEventArgs> del);
     public GameTask SelectTask(Guid sessionId, int taskId);
     public TaskResult SubmitTask(Guid sessionId, string input);
     public void SaveTaskSet(Guid sessionId, List<GameTask> tasks);
     public TestCaseResult SubmitTestCase(Guid sessionId, string input, int id);
+    public TestCaseResult SubmitTestTaskTestCase(string input, int id);
     public StateDTO GetState(Guid sessionId);
     public void RemoveSession(Guid sessionId);
     public string GetStartCode(Guid sessionId, StubGenerator.Language language);
     bool IsGameSessionActive(Guid id);
+    string GetTestTaskStartCode(StubGenerator.Language language);
 }

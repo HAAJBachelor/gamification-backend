@@ -33,7 +33,12 @@ public class GameService : IGameService
     {
         return _manager.SubmitTestCase(sessionId, input, index);
     }
-
+    
+    public TestCaseResult SubmitTestTaskTestCase(string input, int index)
+    {
+        return _manager.SubmitTestTaskTestCase(input, index);
+    }
+    
     public List<GameTaskDTO> GenerateTaskSet(Guid sessionId)
     {
         var tasks = _repo.GenerateTaskSet();
@@ -56,6 +61,11 @@ public class GameService : IGameService
     {
         return _manager.GetStartCode(sessionId, language);
     }
+    
+    public string GetTestTaskStartCode(StubGenerator.Language language)
+    {
+        return _manager.GetTestTaskStartCode(language);
+    }
 
     public void SaveUsername(Guid sessionId, string username)
     {
@@ -65,6 +75,15 @@ public class GameService : IGameService
     public bool IsGameSessionActive(Guid sessionId)
     {
         return _manager.IsGameSessionActive(sessionId);
+    }
+
+    public GameTaskDTO SelectTaskForTesting(string taskId)
+    {
+        var gameTask = _repo.SelectTaskForTesting(taskId);
+        _manager.TestTask = gameTask;
+        var taskDTO = DTOMapper.GameTaskMapper(gameTask);
+        gameTask.ValidatorCases.ForEach(t => taskDTO.TestCases.Add(t));
+        return taskDTO;
     }
 
     //public delegate void EventHandler(object? source, TimerDepletedEventArgs args);

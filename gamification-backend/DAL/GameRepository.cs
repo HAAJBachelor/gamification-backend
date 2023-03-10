@@ -66,4 +66,11 @@ public class GameRepository : IGameRepository
         _db.SessionRecords.Update(record);
         _db.SaveChangesAsync();
     }
+
+    public GameTask SelectTaskForTesting(string taskId)
+    {
+        var set = _sanity.DocumentSet<Task>();
+        var task = set.Get(taskId);
+        return TaskMapper.FromSanityTaskToGameTask(task);
+    }
 }
