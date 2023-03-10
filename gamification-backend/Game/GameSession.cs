@@ -10,12 +10,12 @@ namespace gamification_backend.Game;
 /// </summary>
 public class GameSession : IGameSession
 {
-    private readonly string _id;
+    private readonly Guid _id;
     private readonly EventHandler<TimerDepletedEventArgs> _myEvent;
     private GameTask? _currentTask;
     private List<GameTask>? _taskSetToSelectFrom;
 
-    public GameSession(string id, int startTime, EventHandler<TimerDepletedEventArgs> eventHandler)
+    public GameSession(Guid id, int startTime, EventHandler<TimerDepletedEventArgs> eventHandler)
     {
         _id = id;
         _myEvent = eventHandler;

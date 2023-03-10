@@ -4,7 +4,7 @@ namespace gamification_backend.DTO;
 
 public class CompilerTaskDTO
 {
-    public string SessionId { get; set; }
+    public Guid SessionId { get; set; }
     public string Language { get; set; }
     public List<TestCase> TestCases { get; set; }
     public string UserCode { get; set; }

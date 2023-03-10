@@ -112,9 +112,9 @@ namespace gamification_backend.Controllers
             return Ok("Done");
         }
 
-        private string GetSessionId()
+        private Guid GetSessionId()
         {
-            return HttpContext.Session.GetString(SessionId);
+            return Guid.Parse(HttpContext.Session.GetString(SessionId));
         }
 
         private bool Authorized()

@@ -18,51 +18,51 @@ public class GameService : IGameService
         _repo = repo;
     }
 
-    public void CreateSession(string id)
+    public void CreateSession(Guid id)
     {
         SaveSessionEventHandler += SaveSession;
         _manager.CreateSession(id, SaveSessionEventHandler);
     }
 
-    public TaskResult SubmitTask(string sessionId, string input)
+    public TaskResult SubmitTask(Guid sessionId, string input)
     {
         return _manager.SubmitTask(sessionId, input);
     }
 
-    public TestCaseResult SubmitTestCase(string sessionId, string input, int index)
+    public TestCaseResult SubmitTestCase(Guid sessionId, string input, int index)
     {
         return _manager.SubmitTestCase(sessionId, input, index);
     }
 
-    public List<GameTaskDTO> GenerateTaskSet(string sessionId)
+    public List<GameTaskDTO> GenerateTaskSet(Guid sessionId)
     {
         var tasks = _repo.GenerateTaskSet();
         _manager.SaveTaskSet(sessionId, tasks.Result);
         return DTOMapper.GameTaskMapper(tasks.Result);
     }
 
-    public GameTaskDTO SelectTask(string sessionId, int taskId)
+    public GameTaskDTO SelectTask(Guid sessionId, int taskId)
     {
         return DTOMapper.GameTaskMapper(_manager.SelectTask(sessionId, taskId));
     }
 
-    public StateDTO GetState(string sessionId)
+    public StateDTO GetState(Guid sessionId)
     {
         return _manager.GetState(sessionId);
     }
 
 
-    public string GetStartCode(string sessionId, StubGenerator.Language language)
+    public string GetStartCode(Guid sessionId, StubGenerator.Language language)
     {
         return _manager.GetStartCode(sessionId, language);
     }
 
-    public void SaveUsername(string sessionId, string username)
+    public void SaveUsername(Guid sessionId, string username)
     {
         _repo.SaveUsername(sessionId, username);
     }
 
-    public bool IsGameSessionActive(string sessionId)
+    public bool IsGameSessionActive(Guid sessionId)
     {
         return _manager.IsGameSessionActive(sessionId);
     }

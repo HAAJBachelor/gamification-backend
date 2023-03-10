@@ -49,7 +49,7 @@ public class UnitTest1
                 Language = i % 2 == 0 ? "java" : "csharp",
                 UserCode = "class Solution{public static void main(String[] args){System.out.println(2);}}",
                 TestCases = tc,
-                SessionId = "id"
+                SessionId = Guid.NewGuid()
             };
             var res = await CodeCompiler.Instance().RunTask(gt);
             if (res.Error)

@@ -26,8 +26,8 @@ public class WebSocketController : Controller
     private void Echo(WebSocket webSocket)
     {
         var buffer = new byte[1024 * 4];
-        var id = HttpContext.Session.GetString(GameController.SessionId);
-        if (string.IsNullOrEmpty(id))
+        var id = Guid.Parse(HttpContext.Session.GetString(GameController.SessionId));
+        if (id == Guid.Empty)
         {
             Console.WriteLine("Could not find session id");
             return;
