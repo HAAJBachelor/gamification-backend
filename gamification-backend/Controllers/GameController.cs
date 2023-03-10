@@ -28,7 +28,8 @@ namespace gamification_backend.Controllers
         {
             if (Authorized()) return Ok("Already authorized");
             HttpContext.Session.SetString(Active, "Active");
-            HttpContext.Session.SetInt32(SessionId, _service.CreateSession());
+            HttpContext.Session.SetString(SessionId, GenKey());
+            _service.CreateSession(GetSessionId());
             _logger.LogInformation("Created new session with id " + GetSessionId());
             return Ok("A session was Created");
         }
@@ -128,9 +129,9 @@ namespace gamification_backend.Controllers
             return Ok("Done");
         }
 
-        private int GetSessionId()
+        private Guid GetSessionId()
         {
-            return (int) HttpContext.Session.GetInt32(SessionId);
+            return Guid.Parse(HttpContext.Session.GetString(SessionId));
         }
 
         private bool Authorized()
@@ -142,6 +143,11 @@ namespace gamification_backend.Controllers
         {
             _logger.LogInformation("Ending session with id: " + GetSessionId());
             HttpContext.Session.SetString(Active, "");
+        }
+
+        private string GenKey()
+        {
+            return Guid.NewGuid().ToString();
         }
     }
 }

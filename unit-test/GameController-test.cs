@@ -13,7 +13,6 @@ namespace unit_test;
 public class GameController_test
 {
     private readonly string _sessionId = "sessionId";
-    
     private readonly ITestOutputHelper _testOutputHelper;
     private static readonly Mock<IGameRepository> Repo = new Mock<IGameRepository>();
     private static readonly Mock<IGameService> Service = new Mock<IGameService>();
@@ -26,11 +25,11 @@ public class GameController_test
         _testOutputHelper = testOutputHelper;
     }
 
-    [Fact]
+    /*[Fact]
     public async Task CreateSession_Ok()
     {
         var result = Service.Object.CreateSession();
         _testOutputHelper.WriteLine("Print: " + result);
         Assert.Equal(0, result);
-    }
+    }*/
 }

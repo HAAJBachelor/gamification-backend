@@ -23,11 +23,11 @@ public class WebSocketController : Controller
         }
     }
 
-    private async void Echo(WebSocket webSocket)
+    private void Echo(WebSocket webSocket)
     {
         var buffer = new byte[1024 * 4];
-        var id = HttpContext.Session.GetInt32(GameController.SessionId);
-        if (!id.HasValue)
+        var id = Guid.Parse(HttpContext.Session.GetString(GameController.SessionId));
+        if (id == Guid.Empty)
         {
             Console.WriteLine("Could not find session id");
             return;
@@ -36,7 +36,7 @@ public class WebSocketController : Controller
         var prevTime = -1;
         while (true)
         {
-            var running = GameManager.Instance().SessionIsRunning(id.Value);
+            var running = GameManager.Instance().SessionIsRunning(id);
             Message data;
             if (!running)
             {
@@ -45,16 +45,17 @@ public class WebSocketController : Controller
             else
             {
                 //Getting state from the session
-                var time = GameManager.Instance().GetSessionTime(id.Value);
-                if (time == prevTime) continue;
+                var time = GameManager.Instance().GetSessionTime(id);
+                if (time == prevTime)
+                    continue;
                 prevTime = time;
                 data = Message.CreateUpdate(time.ToString());
             }
 
             var json = JsonSerializer.Serialize(data);
-            buffer = Encoding.UTF8.GetBytes(json);
+            var bytes = Encoding.UTF8.GetBytes(json);
             var size = Encoding.UTF8.GetByteCount(json);
-            await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, size),
+            webSocket.SendAsync(new ArraySegment<byte>(bytes, 0, size),
                 WebSocketMessageType.Text,
                 true,
                 CancellationToken.None);

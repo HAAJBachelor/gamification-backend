@@ -11,39 +11,46 @@ public class GameManager : IGameManager
     private readonly Dictionary<int, GameSession> _sessions;
     private int _idCounter;
     private GameTask? _testTask;
+    private readonly Dictionary<Guid, GameSession> _sessions;
 
     private GameManager()
     {
-        _sessions = new Dictionary<int, GameSession>();
+        _sessions = new Dictionary<Guid, GameSession>();
     }
 
-    public int CreateSession(EventHandler<TimerDepletedEventArgs> eventHandler)
+    public void CreateSession(Guid id, EventHandler<TimerDepletedEventArgs> eventHandler)
     {
-        var session = new GameSession(_idCounter, 600, eventHandler);
-        _sessions.Add(_idCounter, session);
-        Console.WriteLine("Creating new session with id {0}, total: {1}", _idCounter, _sessions.Count);
-        return _idCounter++;
+        var session = new GameSession(id, 600, eventHandler);
+        _sessions.Add(id, session);
+        Console.WriteLine("Creating new session with id {0}, total: {1}", id, _sessions.Count);
     }
 
-    public GameTask SelectTask(int sessionId, int taskId)
+    public GameTask SelectTask(Guid sessionId, int taskId)
     {
         if (_sessions.ContainsKey(sessionId))
             return _sessions[sessionId].StartNewTask(taskId);
-        throw new ArgumentException("Invalid session Id");
+        throw new ArgumentException("Invalid session Id. GameManager.SelectTask");
     }
 
-    public TaskResult SubmitTask(int sessionId, string input)
+    public TaskResult SubmitTask(Guid sessionId, string input)
     {
         if (!_sessions.ContainsKey(sessionId)) throw new ArgumentException("Invalid session Id");
         var session = _sessions[sessionId];
         return session.SubmitTask(input);
     }
 
-    public TestCaseResult SubmitTestCase(int sessionId, string input, int id)
+    public TestCaseResult SubmitTestCase(Guid sessionId, string input, int id)
     {
         return _sessions[sessionId].SubmitTestCase(input, id);
     }
 
+    public void SaveTaskSet(Guid sessionId, List<GameTask> tasks)
+    {
+        if (_sessions.ContainsKey(sessionId))
+            _sessions[sessionId].SaveGeneratedTaskSet(tasks);
+        else throw new ArgumentException("Invalid session Id " + sessionId);
+    }
+    
     public TestCaseResult SubmitTestTaskTestCase(string input, int index)
     {
         if (TestTask == null) throw new ArgumentException("Test task is not set");
@@ -58,19 +65,19 @@ public class GameManager : IGameManager
         else throw new ArgumentException("Invalid session Id " + sessionId);
     }
 
-    public StateDTO GetState(int sessionId)
+    public StateDTO GetState(Guid sessionId)
     {
         if (_sessions.ContainsKey(sessionId))
             return _sessions[sessionId].GetState();
         throw new ArgumentException("Invalid session Id");
     }
 
-    public void RemoveSession(int sessionId)
+    public void RemoveSession(Guid sessionId)
     {
         _sessions.Remove(sessionId);
     }
 
-    public string GetStartCode(int sessionId, StubGenerator.Language language)
+    public string GetStartCode(Guid sessionId, StubGenerator.Language language)
     {
         var session = _sessions[sessionId];
         var currentTask = session.GetCurrentTask();
@@ -86,15 +93,15 @@ public class GameManager : IGameManager
 
     public string GetTestTaskStartCode(StubGenerator.Language language)
     {
-        if (TestTask == null)
+        if (_testTask == null)
             throw new ArgumentException("Test task is not set");
-        var code = StubService.GenerateCode(TestTask.StubCode, language);
-        TestTask.StartCode = code;
-        TestTask.Language = language.ToString().ToLower();
+        var code = StubService.GenerateCode(_testTask.StubCode, language);
+        _testTask.StartCode = code;
+        _testTask.Language = language.ToString().ToLower();
         return code;
     }
-
-    public bool IsGameSessionActive(int id)
+    
+    public bool IsGameSessionActive(Guid id)
     {
         return _sessions[id].StateManager.IsRunning();
     }
@@ -122,13 +129,13 @@ public class GameManager : IGameManager
         return _instance ??= new GameManager();
     }
 
-    public bool SessionIsRunning(int id)
+    public bool SessionIsRunning(Guid id)
     {
         var session = _sessions[id];
         return session.StateManager.IsRunning();
     }
 
-    public int GetSessionTime(int id)
+    public int GetSessionTime(Guid id)
     {
         return _sessions[id].StateManager.GetTime();
     }
