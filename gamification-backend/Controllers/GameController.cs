@@ -12,6 +12,7 @@ namespace gamification_backend.Controllers
     {
         private readonly ILogger<GameController> _logger;
         private readonly IGameService _service;
+        private string Active = "Active";
 
         public GameController(IGameService service, ILogger<GameController> logger)
         {
@@ -20,7 +21,6 @@ namespace gamification_backend.Controllers
         }
 
         public static string SessionId { get; } = "sessionId";
-        private string Active = "Active";
 
         // GET: /api/CreateSession/
         [HttpGet]
@@ -28,7 +28,8 @@ namespace gamification_backend.Controllers
         {
             if (Authorized()) return Ok("Already authorized");
             HttpContext.Session.SetString(Active, "Active");
-            HttpContext.Session.SetInt32(SessionId, _service.CreateSession());
+            HttpContext.Session.SetString(SessionId, GenKey());
+            _service.CreateSession(GetSessionId());
             _logger.LogInformation("Created new session with id " + GetSessionId());
             return Ok("A session was Created");
         }
@@ -111,20 +112,25 @@ namespace gamification_backend.Controllers
             return Ok("Done");
         }
 
-        private int GetSessionId()
+        private Guid GetSessionId()
         {
-            return (int)HttpContext.Session.GetInt32(SessionId);
+            return Guid.Parse(HttpContext.Session.GetString(SessionId));
         }
 
         private bool Authorized()
         {
             return !string.IsNullOrEmpty(HttpContext.Session.GetString(Active));
         }
-        
+
         private void EndSession()
         {
             _logger.LogInformation("Ending session with id: " + GetSessionId());
             HttpContext.Session.SetString(Active, "");
+        }
+
+        private string GenKey()
+        {
+            return Guid.NewGuid().ToString();
         }
     }
 }

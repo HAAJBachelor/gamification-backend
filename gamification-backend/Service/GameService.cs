@@ -18,51 +18,51 @@ public class GameService : IGameService
         _repo = repo;
     }
 
-    public int CreateSession()
+    public void CreateSession(Guid id)
     {
         SaveSessionEventHandler += SaveSession;
-        return _manager.CreateSession(SaveSessionEventHandler);
+        _manager.CreateSession(id, SaveSessionEventHandler);
     }
 
-    public TaskResult SubmitTask(int sessionId, string input)
+    public TaskResult SubmitTask(Guid sessionId, string input)
     {
         return _manager.SubmitTask(sessionId, input);
     }
 
-    public TestCaseResult SubmitTestCase(int sessionId, string input, int index)
+    public TestCaseResult SubmitTestCase(Guid sessionId, string input, int index)
     {
         return _manager.SubmitTestCase(sessionId, input, index);
     }
 
-    public List<GameTaskDTO> GenerateTaskSet(int sessionId)
+    public List<GameTaskDTO> GenerateTaskSet(Guid sessionId)
     {
         var tasks = _repo.GenerateTaskSet();
         _manager.SaveTaskSet(sessionId, tasks.Result);
         return DTOMapper.GameTaskMapper(tasks.Result);
     }
 
-    public GameTaskDTO SelectTask(int sessionId, int taskId)
+    public GameTaskDTO SelectTask(Guid sessionId, int taskId)
     {
         return DTOMapper.GameTaskMapper(_manager.SelectTask(sessionId, taskId));
     }
 
-    public StateDTO GetState(int sessionId)
+    public StateDTO GetState(Guid sessionId)
     {
         return _manager.GetState(sessionId);
     }
 
 
-    public string GetStartCode(int sessionId, StubGenerator.Language language)
+    public string GetStartCode(Guid sessionId, StubGenerator.Language language)
     {
         return _manager.GetStartCode(sessionId, language);
     }
 
-    public void SaveUsername(int sessionId, string username)
+    public void SaveUsername(Guid sessionId, string username)
     {
         _repo.SaveUsername(sessionId, username);
     }
 
-    public bool IsGameSessionActive(int sessionId)
+    public bool IsGameSessionActive(Guid sessionId)
     {
         return _manager.IsGameSessionActive(sessionId);
     }
@@ -72,7 +72,7 @@ public class GameService : IGameService
 
     private void SaveSession(object? source, TimerDepletedEventArgs args)
     {
-        _manager.RemoveSession(args.record.Id);
-        var x = _repo.SaveSession(args.record);
+        //_manager.RemoveSession(args.record.SessionId);
+        _repo.SaveSession(args.record);
     }
 }

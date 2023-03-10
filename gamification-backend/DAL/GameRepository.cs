@@ -59,9 +59,9 @@ public class GameRepository : IGameRepository
         }
     }
 
-    public void SaveUsername(int sessionId, string username)
+    public void SaveUsername(Guid sessionId, string username)
     {
-        var record = _db.SessionRecords.Last(x=> x.SessionId == sessionId);
+        var record = _db.SessionRecords.First(x=> x.SessionId.Equals(sessionId));
         record.Username = username;
         _db.SessionRecords.Update(record);
         _db.SaveChangesAsync();
