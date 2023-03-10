@@ -8,7 +8,6 @@ namespace gamification_backend.Game;
 public class GameManager : IGameManager
 {
     private static GameManager? _instance;
-    private readonly Dictionary<int, GameSession> _sessions;
     private int _idCounter;
     private GameTask? _testTask;
     private readonly Dictionary<Guid, GameSession> _sessions;
@@ -56,13 +55,6 @@ public class GameManager : IGameManager
         if (TestTask == null) throw new ArgumentException("Test task is not set");
         TestTask.UserCode = input;
         return GameLogic.RunTestCase(TestTask, index);
-    }
-
-    public void SaveTaskSet(int sessionId, List<GameTask> tasks)
-    {
-        if (_sessions.ContainsKey(sessionId))
-            _sessions[sessionId].SaveGeneratedTaskSet(tasks);
-        else throw new ArgumentException("Invalid session Id " + sessionId);
     }
 
     public StateDTO GetState(Guid sessionId)
