@@ -9,9 +9,9 @@ public static class GameLogic
 {
     public static TestCaseResult RunTestCase(GameTask task, int index)
     {
-        var output = CodeCompiler.Instance().RunTask(task).Result;
+        var output = CodeCompiler.Instance().RunTask(task, index).Result;
         if (output.Error) return GenerateError(output);
-        var result = ValidateTestCase(task.SingleTestCase(index).Output, output.Results[index]);
+        var result = ValidateTestCase(task.SingleTestCase(index).Output, output.Results[0]);
         return result;
     }
 
