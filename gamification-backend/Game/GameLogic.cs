@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 using gamification_backend.DTO;
 using gamification_backend.Models;
 using gamification_backend.Service;
@@ -87,7 +88,7 @@ public static class GameLogic
         }
 
         const int maxLineLength = 20;
-        output = output.Replace("/tmp/Solutions/Solution0/", "");
+        output = Regex.Replace(output, @"/tmp/Solutions/Solution\d*(-\d*)*/", "");
         var lines = output.Split("\n");
         if (lines.Length <= maxLineLength)
             return output;
