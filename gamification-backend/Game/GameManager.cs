@@ -17,7 +17,7 @@ public class GameManager : IGameManager
 
     public void CreateSession(Guid id, EventHandler<TimerDepletedEventArgs> eventHandler)
     {
-        var session = new GameSession(id, 30, eventHandler);
+        var session = new GameSession(id, 600, eventHandler);
         _sessions.Add(id, session);
         Console.WriteLine("Creating new session with id {0}, total: {1}", id, _sessions.Count);
     }
