@@ -19,6 +19,8 @@ public static class StubGenerator
         {
             Language.Java => GenerateJava(codeTokens),
             Language.Csharp => GenerateCsharp(codeTokens),
+            Language.Typescript => GenerateTypescript(codeTokens),
+            Language.Javascript => GenerateJavascript(codeTokens),
             _ => ""
         };
     }
@@ -93,6 +95,7 @@ public static class StubGenerator
             "double" => Variable.Type.Double,
             "float" => Variable.Type.Float,
             "boolean" => Variable.Type.Boolean,
+
             _ => Variable.Type.Undefined
         };
     }
@@ -141,11 +144,7 @@ public static class StubGenerator
                 switch (variable.VariableType)
                 {
                     case Variable.Type.Integer:
-                        if (loop)
-                            sb.AppendLine($"var {variable.Name} = int.Parse(inputs[i]);");
-                        else
-                            sb.AppendLine($"var {variable.Name} = int.Parse(Console.ReadLine());");
-
+                        sb.AppendLine($"var {variable.Name} = int.Parse(Console.ReadLine());");
                         break;
                     case Variable.Type.Float:
                         if (loop)
@@ -155,32 +154,16 @@ public static class StubGenerator
 
                         break;
                     case Variable.Type.Double:
-                        if (loop)
-                            sb.AppendLine($"var {variable.Name} = double.Parse(inputs[i]);");
-                        else
-                            sb.AppendLine($"var {variable.Name} = double.Parse(Console.ReadLine());");
-
+                        sb.AppendLine($"var {variable.Name} = double.Parse(Console.ReadLine());");
                         break;
                     case Variable.Type.Long:
-                        if (loop)
-                            sb.AppendLine($"var {variable.Name} = long.Parse(inputs[i]);");
-                        else
-                            sb.AppendLine($"var {variable.Name} = long.Parse(Console.ReadLine());");
-
+                        sb.AppendLine($"var {variable.Name} = long.Parse(Console.ReadLine());");
                         break;
                     case Variable.Type.String:
-                        if (loop)
-                            sb.AppendLine($"var {variable.Name} = inputs[i];");
-                        else
-                            sb.AppendLine($"var {variable.Name} = Console.ReadLine();");
-
+                        sb.AppendLine($"var {variable.Name} = Console.ReadLine();");
                         break;
                     case Variable.Type.Boolean:
-                        if (loop)
-                            sb.AppendLine($"var {variable.Name} = Boolean.Parse(inputs[i])");
-                        else
-                            sb.AppendLine($"var {variable.Name} = Boolean.Parse(Console.ReadLine())");
-
+                        sb.AppendLine($"var {variable.Name} = Boolean.Parse(Console.ReadLine())");
                         break;
                     case Variable.Type.Undefined:
                         sb.AppendLine($"var {variable.Name} = input[i]");
@@ -191,8 +174,84 @@ public static class StubGenerator
 
                 break;
             case Language.Javascript:
+                switch (variable.VariableType)
+                {
+                    case Variable.Type.Integer:
+                        sb.AppendLine($"const {variable.Name} = parseInt(inputs[i]);");
+                        break;
+                    case Variable.Type.Float:
+                        sb.AppendLine($"const {variable.Name} = parseFloat(inputs[i]);");
+                        break;
+                    case Variable.Type.Double:
+                        sb.AppendLine($"const {variable.Name} = parseFloat(inputs[i]);");
+                        break;
+                    case Variable.Type.Long:
+                        sb.AppendLine($"const {variable.Name} = parseFloat(inputs[i]);");
+                        break;
+                    case Variable.Type.String:
+                        if (loop)
+                            sb.AppendLine($"const {variable.Name} = readline();");
+                        else
+                            sb.AppendLine($"const {variable.Name} = inputs[i];");
+                        break;
+                    case Variable.Type.Boolean:
+
+                        sb.AppendLine($"var {variable.Name} = Boolean.Parse(inputs[i])");
+                        break;
+                    case Variable.Type.Undefined:
+                        sb.AppendLine($"var {variable.Name} = input[i]");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
                 break;
             case Language.Typescript:
+                switch (variable.VariableType)
+                {
+                    case Variable.Type.Integer:
+                        if (loop)
+                            sb.AppendLine($"const {variable.Name}:number = readline();");
+                        else
+                            sb.AppendLine($"const {variable.Name}:number = parseInt(inputs[i]);");
+                        break;
+                    case Variable.Type.Float:
+                        if (loop)
+                            sb.AppendLine($"const {variable.Name}:number = readline();");
+                        else
+                            sb.AppendLine($"const {variable.Name}:number = parseFloat(inputs[i]);");
+                        break;
+                    case Variable.Type.Double:
+                        if (loop)
+                            sb.AppendLine($"const {variable.Name}:number = readline();");
+                        else
+                            sb.AppendLine($"const {variable.Name}:number = parseFloat(inputs[i]);");
+                        break;
+                    case Variable.Type.Long:
+                        if (loop)
+                            sb.AppendLine($"const {variable.Name}:number = readline();");
+                        else
+                            sb.AppendLine($"const {variable.Name}:number = parseFloat(inputs[i]);");
+                        break;
+                    case Variable.Type.String:
+                        if (loop)
+                            sb.AppendLine($"const {variable.Name}:string = readline();");
+                        else
+                            sb.AppendLine($"const {variable.Name}:string = inputs[i];");
+                        break;
+                    case Variable.Type.Boolean:
+                        if (loop)
+                            sb.AppendLine($"const {variable.Name}:boolean = readline();");
+                        else
+                            sb.AppendLine($"var {variable.Name}:boolean = Boolean.Parse(inputs[i])");
+                        break;
+                    case Variable.Type.Undefined:
+                        sb.AppendLine($"var {variable.Name} = input[i]");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
                 break;
             default:
                 throw new ArgumentOutOfRangeException(nameof(language), language, null);
@@ -219,16 +278,16 @@ public static class StubGenerator
             switch (token.Type)
             {
                 case CodeTokenType.Read:
-                    var read = (Read) token;
+                    var read = (Read)token;
                     sb.Append(GenerateVariable(read.Variable, Language.Java));
                     break;
                 case CodeTokenType.Write:
-                    var write = (Write) token;
+                    var write = (Write)token;
                     sb.AppendLine($"System.out.println(\"{write.Value}\");");
                     break;
                 case CodeTokenType.Loop:
                 case CodeTokenType.Loopline:
-                    var loop = (Loop) token;
+                    var loop = (Loop)token;
                     sb.Append($"for(int i = 0; i < {loop.Limit}; i++)");
                     sb.AppendLine(" {");
                     foreach (var loopVariable in loop.Variables)
@@ -236,7 +295,6 @@ public static class StubGenerator
                         sb.Append(Tabs(3));
                         sb.Append(GenerateVariable(loopVariable, Language.Java));
                     }
-
                     sb.Append(Tabs(2));
                     sb.AppendLine("}");
                     break;
@@ -244,10 +302,89 @@ public static class StubGenerator
                     throw new ArgumentOutOfRangeException();
             }
         }
-
         sb.Append(Tabs(1));
         sb.AppendLine("}");
         sb.AppendLine("}");
+        return sb.ToString();
+    }
+    private static string GenerateTypescript(List<CodeToken> codeTokens)
+    {
+        StringBuilder sb = new();
+        sb.AppendLine("var inputs = readline().split(' ');");
+
+        foreach (var token in codeTokens)
+        {
+            switch (token.Type)
+            {
+                case CodeTokenType.Read:
+                    var read = (Read)token;
+                    sb.Append(GenerateVariable(read.Variable, Language.Typescript));
+                    sb.AppendLine(" ");
+                    break;
+                case CodeTokenType.Write:
+                    var write = (Write)token;
+                    sb.AppendLine($"console.log(\"{write.Value}\");");
+                    break;
+                case CodeTokenType.Loop:
+                case CodeTokenType.Loopline:
+                    var loop = (Loop)token;
+                    sb.Append($"for(let i = 0; i < {loop.Limit} ; i++)");
+                    sb.AppendLine(" {");
+                    foreach (var loopVariable in loop.Variables)
+                    {
+                        sb.Append(Tabs(1));
+                        sb.Append(GenerateVariable(loopVariable, Language.Typescript));
+                    }
+
+
+                    sb.AppendLine("}");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        return sb.ToString();
+    }
+
+    private static string GenerateJavascript(List<CodeToken> codeTokens)
+    {
+        StringBuilder sb = new();
+        sb.AppendLine("var inputs = readline().split(' ');");
+
+
+        foreach (var token in codeTokens)
+        {
+            switch (token.Type)
+            {
+                case CodeTokenType.Read:
+                    var read = (Read)token;
+                    sb.Append(GenerateVariable(read.Variable, Language.Javascript));
+                    sb.AppendLine(" ");
+                    break;
+                case CodeTokenType.Write:
+                    var write = (Write)token;
+                    sb.AppendLine($"console.log(\"{write.Value}\");");
+                    break;
+                case CodeTokenType.Loop:
+                case CodeTokenType.Loopline:
+                    var loop = (Loop)token;
+                    sb.Append($"for(let i = 0; i < {loop.Limit} ; i++)");
+                    sb.AppendLine(" {");
+                    foreach (var loopVariable in loop.Variables)
+                    {
+                        sb.Append(Tabs(1));
+                        sb.Append(GenerateVariable(loopVariable, Language.Javascript));
+                    }
+
+
+                    sb.AppendLine("}");
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
         return sb.ToString();
     }
 
@@ -271,16 +408,16 @@ public static class StubGenerator
             switch (token.Type)
             {
                 case CodeTokenType.Read:
-                    var read = (Read) token;
+                    var read = (Read)token;
                     sb.Append(GenerateVariable(read.Variable, Language.Csharp));
                     break;
                 case CodeTokenType.Write:
-                    var write = (Write) token;
+                    var write = (Write)token;
                     sb.AppendLine($"Console.WriteLine(\"{write.Value}\");");
                     break;
                 case CodeTokenType.Loop:
                 case CodeTokenType.Loopline:
-                    var loop = (Loop) token;
+                    var loop = (Loop)token;
                     var inputs = inputsUsed ? "inputs" : "var inputs";
                     if (!inputsUsed)
                         inputsUsed = true;
