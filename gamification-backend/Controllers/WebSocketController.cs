@@ -23,7 +23,7 @@ public class WebSocketController : Controller
         }
     }
 
-    private void Echo(WebSocket webSocket)
+    private async void Echo(WebSocket webSocket)
     {
         var buffer = new byte[1024 * 4];
         var id = HttpContext.Session.GetInt32(GameController.SessionId);
@@ -46,16 +46,15 @@ public class WebSocketController : Controller
             {
                 //Getting state from the session
                 var time = GameManager.Instance().GetSessionTime(id.Value);
-                if (time == prevTime)
-                    continue;
+                if (time == prevTime) continue;
                 prevTime = time;
                 data = Message.CreateUpdate(time.ToString());
             }
 
             var json = JsonSerializer.Serialize(data);
-            var bytes = Encoding.UTF8.GetBytes(json);
+            buffer = Encoding.UTF8.GetBytes(json);
             var size = Encoding.UTF8.GetByteCount(json);
-            webSocket.SendAsync(new ArraySegment<byte>(bytes, 0, size),
+            await webSocket.SendAsync(new ArraySegment<byte>(buffer, 0, size),
                 WebSocketMessageType.Text,
                 true,
                 CancellationToken.None);

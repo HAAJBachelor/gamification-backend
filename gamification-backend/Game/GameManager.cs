@@ -10,6 +10,7 @@ public class GameManager : IGameManager
     private static GameManager? _instance;
     private readonly Dictionary<int, GameSession> _sessions;
     private int _idCounter;
+    private GameTask? _testTask;
 
     private GameManager()
     {
@@ -41,6 +42,13 @@ public class GameManager : IGameManager
     public TestCaseResult SubmitTestCase(int sessionId, string input, int id)
     {
         return _sessions[sessionId].SubmitTestCase(input, id);
+    }
+
+    public TestCaseResult SubmitTestTaskTestCase(string input, int index)
+    {
+        if (TestTask == null) throw new ArgumentException("Test task is not set");
+        TestTask.UserCode = input;
+        return GameLogic.RunTestCase(TestTask, index);
     }
 
     public void SaveTaskSet(int sessionId, List<GameTask> tasks)
@@ -76,9 +84,37 @@ public class GameManager : IGameManager
         return code;
     }
 
+    public string GetTestTaskStartCode(StubGenerator.Language language)
+    {
+        if (TestTask == null)
+            throw new ArgumentException("Test task is not set");
+        var code = StubService.GenerateCode(TestTask.StubCode, language);
+        TestTask.StartCode = code;
+        TestTask.Language = language.ToString().ToLower();
+        return code;
+    }
+
     public bool IsGameSessionActive(int id)
     {
         return _sessions[id].StateManager.IsRunning();
+    }
+
+    public GameTask? TestTask
+    {
+        get => _testTask;
+        set
+        {
+            if (_testTask is null)
+            {
+                _testTask = value;
+                return;
+            }
+
+            var lang = _testTask.Language;
+            _testTask = value;
+            if (lang != "")
+                _testTask.Language = lang;
+        }
     }
 
     public static GameManager Instance()

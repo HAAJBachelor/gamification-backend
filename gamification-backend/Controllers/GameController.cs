@@ -12,6 +12,7 @@ namespace gamification_backend.Controllers
     {
         private readonly ILogger<GameController> _logger;
         private readonly IGameService _service;
+        private string Active = "Active";
 
         public GameController(IGameService service, ILogger<GameController> logger)
         {
@@ -20,7 +21,6 @@ namespace gamification_backend.Controllers
         }
 
         public static string SessionId { get; } = "sessionId";
-        private string Active = "Active";
 
         // GET: /api/CreateSession/
         [HttpGet]
@@ -51,6 +51,13 @@ namespace gamification_backend.Controllers
             return _service.SubmitTestCase(GetSessionId(), input, index);
         }
 
+        //POST: /api/SubmitTestTaskTestCase/
+        [HttpPost]
+        public ActionResult<TestCaseResult> SubmitTestTaskTestCase([FromBody] string input, int index)
+        {
+            return _service.SubmitTestTaskTestCase(input, index);
+        }
+
         // GET: /api/SelectTask/
         [HttpGet]
         public ActionResult<GameTaskDTO> SelectTask(int taskId)
@@ -58,6 +65,13 @@ namespace gamification_backend.Controllers
             if (!Authorized()) return Unauthorized();
             _logger.LogInformation("Selecting task for session " + GetSessionId());
             return Ok(_service.SelectTask(GetSessionId(), taskId));
+        }
+
+        // GET: /api/SelectTaskForTesting/
+        [HttpGet]
+        public ActionResult<GameTaskDTO> SelectTaskForTesting(string taskId)
+        {
+            return Ok(_service.SelectTaskForTesting(taskId));
         }
 
         // GET: /api/GenerateTasks/
@@ -80,11 +94,14 @@ namespace gamification_backend.Controllers
 
         // GET: /api/GetStartCode/
         [HttpGet]
-        public ActionResult<string> GetStartCode(string language)
+        public ActionResult<string> GetStartCode(string language, bool test)
         {
-            if (!Authorized()) return Unauthorized();
             if (Enum.TryParse(language, true, out StubGenerator.Language lang))
             {
+                if (test) return Ok(_service.GetTestTaskStartCode(lang));
+
+                if (!Authorized()) return Unauthorized();
+
                 _logger.LogInformation("Getting startcode for session " + GetSessionId());
                 return Ok(_service.GetStartCode(GetSessionId(), lang));
             }
@@ -113,14 +130,14 @@ namespace gamification_backend.Controllers
 
         private int GetSessionId()
         {
-            return (int)HttpContext.Session.GetInt32(SessionId);
+            return (int) HttpContext.Session.GetInt32(SessionId);
         }
 
         private bool Authorized()
         {
             return !string.IsNullOrEmpty(HttpContext.Session.GetString(Active));
         }
-        
+
         private void EndSession()
         {
             _logger.LogInformation("Ending session with id: " + GetSessionId());

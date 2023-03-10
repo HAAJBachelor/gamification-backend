@@ -10,5 +10,6 @@ namespace gamification_backend.DAL
         public Task<List<GameTask>> GenerateTaskSet();
         public Task<bool> SaveSession(SessionRecord sessionRecord);
         void SaveUsername(int sessionId, string username);
+        GameTask SelectTaskForTesting(string taskId);
     }
 }
