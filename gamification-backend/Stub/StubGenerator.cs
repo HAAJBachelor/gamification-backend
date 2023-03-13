@@ -408,7 +408,7 @@ public static class StubGenerator
                     foreach (var loopVariable in loop.Variables)
                     {
                         sb.Append(Tabs(1));
-                        sb.Append(GenerateVariable(loopVariable, Language.Typescript));
+                        sb.Append(GenerateVariable(loopVariable, Language.Typescript, true));
                     }
 
                     sb.AppendLine("}");
@@ -556,7 +556,7 @@ public static class StubGenerator
                     foreach (var loopVariable in loop.Variables)
                     {
                         sb.Append(Tabs(1));
-                        sb.Append(GenerateVariable(loopVariable, Language.Python));
+                        sb.Append(GenerateVariable(loopVariable, Language.Python, true));
                     }
 
                     break;
