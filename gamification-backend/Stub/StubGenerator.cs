@@ -332,6 +332,7 @@ public static class StubGenerator
         sb.AppendLine("import java.io.*;");
         sb.AppendLine("import java.math.*;");
         sb.AppendLine("");
+        sb.AppendLine("//Koden under er for å hjelpe deg med å lese inn dataen fra oppgaven.");
         sb.AppendLine("public class Solution {");
         sb.Append(Tabs(1));
         sb.AppendLine("public static void main(String[] args){");
@@ -348,6 +349,9 @@ public static class StubGenerator
                     break;
                 case CodeTokenType.Write:
                     var write = (Write) token;
+                    sb.AppendLine("//Skriv ut ditt svar ved å bruke System.out.println()");
+                    sb.AppendLine("");
+                    sb.Append(Tabs(2));
                     sb.AppendLine($"System.out.println(\"{write.Value}\");");
                     break;
                 case CodeTokenType.Loop:
@@ -378,6 +382,8 @@ public static class StubGenerator
     private static string GenerateTypescript(List<CodeToken> codeTokens)
     {
         StringBuilder sb = new();
+        sb.AppendLine("//Koden under er for å hjelpe deg med å lese inn dataen fra oppgaven.");
+        sb.AppendLine("");
         sb.AppendLine("var inputs: string[] = readline().split(' ');");
 
         foreach (var token in codeTokens)
@@ -390,6 +396,8 @@ public static class StubGenerator
                     break;
                 case CodeTokenType.Write:
                     var write = (Write) token;
+                    sb.AppendLine("//Skriv ut ditt svar ved å bruke console.log()");
+                    sb.AppendLine("");
                     sb.Append($"console.log(\"{write.Value}\");");
                     break;
                 case CodeTokenType.Loop:
@@ -416,6 +424,8 @@ public static class StubGenerator
     private static string GenerateJavascript(List<CodeToken> codeTokens)
     {
         StringBuilder sb = new();
+        sb.AppendLine("//Koden under er for å hjelpe deg med å lese inn dataen fra oppgaven.");
+        sb.AppendLine("");
         sb.AppendLine("var inputs = readline().split(' ');");
         foreach (var token in codeTokens)
         {
@@ -427,6 +437,8 @@ public static class StubGenerator
                     break;
                 case CodeTokenType.Write:
                     var write = (Write) token;
+                    sb.AppendLine("//Skriv ut ditt svar ved å bruke console.log()");
+                    sb.AppendLine("");
                     sb.Append($"console.log(\"{write.Value}\");");
                     break;
                 case CodeTokenType.Loop:
@@ -461,6 +473,8 @@ public static class StubGenerator
         sb.AppendLine("using System.Collections;");
         sb.AppendLine("using System.Collections.Generic;");
         sb.AppendLine("");
+        sb.AppendLine("//Koden under er for å hjelpe deg med å lese inn dataen fra oppgaven.");
+        sb.AppendLine("");
         sb.AppendLine("class Solution {");
         sb.Append(Tabs(1));
         sb.AppendLine("static void Main(string[] args){");
@@ -476,6 +490,9 @@ public static class StubGenerator
                     break;
                 case CodeTokenType.Write:
                     var write = (Write) token;
+                    sb.AppendLine("//Skriv ut ditt svar ved å bruke Console.WriteLine()");
+                    sb.AppendLine("");
+                    sb.Append(Tabs(2));
                     sb.AppendLine($"Console.WriteLine(\"{write.Value}\");");
                     break;
                 case CodeTokenType.Loop:
@@ -514,6 +531,8 @@ public static class StubGenerator
     private static string GeneratePython(List<CodeToken> codeTokens)
     {
         StringBuilder sb = new();
+        sb.AppendLine("#Koden under er for å hjelpe deg med å lese inn dataen fra oppgaven.");
+        sb.AppendLine("");
         sb.AppendLine("inputs = input().split(' ')");
         foreach (var token in codeTokens)
         {
@@ -525,6 +544,8 @@ public static class StubGenerator
                     break;
                 case CodeTokenType.Write:
                     var write = (Write) token;
+                    sb.AppendLine("#Skriv ut ditt svar ved å bruke print()");
+                    sb.AppendLine("");
                     sb.Append($"print(\"{write.Value}\")");
                     break;
                 case CodeTokenType.Loop:
