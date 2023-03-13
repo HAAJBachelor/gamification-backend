@@ -10,7 +10,8 @@ public static class StubGenerator
         Csharp,
         Javascript,
         Typescript,
-        Python
+        Python,
+        None
     }
 
     public static string GenerateCode(Language language, StubParser parser)
