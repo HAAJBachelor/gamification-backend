@@ -75,7 +75,6 @@ public class GameSession : IGameSession
         return res;
     }
 
-
     public GameTask? GetCurrentTask()
     {
         return _currentTask;

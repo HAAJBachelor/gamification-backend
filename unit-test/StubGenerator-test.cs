@@ -32,30 +32,57 @@ public class UnitTest1
         _testOutputHelper.WriteLine(value);
     }
 
+    //typescript
+    [Fact]
+    public void Typescript()
+    {
+        var value = StubService.GenerateCode(
+            "read k:boolean\nloop 5 m:string\nread n:int\nloopline 4 s:string n:int\nwrite 2 2",
+            StubGenerator.Language.Typescript);
+        _testOutputHelper.WriteLine(value);
+    }
+
+    //javascript
+    [Fact]
+    public void Javascript()
+    {
+        var value = StubService.GenerateCode(
+            "read k:boolean\nloop 5 m:string\nread n:int\nloopline 4 s:string n:int\nwrite 2 2",
+            StubGenerator.Language.Javascript);
+        _testOutputHelper.WriteLine(value);
+    }
+
+    //Python
+    [Fact]
+    public void Python()
+    {
+        var value = StubService.GenerateCode(
+            "read k:boolean\nloop 5 m:string\nread n:int\nloopline 4 s:string n:int\nwrite 2 2",
+            StubGenerator.Language.Python);
+        _testOutputHelper.WriteLine(value);
+    }
+
     [Fact]
     public async Task Test()
     {
-        for (var i = 0; i < 100; i++)
+        var t = new TestCase
         {
-            var t = new TestCase
-            {
-                Input = "3",
-                Output = "3"
-            };
-            var tc = new List<TestCase>();
-            tc.Add(t);
-            var gt = new GameTask
-            {
-                Language = i % 2 == 0 ? "java" : "csharp",
-                UserCode = "class Solution{public static void main(String[] args){System.out.println(2);}}",
-                TestCases = tc,
-                SessionId = Guid.NewGuid()
-            };
-            var res = await CodeCompiler.Instance().RunTask(gt);
-            if (res.Error)
-                _testOutputHelper.WriteLine(res.Error_message);
-            else
-                _testOutputHelper.WriteLine(res.Results[0].Description);
-        }
+            Input = "3 2",
+            Output = "2"
+        };
+        var tc = new List<TestCase>();
+        tc.Add(t);
+        var gt = new GameTask
+        {
+            Language = "python",
+            UserCode = "print(input())",
+            TestCases = tc,
+            SessionId = 1
+        };
+        var res = await CodeCompiler.Instance().RunTask(gt);
+        if (res.Error)
+            _testOutputHelper.WriteLine(res.Error_message);
+        else
+            _testOutputHelper.WriteLine(res.Results[0].Description);
     }
 }
