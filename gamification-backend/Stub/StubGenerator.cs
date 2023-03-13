@@ -384,8 +384,7 @@ public static class StubGenerator
         StringBuilder sb = new();
         sb.AppendLine("//Koden under er for å hjelpe deg med å lese inn dataen fra oppgaven.");
         sb.AppendLine("");
-        sb.AppendLine("var inputs: string[] = readline().split(' ');");
-
+        var inputsUsed = false;
         foreach (var token in codeTokens)
         {
             switch (token.Type)
@@ -403,6 +402,10 @@ public static class StubGenerator
                 case CodeTokenType.Loop:
                 case CodeTokenType.Loopline:
                     var loop = (Loop) token;
+                    var inputs = inputsUsed ? "inputs" : "const inputs";
+                    if (!inputsUsed)
+                        inputsUsed = true;
+                    sb.AppendLine($"{inputs} : string[] = readline().split(' ');");
                     sb.Append($"for(let i = 0; i < {loop.Limit} ; i++)");
                     sb.AppendLine(" {");
                     foreach (var loopVariable in loop.Variables)
@@ -426,7 +429,8 @@ public static class StubGenerator
         StringBuilder sb = new();
         sb.AppendLine("//Koden under er for å hjelpe deg med å lese inn dataen fra oppgaven.");
         sb.AppendLine("");
-        sb.AppendLine("var inputs = readline().split(' ');");
+        var inputsUsed = false;
+
         foreach (var token in codeTokens)
         {
             switch (token.Type)
@@ -444,12 +448,16 @@ public static class StubGenerator
                 case CodeTokenType.Loop:
                 case CodeTokenType.Loopline:
                     var loop = (Loop) token;
+                    var inputs = inputsUsed ? "inputs" : "const inputs";
+                    if (!inputsUsed)
+                        inputsUsed = true;
+                    sb.AppendLine($"{inputs} = readline().split(' ');");
                     sb.Append($"for(let i = 0; i < {loop.Limit} ; i++)");
                     sb.AppendLine(" {");
                     foreach (var loopVariable in loop.Variables)
                     {
                         sb.Append(Tabs(1));
-                        sb.Append(GenerateVariable(loopVariable, Language.Javascript));
+                        sb.Append(GenerateVariable(loopVariable, Language.Javascript, true));
                     }
 
 
@@ -533,7 +541,6 @@ public static class StubGenerator
         StringBuilder sb = new();
         sb.AppendLine("#Koden under er for å hjelpe deg med å lese inn dataen fra oppgaven.");
         sb.AppendLine("");
-        sb.AppendLine("inputs = input().split(' ')");
         foreach (var token in codeTokens)
         {
             switch (token.Type)
@@ -551,6 +558,7 @@ public static class StubGenerator
                 case CodeTokenType.Loop:
                 case CodeTokenType.Loopline:
                     var loop = (Loop) token;
+                    sb.AppendLine("inputs = input().split(' ');");
                     sb.Append($"for i in range({loop.Limit})");
                     sb.AppendLine(":");
                     foreach (var loopVariable in loop.Variables)
