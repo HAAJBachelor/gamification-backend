@@ -10,58 +10,42 @@ public class WebSocketController : Controller
 {
     [Route("/ws")]
     [HttpGet]
-    public async Task Get()
+    public async Task InvokeAsync()
     {
         if (HttpContext.WebSockets.IsWebSocketRequest)
         {
-            using var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
-            Echo(webSocket);
+            var webSocket = await HttpContext.WebSockets.AcceptWebSocketAsync();
+            await SendNumbersAsync(webSocket);
         }
         else
         {
-            HttpContext.Response.StatusCode = StatusCodes.Status400BadRequest;
+            HttpContext.Response.StatusCode = 400;
         }
     }
 
-    private void Echo(WebSocket webSocket)
+    private async Task SendNumbersAsync(WebSocket webSocket)
     {
-        var buffer = new byte[1024 * 4];
-        var id = Guid.Parse(HttpContext.Session.GetString(GameController.SessionId));
-        if (id == Guid.Empty)
-        {
-            Console.WriteLine("Could not find session id");
-            return;
-        }
+        var cancellationToken = new CancellationToken();
+        var buffer = new byte[1024];
 
-        var prevTime = -1;
-        while (true)
+        while (webSocket.State == WebSocketState.Open)
         {
-            var running = GameManager.Instance().SessionIsRunning(id);
-            Message data;
-            if (!running)
-            {
-                data = Message.CreateStateChange("Game is not running");
-            }
-            else
-            {
-                //Getting state from the session
-                var time = GameManager.Instance().GetSessionTime(id);
-                if (time == prevTime)
-                    continue;
-                prevTime = time;
-                data = Message.CreateUpdate(time.ToString());
-            }
+            var number = GameManager.Instance()
+                .GetSessionTime(Guid.Parse(HttpContext.Session.GetString(GameController.SessionId)));
 
-            var json = JsonSerializer.Serialize(data);
-            var bytes = Encoding.UTF8.GetBytes(json);
+            var msg = Message.CreateUpdate(number.ToString());
+            var json = JsonSerializer.Serialize(msg);
+            buffer = Encoding.UTF8.GetBytes(json);
             var size = Encoding.UTF8.GetByteCount(json);
-            webSocket.SendAsync(new ArraySegment<byte>(bytes, 0, size),
-                WebSocketMessageType.Text,
-                true,
-                CancellationToken.None);
-        }
-    }
 
+            var message = new ArraySegment<byte>(buffer, 0, size);
+            await webSocket.SendAsync(message, WebSocketMessageType.Text, true, cancellationToken);
+
+            await Task.Delay(TimeSpan.FromSeconds(1));
+        }
+
+        await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "WebSocket closed", cancellationToken);
+    }
 
     private class Message
     {
