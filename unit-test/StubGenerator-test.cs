@@ -74,10 +74,10 @@ public class UnitTest1
         tc.Add(t);
         var gt = new GameTask
         {
-            Language = "python",
-            UserCode = "print(input())",
+            Language = "typescript",
+            UserCode = "console.print(readline())",
             TestCases = tc,
-            SessionId = 1
+            SessionId = Guid.NewGuid()
         };
         var res = await CodeCompiler.Instance().RunTask(gt);
         if (res.Error)

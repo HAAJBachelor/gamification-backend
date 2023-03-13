@@ -1,4 +1,6 @@
-﻿namespace gamification_backend.Models;
+﻿using gamification_backend.Stub;
+
+namespace gamification_backend.Models;
 
 /// <summary>
 ///     A task given to a user. Has a list of testcases.
@@ -43,6 +45,16 @@ public class GameTask
 
     public string Category { get; set; }
     public TaskRewards Rewards { get; set; }
+
+    public StubGenerator.Language LanguageAsEnum()
+    {
+        if (Enum.TryParse(Language, true, out StubGenerator.Language lang))
+        {
+            return lang;
+        }
+
+        return StubGenerator.Language.None;
+    }
 
     public void AddSingleTestCase(TestCase testCase)
     {
