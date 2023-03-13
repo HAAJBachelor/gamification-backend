@@ -9,7 +9,8 @@ public static class StubGenerator
         Java,
         Csharp,
         Javascript,
-        Typescript
+        Typescript,
+        Python
     }
 
     public static string GenerateCode(Language language, StubParser parser)
@@ -21,6 +22,7 @@ public static class StubGenerator
             Language.Csharp => GenerateCsharp(codeTokens),
             Language.Typescript => GenerateTypescript(codeTokens),
             Language.Javascript => GenerateJavascript(codeTokens),
+            Language.Python => GeneratePython(codeTokens),
             _ => ""
         };
     }
@@ -267,6 +269,54 @@ public static class StubGenerator
                 }
 
                 break;
+            case Language.Python:
+                switch (variable.VariableType)
+                {
+                    case Variable.Type.Integer:
+                        if (loop)
+                            sb.AppendLine($"{variable.Name} = int(inputs[i]);");
+                        else
+                            sb.AppendLine($"{variable.Name} = int(input());");
+                        break;
+                    case Variable.Type.Float:
+                        if (loop)
+                            sb.AppendLine($"{variable.Name} = float(inputs[i]);");
+                        else
+                            sb.AppendLine($"{variable.Name} = float(input());");
+                        break;
+                    case Variable.Type.Double:
+                        if (loop)
+                            sb.AppendLine($"{variable.Name} = float(inputs[i]);");
+                        else
+                            sb.AppendLine($"{variable.Name} = float(input());");
+                        break;
+                    case Variable.Type.Long:
+                        if (loop)
+                            sb.AppendLine($"{variable.Name} = int(inputs[i]);");
+                        else
+                            sb.AppendLine($"{variable.Name} = int(input());");
+                        break;
+                    case Variable.Type.String:
+                        if (loop)
+                            sb.AppendLine($"{variable.Name} = inputs[i];");
+                        else
+                            sb.AppendLine($"{variable.Name} = input();");
+                        break;
+                    case Variable.Type.Boolean:
+                        if (loop)
+                            sb.AppendLine($"{variable.Name} = bool(inputs[i]);");
+                        else
+                            sb.AppendLine($"{variable.Name} = bool(input())");
+                        break;
+                    case Variable.Type.Undefined:
+                        sb.AppendLine($"{variable.Name} = input[i]");
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+
+                break;
+
             default:
                 throw new ArgumentOutOfRangeException(nameof(language), language, null);
         }
@@ -456,6 +506,41 @@ public static class StubGenerator
         sb.Append(Tabs(1));
         sb.AppendLine("}");
         sb.AppendLine("}");
+        return sb.ToString();
+    }
+
+    //Generate python
+    private static string GeneratePython(List<CodeToken> codeTokens)
+    {
+        StringBuilder sb = new();
+        sb.AppendLine("inputs = input().split(' ')");
+        foreach (var token in codeTokens)
+        {
+            switch (token.Type)
+            {
+                case CodeTokenType.Read:
+                    var read = (Read) token;
+                    sb.Append(GenerateVariable(read.Variable, Language.Python));
+                    break;
+                case CodeTokenType.Write:
+                    var write = (Write) token;
+                    sb.Append($"print(\"{write.Value}\")");
+                    break;
+                case CodeTokenType.Loop:
+                case CodeTokenType.Loopline:
+                    var loop = (Loop) token;
+                    sb.Append($"for i in range({loop.Limit})");
+                    sb.AppendLine(":");
+                    foreach (var loopVariable in loop.Variables)
+                    {
+                        sb.Append(Tabs(1));
+                        sb.Append(GenerateVariable(loopVariable, Language.Python));
+                    }
+
+                    break;
+            }
+        }
+
         return sb.ToString();
     }
 
