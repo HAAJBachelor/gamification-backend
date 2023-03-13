@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using System.Text.RegularExpressions;
 using gamification_backend.DTO;
 using gamification_backend.Models;
 using gamification_backend.Service;
@@ -9,9 +10,9 @@ public static class GameLogic
 {
     public static TestCaseResult RunTestCase(GameTask task, int index)
     {
-        var output = CodeCompiler.Instance().RunTask(task).Result;
+        var output = CodeCompiler.Instance().RunTask(task, index).Result;
         if (output.Error) return GenerateError(output);
-        var result = ValidateTestCase(task.SingleTestCase(index).Output, output.Results[index]);
+        var result = ValidateTestCase(task.SingleTestCase(index).Output, output.Results[0]);
         return result;
     }
 
@@ -87,7 +88,7 @@ public static class GameLogic
         }
 
         const int maxLineLength = 20;
-        output = output.Replace("/tmp/Solutions/Solution0/", "");
+        output = Regex.Replace(output, @"/tmp/Solutions/Solution\d*(-\d*)*/", "");
         var lines = output.Split("\n");
         if (lines.Length <= maxLineLength)
             return output;

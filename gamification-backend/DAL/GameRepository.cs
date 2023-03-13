@@ -31,7 +31,7 @@ public class GameRepository : IGameRepository
         _client = new SanityClient(options);
         _db = db;
     }
-    
+
     public async Task<List<GameTask>> GenerateTaskSet()
     {
         var response = await _client.FetchAsync<List<Task>>("*[!(_id in path('drafts.**')) && _type == \"task\"]");
@@ -59,11 +59,21 @@ public class GameRepository : IGameRepository
         }
     }
 
-    public void SaveUsername(int sessionId, string username)
+    public void SaveUsername(Guid sessionId, string username)
     {
-        var record = _db.SessionRecords.Last(x=> x.SessionId == sessionId);
+        var record = _db.SessionRecords.First(x => x.SessionId.Equals(sessionId));
         record.Username = username;
         _db.SessionRecords.Update(record);
         _db.SaveChangesAsync();
+    }
+
+    public GameTask SelectTaskForTesting(string taskId)
+    {
+        var set = _sanity.DocumentSet<Task>();
+        var task = set.Get(taskId);
+        //FIXME: Find a better solution for this
+        if (task == null)
+            task = set.Get("drafts." + taskId);
+        return TaskMapper.FromSanityTaskToGameTask(task);
     }
 }

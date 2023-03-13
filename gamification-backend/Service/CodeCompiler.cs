@@ -29,6 +29,7 @@ public class CodeCompiler
     public async Task<CompilerResultsDTO> RunTask(GameTask task, int testcaseIndex = -1)
     {
         var payLoad = DTOMapper.FromGameTaskToCompilerTask(task, testcaseIndex);
+        Console.WriteLine(payLoad.Language);
         return await RunTaskImpl(payLoad);
     }
 

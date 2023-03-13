@@ -1,11 +1,10 @@
 using System.Reflection;
 using gamification_backend.DAL;
 using gamification_backend.DBData;
-using gamification_backend.Models;
 using gamification_backend.Service;
+using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
-using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -60,6 +59,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(MyAllowSpecificOrigins);
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
