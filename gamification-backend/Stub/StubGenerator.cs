@@ -177,26 +177,40 @@ public static class StubGenerator
                 switch (variable.VariableType)
                 {
                     case Variable.Type.Integer:
-                        sb.AppendLine($"const {variable.Name} = parseInt(inputs[i]);");
+                        if (loop)
+                            sb.AppendLine($"const {variable.Name} = parseInt(inputs[i]);");
+                        else
+                            sb.AppendLine($"const {variable.Name} = parseInt(readline());");
                         break;
                     case Variable.Type.Float:
-                        sb.AppendLine($"const {variable.Name} = parseFloat(inputs[i]);");
+                        if (loop)
+                            sb.AppendLine($"const {variable.Name} = parseFloat(inputs[i]);");
+                        else
+                            sb.AppendLine($"const {variable.Name} = parseFloat(readline());");
                         break;
                     case Variable.Type.Double:
-                        sb.AppendLine($"const {variable.Name} = parseFloat(inputs[i]);");
+                        if (loop)
+                            sb.AppendLine($"const {variable.Name} = parseFloat(inputs[i]);");
+                        else
+                            sb.AppendLine($"const {variable.Name} = parseFloat(readline());");
                         break;
                     case Variable.Type.Long:
-                        sb.AppendLine($"const {variable.Name} = parseFloat(inputs[i]);");
+                        if (loop)
+                            sb.AppendLine($"const {variable.Name} = parseFloat(inputs[i]);");
+                        else
+                            sb.AppendLine($"const {variable.Name} = parseFloat(readline());");
                         break;
                     case Variable.Type.String:
                         if (loop)
-                            sb.AppendLine($"const {variable.Name} = readline();");
-                        else
                             sb.AppendLine($"const {variable.Name} = inputs[i];");
+                        else
+                            sb.AppendLine($"const {variable.Name} = readline();");
                         break;
                     case Variable.Type.Boolean:
-
-                        sb.AppendLine($"var {variable.Name} = Boolean.Parse(inputs[i])");
+                        if (loop)
+                            sb.AppendLine($"var {variable.Name} = input[i] == 'true';");
+                        else
+                            sb.AppendLine($"const {variable.Name} = readline() == 'true';");
                         break;
                     case Variable.Type.Undefined:
                         sb.AppendLine($"var {variable.Name} = input[i]");
@@ -211,42 +225,42 @@ public static class StubGenerator
                 {
                     case Variable.Type.Integer:
                         if (loop)
-                            sb.AppendLine($"const {variable.Name}: number = parseInt(readline());");
-                        else
                             sb.AppendLine($"const {variable.Name}: number = parseInt(inputs[i]);");
+                        else
+                            sb.AppendLine($"const {variable.Name}: number = parseInt(readline());");
                         break;
                     case Variable.Type.Float:
                         if (loop)
-                            sb.AppendLine($"const {variable.Name}: number = parseFloat;");
-                        else
                             sb.AppendLine($"const {variable.Name}: number = parseFloat(inputs[i]);");
+                        else
+                            sb.AppendLine($"const {variable.Name}: number = parseFloat(readline());");
                         break;
                     case Variable.Type.Double:
                         if (loop)
-                            sb.AppendLine($"const {variable.Name}: number = parseFloat(readline());");
-                        else
                             sb.AppendLine($"const {variable.Name}: number = parseFloat(inputs[i]);");
+                        else
+                            sb.AppendLine($"const {variable.Name}: number = parseFloat(readline());");
                         break;
                     case Variable.Type.Long:
                         if (loop)
-                            sb.AppendLine($"const {variable.Name}: number = parseInt(readline());");
-                        else
                             sb.AppendLine($"const {variable.Name}: number = parseInt(inputs[i]);");
+                        else
+                            sb.AppendLine($"const {variable.Name}: number = parseInt(readline());");
                         break;
                     case Variable.Type.String:
                         if (loop)
-                            sb.AppendLine($"const {variable.Name}: string = readline();");
-                        else
                             sb.AppendLine($"const {variable.Name}: string = inputs[i];");
+                        else
+                            sb.AppendLine($"const {variable.Name}: string = readline();");
                         break;
                     case Variable.Type.Boolean:
                         if (loop)
-                            sb.AppendLine($"const {variable.Name}: boolean = readline() == 'true';");
+                            sb.AppendLine($"var {variable.Name}: boolean = input[i] == 'true';");
                         else
-                            sb.AppendLine($"var {variable.Name}: boolean = input[i]() == 'true';");
+                            sb.AppendLine($"const {variable.Name}: boolean = readline() == 'true';");
                         break;
                     case Variable.Type.Undefined:
-                        sb.AppendLine($"var {variable.Name} = input[i]");
+                        sb.AppendLine($"var {variable.Name}: any = input[i]");
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -322,11 +336,10 @@ public static class StubGenerator
                 case CodeTokenType.Read:
                     var read = (Read) token;
                     sb.Append(GenerateVariable(read.Variable, Language.Typescript));
-                    sb.AppendLine(" ");
                     break;
                 case CodeTokenType.Write:
                     var write = (Write) token;
-                    sb.AppendLine($"console.log(\"{write.Value}\");");
+                    sb.Append($"console.log(\"{write.Value}\");");
                     break;
                 case CodeTokenType.Loop:
                 case CodeTokenType.Loopline:
@@ -338,7 +351,6 @@ public static class StubGenerator
                         sb.Append(Tabs(1));
                         sb.Append(GenerateVariable(loopVariable, Language.Typescript));
                     }
-
 
                     sb.AppendLine("}");
                     break;
@@ -361,11 +373,10 @@ public static class StubGenerator
                 case CodeTokenType.Read:
                     var read = (Read) token;
                     sb.Append(GenerateVariable(read.Variable, Language.Javascript));
-                    sb.AppendLine(" ");
                     break;
                 case CodeTokenType.Write:
                     var write = (Write) token;
-                    sb.AppendLine($"console.log(\"{write.Value}\");");
+                    sb.Append($"console.log(\"{write.Value}\");");
                     break;
                 case CodeTokenType.Loop:
                 case CodeTokenType.Loopline:
