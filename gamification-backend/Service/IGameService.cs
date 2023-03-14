@@ -18,4 +18,5 @@ public interface IGameService
     GameTaskDTO SelectTaskForTesting(string taskId);
     void SaveUsername(Guid sessionId, string username);
     bool IsGameSessionActive(Guid sessionId);
+    public void EndSession(Guid sessionId);
 }
