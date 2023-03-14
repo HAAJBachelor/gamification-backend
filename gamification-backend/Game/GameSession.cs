@@ -85,7 +85,7 @@ public class GameSession : IGameSession
         StateManager.EndSession();
         var state = GetState();
         var record = new SessionRecord();
-        var elapsed = args.StartTime - args.Seconds;
+        var elapsed = args.StartTime - args.Seconds - 1;
         record.Time = elapsed;
         record.Score = state._points;
         record.SessionId = _id;
