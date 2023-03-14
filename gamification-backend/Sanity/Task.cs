@@ -8,7 +8,7 @@ public class Task : SanityDocument
     {
     }
 
-    public string Name { get; set; }
+    public string Title { get; set; }
     public string Description { get; set; }
     public string InputDescription { get; set; }
     public string OutputDescription { get; set; }
