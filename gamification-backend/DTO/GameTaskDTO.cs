@@ -15,4 +15,5 @@ public class GameTaskDTO
     public List<TestCase> TestCases { get; set; }
     public TaskRewards Rewards { get; set; }
     public string Difficulty { get; set; }
+    public string[] Category { get; set; }
 }
