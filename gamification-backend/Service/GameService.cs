@@ -86,6 +86,11 @@ public class GameService : IGameService
         return taskDTO;
     }
 
+    public void EndSession(Guid sessionId)
+    {
+        _manager.RemoveSession(sessionId);
+    }
+
     //public delegate void EventHandler(object? source, TimerDepletedEventArgs args);
     public event EventHandler<TimerDepletedEventArgs> SaveSessionEventHandler;
 
