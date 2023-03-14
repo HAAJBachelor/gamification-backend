@@ -66,7 +66,8 @@ namespace gamification_backend.Controllers
         {
             if (!Authorized()) return Unauthorized();
             _logger.LogInformation("Selecting task for session " + GetSessionId());
-            return Ok(_service.SelectTask(GetSessionId(), taskId));
+            var task = _service.SelectTask(GetSessionId(), taskId);
+            return Ok(task);
         }
 
         // GET: /api/SelectTaskForTesting/
@@ -82,7 +83,8 @@ namespace gamification_backend.Controllers
         {
             if (!Authorized()) return Unauthorized();
             _logger.LogInformation("Generating taskset for session " + GetSessionId());
-            return Ok(_service.GenerateTaskSet(GetSessionId()));
+            var tasks = _service.GenerateTaskSet(GetSessionId());
+            return Ok(tasks);
         }
 
         // GET: /api/GetState/

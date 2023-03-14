@@ -20,7 +20,16 @@ public class Task : SanityDocument
 
     public string Difficulty { get; set; }
 
-    public string Category { get; set; }
+    public Category[] Category { get; set; }
+}
+
+public class Category : SanityDocument
+{
+    public Category() : base()
+    {
+    }
+
+    public string Name { get; set; }
 }
 
 public class Case : SanityDocument

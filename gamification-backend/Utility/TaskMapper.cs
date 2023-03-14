@@ -22,7 +22,7 @@ public static class TaskMapper
                 .Select(taskTestCase => new TestCase(taskTestCase.ValidatorInput, taskTestCase.ValidatorOutput))
                 .ToList(),
             StubCode = task.Stub,
-            Category = task.Category,
+            Category = task.Category.Select(category => category.Name).ToArray(),
             Difficulty = task.Difficulty,
             Rewards = new TaskRewards
             {
