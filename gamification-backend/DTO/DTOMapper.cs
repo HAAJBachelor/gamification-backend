@@ -8,6 +8,7 @@ public static class DTOMapper
     {
         GameTaskDTO dto = new()
         {
+            Title = gameTask.Title,
             Description = gameTask.Description,
             InputDescription = gameTask.InputDescription,
             OutputDescription = gameTask.OutputDescription,
@@ -38,7 +39,7 @@ public static class DTOMapper
                 UserCode = gameTask.UserCode
             };
         List<TestCase>? singleCase = null;
-        if (testcaseIndex != -1) singleCase = new List<TestCase>(1) {gameTask.SingleTestCase(testcaseIndex)};
+        if (testcaseIndex != -1) singleCase = new List<TestCase>(1) { gameTask.SingleTestCase(testcaseIndex) };
 
         return new CompilerTaskDTO
         {

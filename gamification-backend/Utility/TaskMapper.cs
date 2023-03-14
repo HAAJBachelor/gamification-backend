@@ -10,6 +10,7 @@ public static class TaskMapper
         var gt = new GameTask
         {
             TaskId = 0,
+            Title = task.Name,
             Description = task.Description,
             InputDescription = task.InputDescription,
             OutputDescription = task.OutputDescription,

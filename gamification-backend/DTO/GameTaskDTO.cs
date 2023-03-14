@@ -7,6 +7,7 @@ public class GameTaskDTO
     private readonly TaskRewards _rewards;
 
     public int TaskId { get; set; }
+    public string Title { get; set; }
     public string Description { get; set; }
     public string InputDescription { get; set; }
     public string OutputDescription { get; set; }
