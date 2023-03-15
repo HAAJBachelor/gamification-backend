@@ -27,7 +27,7 @@ public class GameTask
     public string? Id { get; set; }
 
     public int TaskId { get; set; }
-
+    public string Title { get; set; }
     public Guid SessionId { get; set; }
     public string Language { get; set; }
     public string Description { get; set; }
@@ -43,7 +43,7 @@ public class GameTask
     public List<TestCase> ValidatorCases { get; set; }
     public string Difficulty { get; set; }
 
-    public string Category { get; set; }
+    public string[] Category { get; set; }
     public TaskRewards Rewards { get; set; }
 
     public StubGenerator.Language LanguageAsEnum()

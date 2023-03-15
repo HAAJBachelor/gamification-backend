@@ -8,7 +8,7 @@ public class Task : SanityDocument
     {
     }
 
-    public string Name { get; set; }
+    public string Title { get; set; }
     public string Description { get; set; }
     public string InputDescription { get; set; }
     public string OutputDescription { get; set; }
@@ -20,7 +20,16 @@ public class Task : SanityDocument
 
     public string Difficulty { get; set; }
 
-    public string Category { get; set; }
+    public Category[] Category { get; set; }
+}
+
+public class Category : SanityDocument
+{
+    public Category() : base()
+    {
+    }
+
+    public string Name { get; set; }
 }
 
 public class Case : SanityDocument

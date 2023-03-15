@@ -10,6 +10,7 @@ public static class TaskMapper
         var gt = new GameTask
         {
             TaskId = 0,
+            Title = task.Title,
             Description = task.Description,
             InputDescription = task.InputDescription,
             OutputDescription = task.OutputDescription,
@@ -21,7 +22,7 @@ public static class TaskMapper
                 .Select(taskTestCase => new TestCase(taskTestCase.ValidatorInput, taskTestCase.ValidatorOutput))
                 .ToList(),
             StubCode = task.Stub,
-            Category = task.Category,
+            Category = task.Category.Select(category => category.Name).ToArray(),
             Difficulty = task.Difficulty,
             Rewards = new TaskRewards
             {
