@@ -402,7 +402,7 @@ public static class StubGenerator
                 case CodeTokenType.Loop:
                 case CodeTokenType.Loopline:
                     var loop = (Loop) token;
-                    var inputs = inputsUsed ? "inputs" : "const inputs";
+                    var inputs = inputsUsed ? "inputs" : "let inputs";
                     if (!inputsUsed)
                         inputsUsed = true;
                     sb.AppendLine($"{inputs} : string[] = readline().split(' ');");
@@ -448,7 +448,7 @@ public static class StubGenerator
                 case CodeTokenType.Loop:
                 case CodeTokenType.Loopline:
                     var loop = (Loop) token;
-                    var inputs = inputsUsed ? "inputs" : "const inputs";
+                    var inputs = inputsUsed ? "inputs" : "let inputs";
                     if (!inputsUsed)
                         inputsUsed = true;
                     sb.AppendLine($"{inputs} = readline().split(' ');");
