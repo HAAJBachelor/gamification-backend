@@ -42,6 +42,8 @@ public class WebSocketController : Controller
             await webSocket.SendAsync(message, WebSocketMessageType.Text, true, cancellationToken);
 
             await Task.Delay(TimeSpan.FromSeconds(1));
+            if (number <= 0)
+                break;
         }
 
         await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "WebSocket closed", cancellationToken);
