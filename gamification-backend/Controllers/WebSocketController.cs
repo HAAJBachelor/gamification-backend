@@ -32,8 +32,8 @@ public class WebSocketController : Controller
         {
             var number = GameManager.Instance()
                 .GetSessionTime(Guid.Parse(HttpContext.Session.GetString(GameController.SessionId)));
-
-            var msg = Message.CreateUpdate(number.ToString());
+            Message msg;
+            msg = number <= 0 ? Message.CreateStateChange("Finished") : Message.CreateUpdate(number.ToString());
             var json = JsonSerializer.Serialize(msg);
             buffer = Encoding.UTF8.GetBytes(json);
             var size = Encoding.UTF8.GetByteCount(json);
@@ -42,6 +42,8 @@ public class WebSocketController : Controller
             await webSocket.SendAsync(message, WebSocketMessageType.Text, true, cancellationToken);
 
             await Task.Delay(TimeSpan.FromSeconds(1));
+            if (number <= 0)
+                break;
         }
 
         await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "WebSocket closed", cancellationToken);
