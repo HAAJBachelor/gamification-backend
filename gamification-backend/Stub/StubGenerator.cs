@@ -289,37 +289,37 @@ public static class StubGenerator
                 {
                     case Variable.Type.Integer:
                         if (loop)
-                            sb.AppendLine($"{variable.Name} = int(inputs[i]);");
+                            sb.AppendLine($"{variable.Name} = int(inputs[i])");
                         else
-                            sb.AppendLine($"{variable.Name} = int(input());");
+                            sb.AppendLine($"{variable.Name} = int(input())");
                         break;
                     case Variable.Type.Float:
                         if (loop)
-                            sb.AppendLine($"{variable.Name} = float(inputs[i]);");
+                            sb.AppendLine($"{variable.Name} = float(inputs[i])");
                         else
-                            sb.AppendLine($"{variable.Name} = float(input());");
+                            sb.AppendLine($"{variable.Name} = float(input())");
                         break;
                     case Variable.Type.Double:
                         if (loop)
-                            sb.AppendLine($"{variable.Name} = float(inputs[i]);");
+                            sb.AppendLine($"{variable.Name} = float(inputs[i])");
                         else
-                            sb.AppendLine($"{variable.Name} = float(input());");
+                            sb.AppendLine($"{variable.Name} = float(input())");
                         break;
                     case Variable.Type.Long:
                         if (loop)
-                            sb.AppendLine($"{variable.Name} = int(inputs[i]);");
+                            sb.AppendLine($"{variable.Name} = int(inputs[i])");
                         else
-                            sb.AppendLine($"{variable.Name} = int(input());");
+                            sb.AppendLine($"{variable.Name} = int(input())");
                         break;
                     case Variable.Type.String:
                         if (loop)
-                            sb.AppendLine($"{variable.Name} = inputs[i];");
+                            sb.AppendLine($"{variable.Name} = inputs[i]");
                         else
-                            sb.AppendLine($"{variable.Name} = input();");
+                            sb.AppendLine($"{variable.Name} = input()");
                         break;
                     case Variable.Type.Boolean:
                         if (loop)
-                            sb.AppendLine($"{variable.Name} = bool(inputs[i]);");
+                            sb.AppendLine($"{variable.Name} = bool(inputs[i])");
                         else
                             sb.AppendLine($"{variable.Name} = bool(input())");
                         break;
@@ -572,7 +572,7 @@ public static class StubGenerator
                 case CodeTokenType.Loop:
                 case CodeTokenType.Loopline:
                     var loop = (Loop) token;
-                    sb.AppendLine("inputs = input().split(' ');");
+                    sb.AppendLine("inputs = input().split(' ')");
                     sb.Append($"for i in range({loop.Limit})");
                     sb.AppendLine(":");
                     foreach (var loopVariable in loop.Variables)
