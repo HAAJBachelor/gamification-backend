@@ -23,7 +23,7 @@ public static class GameLogic
         {
             Success = false,
             Error = true,
-            Description = FormatOutput(output.Error_message, language)
+            Description = FormatOutput(output.Error_message, language, true)
         };
     }
 
@@ -43,7 +43,7 @@ public static class GameLogic
     {
         if (result.Error)
         {
-            result.Description = FormatOutput(result.Description, language);
+            result.Description = FormatOutput(result.Description, language, true);
             return result;
         }
 
@@ -58,28 +58,31 @@ public static class GameLogic
         var lines = result.Description.Split("\n");
         var expectedLines = expected.Split("\n");
         var builder = new StringBuilder();
-        for (var i = 0; i < expected.Length; i++)
+        foreach (var line in lines) builder.AppendLine($"> {line}");
+
+        var formattedOuput = FormatOutput(builder.ToString(), language);
+        var errorMessage = "";
+        for (var i = 0; i < expectedLines.Length; i++)
         {
             if (i == lines.Length)
             {
-                builder.AppendLine($"Wrong answer on line {i + 1}: Missing output, expected {expectedLines[i]}");
+                errorMessage = $"Wrong answer on line {i + 1}: Missing output, expected {expectedLines[i]}";
                 break;
             }
 
-            builder.AppendLine($"> {lines[i]}");
             if (lines[i] != expectedLines[i])
             {
-                builder.AppendLine($"Wrong answer on line {i + 1}: You got {lines[i]}, expected {expectedLines[i]}");
+                errorMessage = $"Wrong answer on line {i + 1}: You got {lines[i]}, expected {expectedLines[i]}";
                 break;
             }
         }
 
-        Console.WriteLine(builder.ToString());
-        result.Description = builder.ToString();
+        result.Description = $"{formattedOuput}\n{errorMessage}";
         return result;
     }
 
-    private static string FormatOutput(string output, StubGenerator.Language language = StubGenerator.Language.None)
+    private static string FormatOutput(string output, StubGenerator.Language language = StubGenerator.Language.None,
+        bool error = false)
     {
         const string internalTimeoutMessage = "timelimit: sending warning signal 15";
         const string clientTimeoutMessage = "Timeout! Execution timed out after 3 seconds.\n Make your code faster :)";
@@ -90,31 +93,34 @@ public static class GameLogic
         }
 
         const int maxLineLength = 20;
-        output = Regex.Replace(output, @"/tmp/Solutions/Solution\d*(-\d*)*/", "");
-        if (language == StubGenerator.Language.Javascript)
+        if (error)
         {
-            var parts = output.Split("\n");
-            var firstLine = parts[0].Split(":");
-            var lineNumber = int.Parse(firstLine[1]);
-            lineNumber--;
-            var correctLine = firstLine[0] + ":" + lineNumber;
-            var b = new StringBuilder();
-            b.AppendLine(correctLine);
-            for (var i = 1; i < parts.Length; i++) b.AppendLine(parts[i]);
-            output = b.ToString();
-        }
-        else if (language == StubGenerator.Language.Typescript)
-        {
-            //extract string from output with this regex: Solution\.ts\(\d+,\d+\)
-            var regex = new Regex(@"Solution\.ts\(\d+");
-            var match = regex.Match(output);
-            if (match.Success)
+            output = Regex.Replace(output, @"/tmp/Solutions/Solution\d*(-\d*)*/", "");
+            if (language == StubGenerator.Language.Javascript)
             {
-                var parts = match.Value.Split("(");
-                var lineNumber = int.Parse(parts[1]);
+                var parts = output.Split("\n");
+                var firstLine = parts[0].Split(":");
+                var lineNumber = int.Parse(firstLine[1]);
                 lineNumber--;
-                var correctLine = $"Solution.ts({lineNumber}";
-                output = Regex.Replace(output, regex.ToString(), correctLine);
+                var correctLine = firstLine[0] + ":" + lineNumber;
+                var b = new StringBuilder();
+                b.AppendLine(correctLine);
+                for (var i = 1; i < parts.Length; i++) b.AppendLine(parts[i]);
+                output = b.ToString();
+            }
+            else if (language == StubGenerator.Language.Typescript)
+            {
+                //extract string from output with this regex: Solution\.ts\(\d+,\d+\)
+                var regex = new Regex(@"Solution\.ts\(\d+");
+                var match = regex.Match(output);
+                if (match.Success)
+                {
+                    var parts = match.Value.Split("(");
+                    var lineNumber = int.Parse(parts[1]);
+                    lineNumber--;
+                    var correctLine = $"Solution.ts({lineNumber}";
+                    output = Regex.Replace(output, regex.ToString(), correctLine);
+                }
             }
         }
 
