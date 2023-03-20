@@ -19,4 +19,5 @@ public interface IController
 
     public ActionResult<bool> IsGameSessionActive();
     public ActionResult<GameTaskDTO> SelectTaskForTesting(string taskId);
+    public ActionResult<List<SessionRecord>> GetLeaderboard();
 }
