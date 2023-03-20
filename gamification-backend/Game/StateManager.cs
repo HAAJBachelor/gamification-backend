@@ -20,7 +20,7 @@ public class StateManager : IStateManager
 
     public StateManager(int seconds, EventHandler<EventArgsFromTimer> handler)
     {
-        _timer = new Timer(seconds, handler);
+        _timer = new Timer(this, seconds, handler);
         _points = 0;
         _lives = 3; // Example amount
     }
@@ -50,7 +50,7 @@ public class StateManager : IStateManager
 
     public void StartSession()
     {
-        _runningState = RunningState.TaskSelect;
+        SetInTaskSelect();
     }
 
     public void SetInTask()

@@ -7,12 +7,14 @@ namespace gamification_backend.Game;
 /// </summary>
 public class Timer : ITimer
 {
+    private readonly StateManager _manager;
     private bool _count;
 
-    public Timer(int seconds, EventHandler<EventArgsFromTimer> handler)
+    public Timer(StateManager manager, int seconds, EventHandler<EventArgsFromTimer> handler)
     {
         Seconds = seconds;
         _count = false;
+        _manager = manager;
         Counter(handler);
     }
 
@@ -25,28 +27,15 @@ public class Timer : ITimer
         Seconds += seconds;
     }
 
-    public void Start()
-    {
-        _count = true;
-    }
-
-    public void Pause()
-    {
-        _count = false;
-    }
-
     private async void Counter(EventHandler<EventArgsFromTimer> handler)
     {
         var timer = new PeriodicTimer(TimeSpan.FromSeconds(1));
-        Start();
         while (await timer.WaitForNextTickAsync())
         {
-            if (!_count) continue;
+            if (_manager.InTaskSelect()) continue;
             Seconds--;
             Elapsed++;
             if (Seconds >= 0) continue;
-            Pause();
-
             handler.Invoke(this, new EventArgsFromTimer(Elapsed));
         }
     }
