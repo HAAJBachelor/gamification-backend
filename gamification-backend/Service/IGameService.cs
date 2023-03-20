@@ -20,4 +20,5 @@ public interface IGameService
     bool IsGameSessionActive(Guid sessionId);
     public void EndSession(Guid sessionId);
     GameTask? GetSelectedTask(Guid getSessionId);
+    public List<SessionRecord> GetLeaderboard();
 }

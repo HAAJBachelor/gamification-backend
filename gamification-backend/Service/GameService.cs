@@ -96,6 +96,11 @@ public class GameService : IGameService
         return _manager.GetSelectedTask(getSessionId);
     }
 
+    public List<SessionRecord> GetLeaderboard()
+    {
+        return _repo.GetLeaderboard();
+    }
+
     //public delegate void EventHandler(object? source, TimerDepletedEventArgs args);
     public event EventHandler<TimerDepletedEventArgs> SaveSessionEventHandler;
 

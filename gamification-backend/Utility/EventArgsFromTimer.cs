@@ -2,12 +2,10 @@
 
 public class EventArgsFromTimer
 {
-    public EventArgsFromTimer(int seconds, int startTime)
+    public EventArgsFromTimer(int elapsed)
     {
-        Seconds = seconds;
-        StartTime = startTime;
+        Elapsed = elapsed;
     }
 
-    public int Seconds { get; set; }
-    public int StartTime { get; set; }
+    public int Elapsed { get; set; }
 }

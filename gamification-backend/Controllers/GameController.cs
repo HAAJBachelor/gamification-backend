@@ -92,6 +92,11 @@ namespace gamification_backend.Controllers
             return Ok(_service.SelectTaskForTesting(taskId));
         }
 
+        public ActionResult<List<SessionRecord>> GetLeaderboard()
+        {
+            return Ok(_service.GetLeaderboard());
+        }
+
         // GET: /api/GenerateTasks/
         [HttpGet]
         public ActionResult<List<GameTaskDTO>> GenerateTasks()

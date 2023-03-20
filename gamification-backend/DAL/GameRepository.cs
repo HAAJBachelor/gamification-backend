@@ -76,4 +76,9 @@ public class GameRepository : IGameRepository
             task = set.Get("drafts." + taskId);
         return TaskMapper.FromSanityTaskToGameTask(task);
     }
+
+    public List<SessionRecord> GetLeaderboard()
+    {
+        return new List<SessionRecord>(_db.SessionRecords.OrderByDescending(s => s.Score).Take(10));
+    }
 }
