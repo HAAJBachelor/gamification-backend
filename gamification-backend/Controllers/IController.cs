@@ -13,6 +13,7 @@ public interface IController
     public ActionResult<TestCaseResult> SubmitTestTaskTestCase(string input, int index);
     public ActionResult<GameTaskDTO> SelectTask(int taskId);
     public ActionResult<List<GameTaskDTO>> GenerateTasks();
+    public ActionResult<GameTaskDTO> GetSelectedTask();
     public ActionResult<StateDTO> GetState();
     public ActionResult<string> GetStartCode(string language, bool test);
 

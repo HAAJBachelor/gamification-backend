@@ -19,4 +19,5 @@ public interface IGameManager
     public string GetStartCode(Guid sessionId, StubGenerator.Language language);
     bool IsGameSessionActive(Guid id);
     string GetTestTaskStartCode(StubGenerator.Language language);
+    GameTask? GetSelectedTask(Guid getSessionId);
 }

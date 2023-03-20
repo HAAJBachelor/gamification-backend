@@ -19,4 +19,5 @@ public interface IGameService
     void SaveUsername(Guid sessionId, string username);
     bool IsGameSessionActive(Guid sessionId);
     public void EndSession(Guid sessionId);
+    GameTask? GetSelectedTask(Guid getSessionId);
 }

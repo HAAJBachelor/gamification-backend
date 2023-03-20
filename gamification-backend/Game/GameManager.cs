@@ -116,6 +116,11 @@ public class GameManager : IGameManager
         }
     }
 
+    public GameTask? GetSelectedTask(Guid getSessionId)
+    {
+        return _sessions[getSessionId].GetCurrentTask();
+    }
+
     public static GameManager Instance()
     {
         return _instance ??= new GameManager();
