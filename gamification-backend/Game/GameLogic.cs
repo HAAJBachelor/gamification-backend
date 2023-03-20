@@ -35,9 +35,18 @@ public static class GameLogic
             .Select((t, i) =>
                 ValidateTestCase(task.ValidatorCases[i].Output, t))
             .ToList();
+        var error = testCaseResults.All(testCaseResult => testCaseResult.Error);
+        //NOTE: This is a hack to get the compiler error message for non-compiled languages
+        if (error)
+        {
+            outputs.Error = true;
+            outputs.Error_message = testCaseResults[0].Description ?? string.Empty;
+        }
+
         if (outputs.Error)
         {
-            return new TaskResult(testCaseResults, false, outputs.Error, outputs.Error_message);
+            return new TaskResult(new List<TestCaseResult>(), false, outputs.Error,
+                FormatOutput(outputs.Error_message, task.LanguageAsEnum(), true));
         }
 
         var success = testCaseResults.All(testCaseResult => testCaseResult.Success);
@@ -101,7 +110,7 @@ public static class GameLogic
         const int maxLineLength = 20;
         if (error)
         {
-            output = Regex.Replace(output, @"/tmp/Solutions/Solution\d*(-\d*)*/", "");
+            output = Regex.Replace(output, @"\/tmp\/Solutions\/Solution[\w\d-]+\/", "");
             if (language == StubGenerator.Language.Javascript)
             {
                 var parts = output.Split("\n");
