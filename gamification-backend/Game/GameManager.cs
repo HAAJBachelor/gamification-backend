@@ -8,6 +8,7 @@ namespace gamification_backend.Game;
 public class GameManager : IGameManager
 {
     private static GameManager? _instance;
+    private readonly Dictionary<Guid, GameSession> _sessions;
     private int _idCounter;
     private GameTask? _testTask;
 
