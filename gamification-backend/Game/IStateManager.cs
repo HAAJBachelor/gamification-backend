@@ -9,17 +9,17 @@ public interface IStateManager
 
     public int GetTime();
 
-    public void EndSession();
+    public void EndGame();
 
-    public void PauseSession();
+    public void SetInTaskSelect();
 
-    public void ResumeSession();
+    public void SetInTask();
 
     public void StartSession();
 
-    public bool IsRunning();
+    public bool InTask();
 
-    public bool IsPaused();
+    public bool InTaskSelect();
 
     public bool IsEnded();
 }

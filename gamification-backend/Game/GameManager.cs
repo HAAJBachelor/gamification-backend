@@ -10,7 +10,6 @@ public class GameManager : IGameManager
     private static GameManager? _instance;
     private int _idCounter;
     private GameTask? _testTask;
-    private readonly Dictionary<Guid, GameSession> _sessions;
 
     private GameManager()
     {
@@ -49,7 +48,7 @@ public class GameManager : IGameManager
             _sessions[sessionId].SaveGeneratedTaskSet(tasks);
         else throw new ArgumentException("Invalid session Id " + sessionId);
     }
-    
+
     public TestCaseResult SubmitTestTaskTestCase(string input, int index)
     {
         if (TestTask == null) throw new ArgumentException("Test task is not set");
@@ -92,10 +91,10 @@ public class GameManager : IGameManager
         _testTask.Language = language.ToString().ToLower();
         return code;
     }
-    
+
     public bool IsGameSessionActive(Guid id)
     {
-        return _sessions[id].StateManager.IsRunning();
+        return !_sessions[id].StateManager.IsEnded();
     }
 
     public GameTask? TestTask
@@ -129,7 +128,7 @@ public class GameManager : IGameManager
     public bool SessionIsRunning(Guid id)
     {
         var session = _sessions[id];
-        return session.StateManager.IsRunning();
+        return session.StateManager.InTask();
     }
 
     public int GetSessionTime(Guid id)

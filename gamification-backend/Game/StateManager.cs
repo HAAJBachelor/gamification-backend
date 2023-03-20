@@ -7,9 +7,9 @@ public class StateManager : IStateManager
 {
     public enum RunningState
     {
-        Running,
-        Paused,
-        Ended
+        InTask,
+        TaskSelect,
+        GameEnded
     }
 
     private readonly Timer _timer;
@@ -38,39 +38,39 @@ public class StateManager : IStateManager
         return new StateDTO(_points, _lives, _runningState);
     }
 
-    public void EndSession()
+    public void EndGame()
     {
-        _runningState = RunningState.Ended;
+        _runningState = RunningState.GameEnded;
     }
 
-    public void PauseSession()
+    public void SetInTaskSelect()
     {
-        _runningState = RunningState.Paused;
+        _runningState = RunningState.TaskSelect;
     }
 
     public void StartSession()
     {
-        _runningState = RunningState.Running;
+        _runningState = RunningState.TaskSelect;
     }
 
-    public void ResumeSession()
+    public void SetInTask()
     {
-        _runningState = RunningState.Running;
+        _runningState = RunningState.InTask;
     }
 
-    public bool IsRunning()
+    public bool InTask()
     {
-        return _runningState == RunningState.Running;
+        return _runningState == RunningState.InTask;
     }
 
-    public bool IsPaused()
+    public bool InTaskSelect()
     {
-        return _runningState == RunningState.Paused;
+        return _runningState == RunningState.TaskSelect;
     }
 
     public bool IsEnded()
     {
-        return _runningState == RunningState.Ended;
+        return _runningState == RunningState.GameEnded;
     }
 
     public int GetTime()
