@@ -11,14 +11,13 @@ public class Timer : ITimer
 
     public Timer(int seconds, EventHandler<EventArgsFromTimer> handler)
     {
-        StartTime = seconds;
-        Seconds = StartTime;
+        Seconds = seconds;
         _count = false;
         Counter(handler);
     }
 
     public int Seconds { get; set; }
-    public int StartTime { get; set; }
+    public int Elapsed { get; set; }
 
     public void AddTime(int seconds)
     {
@@ -44,10 +43,11 @@ public class Timer : ITimer
         {
             if (!_count) continue;
             Seconds--;
+            Elapsed++;
             if (Seconds >= 0) continue;
             Pause();
 
-            handler.Invoke(this, new EventArgsFromTimer(Seconds, StartTime));
+            handler.Invoke(this, new EventArgsFromTimer(Elapsed));
         }
     }
 }
