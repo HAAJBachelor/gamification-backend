@@ -35,8 +35,8 @@ public class Timer : ITimer
             if (_manager.InTaskSelect()) continue;
             Seconds--;
             Elapsed++;
-            if (Seconds >= 0) continue;
-            handler.Invoke(this, new EventArgsFromTimer(Elapsed));
+            if (Seconds < 0) handler.Invoke(this, new EventArgsFromTimer(Elapsed));
+            if (_manager.IsEnded()) break;
         }
     }
 }
