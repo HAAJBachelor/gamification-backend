@@ -30,10 +30,16 @@ public static class GameLogic
     public static TaskResult Submit(GameTask task)
     {
         var outputs = CodeCompiler.Instance().RunTaskValidators(task).Result;
+
         var testCaseResults = outputs.Results
             .Select((t, i) =>
                 ValidateTestCase(task.ValidatorCases[i].Output, t))
             .ToList();
+        if (outputs.Error)
+        {
+            return new TaskResult(testCaseResults, false, outputs.Error, outputs.Error_message);
+        }
+
         var success = testCaseResults.All(testCaseResult => testCaseResult.Success);
         return new TaskResult(testCaseResults, success, outputs.Error);
     }

@@ -28,7 +28,7 @@ public class GameSession : IGameSession
 
     public GameTask StartNewTask(int id)
     {
-        if (_taskSetToSelectFrom is not { Count: 3 })
+        if (_taskSetToSelectFrom is not {Count: 3})
         {
             throw new Exception(
                 $"Error in GameSession.StartNewTask(), expected 3 tasks got {_taskSetToSelectFrom.Count}");
@@ -37,6 +37,7 @@ public class GameSession : IGameSession
         _currentTask = _taskSetToSelectFrom[id];
         _currentTask.StartCode = StubService.GenerateCode(_currentTask.StubCode, StubGenerator.Language.Java);
         _taskSetToSelectFrom.Clear();
+        StateManager.SetInTask();
         return _currentTask;
     }
 
@@ -56,7 +57,7 @@ public class GameSession : IGameSession
 
         var rewards = _currentTask.Rewards;
         StateManager.UpdateState(rewards.Lives, rewards.Time, rewards.Points);
-
+        StateManager.SetInTaskSelect();
         return res;
     }
 
@@ -82,7 +83,7 @@ public class GameSession : IGameSession
 
     private void EndSession(object? sender, EventArgsFromTimer args)
     {
-        StateManager.EndSession();
+        StateManager.EndGame();
         var state = GetState();
         var record = new SessionRecord();
         var elapsed = args.Elapsed - 1;

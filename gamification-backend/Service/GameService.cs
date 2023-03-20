@@ -91,6 +91,11 @@ public class GameService : IGameService
         _manager.RemoveSession(sessionId);
     }
 
+    public GameTask GetSelectedTask(Guid getSessionId)
+    {
+        return _manager.GetSelectedTask(getSessionId);
+    }
+
     //public delegate void EventHandler(object? source, TimerDepletedEventArgs args);
     public event EventHandler<TimerDepletedEventArgs> SaveSessionEventHandler;
 

@@ -69,6 +69,22 @@ namespace gamification_backend.Controllers
             return Ok(task);
         }
 
+        //GET: /api/GetSelectedTask
+        [HttpGet]
+        public ActionResult<GameTaskDTO> GetSelectedTask()
+        {
+            if (!Authorized()) return Unauthorized();
+            _logger.LogInformation("Getting selected task for session " + GetSessionId());
+            var task = _service.GetSelectedTask(GetSessionId());
+            if (task == null)
+            {
+                _logger.LogInformation("The state says we're in a task, but no task is selected");
+                return NotFound("No task is selected");
+            }
+
+            return Ok(task);
+        }
+
         // GET: /api/SelectTaskForTesting/
         [HttpGet]
         public ActionResult<GameTaskDTO> SelectTaskForTesting(string taskId)
