@@ -43,9 +43,28 @@ public class GameService : IGameService
 
     public List<GameTaskDTO> GenerateTaskSet(Guid sessionId)
     {
-        var tasks = _gameRepository.GenerateTaskSet();
-        _manager.SaveTaskSet(sessionId, tasks.Result);
-        return DTOMapper.GameTaskMapper(tasks.Result);
+        var finishedTasks = _manager.FinishedTasks(sessionId);
+        var sanityTask = _gameRepository.GenerateTaskSet().Result;
+        var filteredTasks = sanityTask.Where(t => !finishedTasks.Contains(t._id)).ToList();
+        var tasks = new List<GameTask>();
+        var rnd = new Random();
+        var randomIndexes = Enumerable.Range(0, filteredTasks.Count).OrderBy(x => rnd.Next()).ToArray();
+        tasks.AddRange(randomIndexes
+            .Select(index => TaskMapper.FromSanityTaskToGameTask(filteredTasks[index]))
+            .Where(t => !finishedTasks.Contains(t.Id))
+            .Take(3));
+        if (tasks.Count < 3)
+        {
+            randomIndexes = Enumerable.Range(0, filteredTasks.Count).OrderBy(x => rnd.Next()).ToArray();
+            var i = 0;
+            while (tasks.Count < 3)
+            {
+                tasks.Add(TaskMapper.FromSanityTaskToGameTask(sanityTask[randomIndexes[i--]]));
+            }
+        }
+
+        _manager.SaveTaskSet(sessionId, tasks);
+        return DTOMapper.GameTaskMapper(tasks);
     }
 
     public GameTaskDTO SelectTask(Guid sessionId, int taskId)

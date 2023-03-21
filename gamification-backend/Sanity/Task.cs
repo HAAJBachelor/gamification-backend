@@ -8,6 +8,7 @@ public class Task : SanityDocument
     {
     }
 
+    public string _id { get; set; }
     public string Title { get; set; }
     public string Description { get; set; }
     public string InputDescription { get; set; }
@@ -21,6 +22,8 @@ public class Task : SanityDocument
     public string Difficulty { get; set; }
 
     public Category[] Category { get; set; }
+
+    public int Points { get; set; }
 }
 
 public class Category : SanityDocument

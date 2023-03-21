@@ -29,16 +29,11 @@ public class GameRepository : IGameRepository
         _client = new SanityClient(options);
     }
 
-    public async Task<List<GameTask>> GenerateTaskSet()
+    public async Task<List<Task>> GenerateTaskSet()
     {
         var response = await _client.FetchAsync<List<Task>>("*[!(_id in path('drafts.**')) && _type == \"task\"]");
         var taskList = response.Result;
-        var tasks = new List<GameTask>();
-        Console.WriteLine($"Fetched {taskList.Count} tasks from sanity");
-        var rnd = new Random();
-        var randomIndexes = Enumerable.Range(0, taskList.Count).OrderBy(x => rnd.Next()).Take(3).ToArray();
-        tasks.AddRange(randomIndexes.Select(index => TaskMapper.FromSanityTaskToGameTask(taskList[index])));
-        return tasks;
+        return taskList;
     }
 
     public GameTask SelectTaskForTesting(string taskId)

@@ -24,7 +24,7 @@ public class GameTask
         TestCases = new List<TestCase>();
     }
 
-    public string? Id { get; set; }
+    public string Id { get; set; }
 
     public int TaskId { get; set; }
     public string Title { get; set; }

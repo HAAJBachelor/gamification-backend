@@ -21,4 +21,6 @@ public interface IGameManager
     string GetTestTaskStartCode(StubGenerator.Language language);
     GameTask? GetSelectedTask(Guid getSessionId);
     public void CancelSession(Guid sessionId);
+
+    public List<string> FinishedTasks(Guid id);
 }

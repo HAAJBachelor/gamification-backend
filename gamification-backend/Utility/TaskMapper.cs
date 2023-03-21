@@ -9,7 +9,7 @@ public static class TaskMapper
     {
         var gt = new GameTask
         {
-            TaskId = 0,
+            Id = task._id,
             Title = task.Title,
             Description = task.Description,
             InputDescription = task.InputDescription,
@@ -27,7 +27,7 @@ public static class TaskMapper
             Rewards = new TaskRewards
             {
                 Lives = task.Rewards.Where(reward => reward.Type == "lives").Sum(r => r.Amount),
-                Points = task.Rewards.Where(reward => reward.Type == "points").Sum(r => r.Amount),
+                Points = task.Points,
                 Time = task.Rewards.Where(reward => reward.Type == "time").Sum(r => r.Amount),
             }
         };

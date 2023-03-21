@@ -8,13 +8,13 @@ namespace gamification_backend.Game;
 public class GameManager : IGameManager
 {
     private static GameManager? _instance;
-    private readonly Dictionary<Guid, GameSession> _sessions;
+    private readonly Dictionary<Guid, IGameSession> _sessions;
     private int _idCounter;
     private GameTask? _testTask;
 
     private GameManager()
     {
-        _sessions = new Dictionary<Guid, GameSession>();
+        _sessions = new Dictionary<Guid, IGameSession>();
     }
 
     public void CreateSession(Guid id, EventHandler<TimerDepletedEventArgs> eventHandler)
@@ -125,6 +125,11 @@ public class GameManager : IGameManager
     {
         _sessions[sessionId].Cancel();
         RemoveSession(sessionId);
+    }
+
+    public List<string> FinishedTasks(Guid id)
+    {
+        return _sessions[id].FinishedTasks();
     }
 
     public static GameManager Instance()

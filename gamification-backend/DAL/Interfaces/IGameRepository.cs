@@ -1,4 +1,5 @@
 ﻿using gamification_backend.Models;
+using Task = gamification_backend.Sanity.Task;
 
 namespace gamification_backend.DAL
 {
@@ -7,7 +8,7 @@ namespace gamification_backend.DAL
         // Interface for GameRepository
         // All methods in GameRepository must be added here.
 
-        public Task<List<GameTask>> GenerateTaskSet();
+        public Task<List<Task>> GenerateTaskSet();
         GameTask SelectTaskForTesting(string taskId);
     }
 }

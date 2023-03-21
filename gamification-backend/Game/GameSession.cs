@@ -13,6 +13,7 @@ public class GameSession : IGameSession
     private readonly Guid _id;
     private readonly EventHandler<TimerDepletedEventArgs> _myEvent;
     private GameTask? _currentTask;
+    private List<string> _finishedTasks = new();
     private List<GameTask>? _taskSetToSelectFrom;
 
     public GameSession(Guid id, int startTime, EventHandler<TimerDepletedEventArgs> eventHandler)
@@ -28,7 +29,7 @@ public class GameSession : IGameSession
 
     public GameTask StartNewTask(int id)
     {
-        if (_taskSetToSelectFrom is not { Count: 3 })
+        if (_taskSetToSelectFrom is not {Count: 3})
         {
             throw new Exception(
                 $"Error in GameSession.StartNewTask(), expected 3 tasks got {_taskSetToSelectFrom.Count}");
@@ -54,7 +55,7 @@ public class GameSession : IGameSession
         var res = GameLogic.Submit(_currentTask);
 
         if (!res.Success) return res;
-
+        _finishedTasks.Add(_currentTask.Id);
         var rewards = _currentTask.Rewards;
         StateManager.UpdateState(rewards.Lives, rewards.Time, rewards.Points);
         StateManager.SetInTaskSelect();
@@ -65,8 +66,6 @@ public class GameSession : IGameSession
     {
         return StateManager.GetState();
     }
-
-    public event EventHandler<EventArgsFromTimer> _timerEvent;
 
     public TestCaseResult SubmitTestCase(string input, int index)
     {
@@ -81,6 +80,18 @@ public class GameSession : IGameSession
         return _currentTask;
     }
 
+    public List<string> FinishedTasks()
+    {
+        return _finishedTasks;
+    }
+
+    public void Cancel()
+    {
+        StateManager.EndGame();
+    }
+
+    public event EventHandler<EventArgsFromTimer> _timerEvent;
+
     private void EndSession(object? sender, EventArgsFromTimer args)
     {
         StateManager.EndGame();
@@ -93,10 +104,5 @@ public class GameSession : IGameSession
         record.Username = "Anonym";
         Console.WriteLine("Session expired");
         _myEvent.Invoke(this, new TimerDepletedEventArgs(record));
-    }
-
-    public void Cancel()
-    {
-        StateManager.EndGame();
     }
 }
