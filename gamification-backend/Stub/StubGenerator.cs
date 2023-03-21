@@ -378,6 +378,12 @@ public static class StubGenerator
                     break;
                 case CodeTokenType.Loop:
                 {
+                    sb.AppendLine("if (in.hasNextLine()) {");
+                    sb.Append(Tabs(3));
+                    sb.AppendLine("in.nextLine();");
+                    sb.Append(Tabs(2));
+                    sb.AppendLine("}");
+                    sb.Append(Tabs(2));
                     var loop = (Loop) token;
                     sb.Append($"for(int i = 0; i < {loop.Limit}; i++)");
                     sb.AppendLine(" {");
