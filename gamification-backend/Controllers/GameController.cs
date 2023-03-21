@@ -26,7 +26,7 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<string> CreateSession()
         {
-            if (Authorized()) _service.EndSession(GetSessionId());
+            if (Authorized()) _service.CancelSession(GetSessionId());
             HttpContext.Session.SetString(Active, "Active");
             HttpContext.Session.SetString(SessionId, GenKey());
             _service.CreateSession(GetSessionId());
@@ -92,6 +92,7 @@ namespace gamification_backend.Controllers
             return Ok(_service.SelectTaskForTesting(taskId));
         }
 
+        [HttpGet]
         public ActionResult<List<SessionRecord>> GetLeaderboard()
         {
             return Ok(_service.GetLeaderboard());

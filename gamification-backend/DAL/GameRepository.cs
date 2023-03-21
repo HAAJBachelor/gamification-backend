@@ -1,5 +1,4 @@
-﻿using gamification_backend.DBData;
-using gamification_backend.Models;
+﻿using gamification_backend.Models;
 using gamification_backend.Utility;
 using Sanity.Linq;
 using Task = gamification_backend.Sanity.Task;
@@ -9,11 +8,10 @@ namespace gamification_backend.DAL;
 public class GameRepository : IGameRepository
 {
     private readonly SanityClient _client;
-    private readonly ApplicationDbContext _db;
     private readonly SanityDataContext _sanity;
 
 
-    public GameRepository(IConfiguration configuration, ApplicationDbContext db)
+    public GameRepository(IConfiguration configuration)
     {
         if (_sanity != null)
             return;
@@ -29,7 +27,6 @@ public class GameRepository : IGameRepository
         };
         _sanity = new SanityDataContext(options);
         _client = new SanityClient(options);
-        _db = db;
     }
 
     public async Task<List<GameTask>> GenerateTaskSet()
@@ -44,29 +41,6 @@ public class GameRepository : IGameRepository
         return tasks;
     }
 
-    public async Task<bool> SaveSession(SessionRecord sessionRecord)
-    {
-        try
-        {
-            _db.SessionRecords.Add(sessionRecord);
-            await _db.SaveChangesAsync();
-            return true;
-        }
-        catch (Exception e)
-        {
-            Console.WriteLine(e);
-            return false;
-        }
-    }
-
-    public void SaveUsername(Guid sessionId, string username)
-    {
-        var record = _db.SessionRecords.First(x => x.SessionId.Equals(sessionId));
-        record.Username = username;
-        _db.SessionRecords.Update(record);
-        _db.SaveChangesAsync();
-    }
-
     public GameTask SelectTaskForTesting(string taskId)
     {
         var set = _sanity.DocumentSet<Task>();
@@ -75,10 +49,5 @@ public class GameRepository : IGameRepository
         if (task == null)
             task = set.Get("drafts." + taskId);
         return TaskMapper.FromSanityTaskToGameTask(task);
-    }
-
-    public List<SessionRecord> GetLeaderboard()
-    {
-        return new List<SessionRecord>(_db.SessionRecords.OrderByDescending(s => s.Score).Take(10));
     }
 }

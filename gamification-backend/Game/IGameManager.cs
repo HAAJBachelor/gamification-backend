@@ -20,4 +20,5 @@ public interface IGameManager
     bool IsGameSessionActive(Guid id);
     string GetTestTaskStartCode(StubGenerator.Language language);
     GameTask? GetSelectedTask(Guid getSessionId);
+    public void CancelSession(Guid sessionId);
 }
