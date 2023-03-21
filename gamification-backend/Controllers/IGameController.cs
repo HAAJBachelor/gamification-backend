@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace gamification_backend.Controllers;
 
-public interface IController
+public interface IGameController
 {
     public ActionResult<string> CreateSession();
     public ActionResult<TaskResult> SubmitTask(string input);

@@ -8,7 +8,7 @@ namespace gamification_backend.Controllers
 {
     [Route("api/[action]")]
     [ApiController]
-    public class GameController : Controller, IController
+    public class GameController : Controller, IGameController
     {
         private readonly ILogger<GameController> _logger;
         private readonly IGameService _service;
