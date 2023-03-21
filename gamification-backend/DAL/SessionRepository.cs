@@ -1,4 +1,5 @@
 ﻿using gamification_backend.DBData;
+using gamification_backend.DTO;
 using gamification_backend.Models;
 using Microsoft.EntityFrameworkCore;
 
@@ -36,9 +37,11 @@ public class SessionRepository : ISessionRepository
         _db.SaveChangesAsync();
     }
 
-    public async Task<List<SessionRecord>> GetLeaderboard()
+    public async Task<List<SessionRecordDTO>> GetLeaderboard()
     {
         var leaderboard = await _db.SessionRecords.OrderByDescending(s => s.Score).Take(10).ToListAsync();
-        return leaderboard;
+        var leaderboardDTO = leaderboard.Select(a => new SessionRecordDTO
+            { Score = a.Score, Time = a.Time, Username = a.Username }).ToList();
+        return leaderboardDTO;
     }
 }

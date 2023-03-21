@@ -20,6 +20,6 @@ public interface IGameService
     bool IsGameSessionActive(Guid sessionId);
     public void EndSession(Guid sessionId);
     GameTask? GetSelectedTask(Guid getSessionId);
-    public List<SessionRecord> GetLeaderboard();
+    public List<SessionRecordDTO> GetLeaderboard();
     public void CancelSession(Guid sessionId);
 }

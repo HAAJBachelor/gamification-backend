@@ -93,7 +93,7 @@ namespace gamification_backend.Controllers
         }
 
         [HttpGet]
-        public ActionResult<List<SessionRecord>> GetLeaderboard()
+        public ActionResult<List<SessionRecordDTO>> GetLeaderboard()
         {
             return Ok(_service.GetLeaderboard());
         }

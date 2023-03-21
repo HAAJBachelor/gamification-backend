@@ -98,7 +98,7 @@ public class GameService : IGameService
         return _manager.GetSelectedTask(getSessionId);
     }
 
-    public List<SessionRecord> GetLeaderboard()
+    public List<SessionRecordDTO> GetLeaderboard()
     {
         return _sessionRepository.GetLeaderboard().Result;
     }

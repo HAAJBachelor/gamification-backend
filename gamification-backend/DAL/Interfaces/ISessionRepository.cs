@@ -1,4 +1,5 @@
-﻿using gamification_backend.Models;
+﻿using gamification_backend.DTO;
+using gamification_backend.Models;
 
 namespace gamification_backend.DAL;
 
@@ -9,5 +10,5 @@ public interface ISessionRepository
 
     public Task<bool> SaveSession(SessionRecord sessionRecord);
     public void SaveUsername(Guid sessionId, string username);
-    public Task<List<SessionRecord>> GetLeaderboard();
+    public Task<List<SessionRecordDTO>> GetLeaderboard();
 }
