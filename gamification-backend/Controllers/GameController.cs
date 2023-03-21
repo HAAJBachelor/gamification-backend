@@ -92,6 +92,7 @@ namespace gamification_backend.Controllers
             return Ok(_service.SelectTaskForTesting(taskId));
         }
 
+        [HttpGet]
         public ActionResult<List<SessionRecord>> GetLeaderboard()
         {
             return Ok(_service.GetLeaderboard());

@@ -24,6 +24,7 @@ public class Program
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
         builder.Services.AddScoped<IGameRepository, GameRepository>();
+        builder.Services.AddScoped<ISessionRepository, SessionRepository>();
         builder.Services.AddScoped<IGameService, GameService>();
         builder.Services.AddDistributedMemoryCache();
         builder.Services.AddSession(options =>

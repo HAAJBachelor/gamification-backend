@@ -9,13 +9,15 @@ namespace gamification_backend.Service;
 
 public class GameService : IGameService
 {
+    private readonly IGameRepository _gameRepository;
     private readonly IGameManager _manager;
-    private readonly IGameRepository _repo;
+    private readonly ISessionRepository _sessionRepository;
 
-    public GameService(IGameRepository repo)
+    public GameService(IGameRepository repo, ISessionRepository sessionRepository)
     {
         _manager = GameManager.Instance();
-        _repo = repo;
+        _gameRepository = repo;
+        _sessionRepository = sessionRepository;
     }
 
     public void CreateSession(Guid id)
@@ -41,7 +43,7 @@ public class GameService : IGameService
 
     public List<GameTaskDTO> GenerateTaskSet(Guid sessionId)
     {
-        var tasks = _repo.GenerateTaskSet();
+        var tasks = _gameRepository.GenerateTaskSet();
         _manager.SaveTaskSet(sessionId, tasks.Result);
         return DTOMapper.GameTaskMapper(tasks.Result);
     }
@@ -69,7 +71,7 @@ public class GameService : IGameService
 
     public void SaveUsername(Guid sessionId, string username)
     {
-        _repo.SaveUsername(sessionId, username);
+        _sessionRepository.SaveUsername(sessionId, username);
     }
 
     public bool IsGameSessionActive(Guid sessionId)
@@ -79,7 +81,7 @@ public class GameService : IGameService
 
     public GameTaskDTO SelectTaskForTesting(string taskId)
     {
-        var gameTask = _repo.SelectTaskForTesting(taskId);
+        var gameTask = _gameRepository.SelectTaskForTesting(taskId);
         _manager.TestTask = gameTask;
         var taskDTO = DTOMapper.GameTaskMapper(gameTask);
         gameTask.ValidatorCases.ForEach(t => taskDTO.TestCases.Add(t));
@@ -98,7 +100,7 @@ public class GameService : IGameService
 
     public List<SessionRecord> GetLeaderboard()
     {
-        return _repo.GetLeaderboard();
+        return _sessionRepository.GetLeaderboard().Result;
     }
 
     public void CancelSession(Guid sessionId)
@@ -112,6 +114,6 @@ public class GameService : IGameService
     private void SaveSession(object? source, TimerDepletedEventArgs args)
     {
         _manager.RemoveSession(args.record.SessionId);
-        _repo.SaveSession(args.record);
+        _sessionRepository.SaveSession(args.record);
     }
 }

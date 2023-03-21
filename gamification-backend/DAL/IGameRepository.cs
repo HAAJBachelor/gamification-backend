@@ -8,9 +8,6 @@ namespace gamification_backend.DAL
         // All methods in GameRepository must be added here.
 
         public Task<List<GameTask>> GenerateTaskSet();
-        public Task<bool> SaveSession(SessionRecord sessionRecord);
-        void SaveUsername(Guid sessionId, string username);
         GameTask SelectTaskForTesting(string taskId);
-        List<SessionRecord> GetLeaderboard();
     }
 }
