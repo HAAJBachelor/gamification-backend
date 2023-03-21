@@ -101,6 +101,11 @@ public class GameService : IGameService
         return _repo.GetLeaderboard();
     }
 
+    public void CancelSession(Guid sessionId)
+    {
+        _manager.CancelSession(sessionId);
+    }
+
     //public delegate void EventHandler(object? source, TimerDepletedEventArgs args);
     public event EventHandler<TimerDepletedEventArgs> SaveSessionEventHandler;
 

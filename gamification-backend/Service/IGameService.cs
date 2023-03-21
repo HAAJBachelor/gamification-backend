@@ -21,4 +21,5 @@ public interface IGameService
     public void EndSession(Guid sessionId);
     GameTask? GetSelectedTask(Guid getSessionId);
     public List<SessionRecord> GetLeaderboard();
+    public void CancelSession(Guid sessionId);
 }

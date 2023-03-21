@@ -121,6 +121,12 @@ public class GameManager : IGameManager
         return _sessions[getSessionId].GetCurrentTask();
     }
 
+    public void CancelSession(Guid sessionId)
+    {
+        _sessions[sessionId].Cancel();
+        RemoveSession(sessionId);
+    }
+
     public static GameManager Instance()
     {
         return _instance ??= new GameManager();
