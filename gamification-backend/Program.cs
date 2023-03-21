@@ -6,70 +6,79 @@ using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data source=myDb.db"),
-    ServiceLifetime.Singleton);
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddScoped<IGameRepository, GameRepository>();
-builder.Services.AddScoped<IGameService, GameService>();
-builder.Services.AddDistributedMemoryCache();
-builder.Services.AddSession(options =>
+public class Program
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(20);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-    options.Cookie.MaxAge = TimeSpan.FromMinutes(120);
-});
+    public static int StartTime { get; private set; }
 
-var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+    public static void Main(string[] args)
+    {
+        StartTime = 600;
+        var builder = WebApplication.CreateBuilder(args);
 
-Log.Logger = new LoggerConfiguration()
-    .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-    .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)
-    .Enrich.FromLogContext()
-    .WriteTo.File($"Logs/{Assembly.GetExecutingAssembly().GetName().Name}.log")
-    .CreateLogger();
-builder.Logging.ClearProviders();
-builder.Logging.AddSerilog();
+        // Add services to the container.
 
-builder.Services.AddCors(options =>
-{
-    options.AddPolicy(MyAllowSpecificOrigins,
-        policy =>
+        builder.Services.AddControllers();
+        // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+        builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data source=myDb.db"),
+            ServiceLifetime.Singleton);
+        builder.Services.AddEndpointsApiExplorer();
+        builder.Services.AddSwaggerGen();
+        builder.Services.AddScoped<IGameRepository, GameRepository>();
+        builder.Services.AddScoped<IGameService, GameService>();
+        builder.Services.AddDistributedMemoryCache();
+        builder.Services.AddSession(options =>
         {
-            policy.WithOrigins("https://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+            options.IdleTimeout = TimeSpan.FromMinutes(20);
+            options.Cookie.HttpOnly = true;
+            options.Cookie.IsEssential = true;
+            options.Cookie.MaxAge = TimeSpan.FromMinutes(120);
         });
-});
 
-builder.Configuration.AddUserSecrets<Program>();
+        var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
-var app = builder.Build();
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+            .MinimumLevel.Override("Microsoft.EntityFrameworkCore.Database.Command", LogEventLevel.Warning)
+            .Enrich.FromLogContext()
+            .WriteTo.File($"Logs/{Assembly.GetExecutingAssembly().GetName().Name}.log")
+            .CreateLogger();
+        builder.Logging.ClearProviders();
+        builder.Logging.AddSerilog();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+        builder.Services.AddCors(options =>
+        {
+            options.AddPolicy(MyAllowSpecificOrigins,
+                policy =>
+                {
+                    policy.WithOrigins("https://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+                });
+        });
+
+        builder.Configuration.AddUserSecrets<Program>();
+
+        var app = builder.Build();
+
+        // Configure the HTTP request pipeline.
+        if (app.Environment.IsDevelopment())
+        {
+            app.UseSwagger();
+            app.UseSwaggerUI();
+        }
+
+        app.UseCors(MyAllowSpecificOrigins);
+
+        app.UseHttpsRedirection();
+
+        app.UseAuthorization();
+
+        app.UseSession();
+
+        app.UseWebSockets();
+
+        app.MapControllers();
+
+        DbInitializer.Initialize(app);
+
+        app.Run();
+    }
 }
-
-app.UseCors(MyAllowSpecificOrigins);
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.UseSession();
-
-app.UseWebSockets();
-
-app.MapControllers();
-
-DbInitializer.Initialize(app);
-
-app.Run();
