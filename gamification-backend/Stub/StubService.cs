@@ -12,7 +12,7 @@ public static class StubService
         catch (Exception e)
         {
             Console.WriteLine(e);
-            throw;
+            return "Could not parse stub";
         }
 
         var code = StubGenerator.GenerateCode(language, parser);

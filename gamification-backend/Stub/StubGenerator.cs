@@ -48,6 +48,14 @@ public static class StubGenerator
                         continue;
                     }
                     case "loopline":
+                    {
+                        var limit = parser.Next().Value;
+                        Loopline codeToken = new(limit);
+                        while (!parser.NextIsNewLine()) codeToken.Variables.Add(ParseVariable(parser));
+
+                        codeTokens.Add(codeToken);
+                        continue;
+                    }
                     case "loop":
                     {
                         var limit = parser.Next().Value;
@@ -369,7 +377,7 @@ public static class StubGenerator
                     sb.AppendLine($"System.out.println(\"{write.Value}\");");
                     break;
                 case CodeTokenType.Loop:
-                case CodeTokenType.Loopline:
+                {
                     var loop = (Loop) token;
                     sb.Append($"for(int i = 0; i < {loop.Limit}; i++)");
                     sb.AppendLine(" {");
@@ -382,6 +390,22 @@ public static class StubGenerator
                     sb.Append(Tabs(2));
                     sb.AppendLine("}");
                     break;
+                }
+                case CodeTokenType.Loopline:
+                {
+                    var loop = (Loopline) token;
+                    sb.Append($"for(int i = 0; i < {loop.Limit}; i++)");
+                    sb.AppendLine(" {");
+                    foreach (var loopVariable in loop.Variables)
+                    {
+                        sb.Append(Tabs(3));
+                        sb.Append(GenerateVariable(loopVariable, Language.Java));
+                    }
+
+                    sb.Append(Tabs(2));
+                    sb.AppendLine("}");
+                    break;
+                }
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -414,8 +438,23 @@ public static class StubGenerator
                     sb.Append($"console.log(\"{write.Value}\");");
                     break;
                 case CodeTokenType.Loop:
-                case CodeTokenType.Loopline:
+                {
                     var loop = (Loop) token;
+                    sb.Append($"for(let i = 0; i < {loop.Limit} ; i++)");
+                    sb.AppendLine(" {");
+                    foreach (var loopVariable in loop.Variables)
+                    {
+                        sb.Append(Tabs(1));
+                        sb.Append(GenerateVariable(loopVariable, Language.Typescript));
+                    }
+
+                    sb.AppendLine("}");
+
+                    break;
+                }
+                case CodeTokenType.Loopline:
+                {
+                    var loop = (Loopline) token;
                     var inputs = inputsUsed ? "inputs" : "let inputs";
                     if (!inputsUsed)
                         inputsUsed = true;
@@ -430,6 +469,7 @@ public static class StubGenerator
 
                     sb.AppendLine("}");
                     break;
+                }
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -460,8 +500,23 @@ public static class StubGenerator
                     sb.Append($"console.log(\"{write.Value}\");");
                     break;
                 case CodeTokenType.Loop:
-                case CodeTokenType.Loopline:
+                {
                     var loop = (Loop) token;
+                    sb.Append($"for(let i = 0; i < {loop.Limit} ; i++)");
+                    sb.AppendLine(" {");
+                    foreach (var loopVariable in loop.Variables)
+                    {
+                        sb.Append(Tabs(1));
+                        sb.Append(GenerateVariable(loopVariable, Language.Javascript));
+                    }
+
+                    sb.AppendLine("}");
+
+                    break;
+                }
+                case CodeTokenType.Loopline:
+                {
+                    var loop = (Loopline) token;
                     var inputs = inputsUsed ? "inputs" : "let inputs";
                     if (!inputsUsed)
                         inputsUsed = true;
@@ -477,6 +532,7 @@ public static class StubGenerator
 
                     sb.AppendLine("}");
                     break;
+                }
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -518,8 +574,23 @@ public static class StubGenerator
                     sb.AppendLine($"Console.WriteLine(\"{write.Value}\");");
                     break;
                 case CodeTokenType.Loop:
-                case CodeTokenType.Loopline:
+                {
                     var loop = (Loop) token;
+                    sb.Append($"for(var i = 0; i < {loop.Limit} ; i++)");
+                    sb.AppendLine(" {");
+                    foreach (var loopVariable in loop.Variables)
+                    {
+                        sb.Append(Tabs(3));
+                        sb.Append(GenerateVariable(loopVariable, Language.Csharp));
+                    }
+
+                    sb.Append(Tabs(2));
+                    sb.AppendLine("}");
+                    break;
+                }
+                case CodeTokenType.Loopline:
+                {
+                    var loop = (Loopline) token;
                     var inputs = inputsUsed ? "inputs" : "var inputs";
                     if (!inputsUsed)
                         inputsUsed = true;
@@ -536,6 +607,7 @@ public static class StubGenerator
                     sb.Append(Tabs(2));
                     sb.AppendLine("}");
                     break;
+                }
                 case CodeTokenType.Variable:
                     break;
                 default:
@@ -570,8 +642,23 @@ public static class StubGenerator
                     sb.Append($"print(\"{write.Value}\")");
                     break;
                 case CodeTokenType.Loop:
-                case CodeTokenType.Loopline:
+                {
                     var loop = (Loop) token;
+                    sb.Append($"for i in range({loop.Limit})");
+                    sb.AppendLine(":");
+                    foreach (var loopVariable in loop.Variables)
+                    {
+                        sb.Append(Tabs(1));
+                        sb.Append(GenerateVariable(loopVariable, Language.Python));
+                    }
+
+                    sb.AppendLine("}");
+
+                    break;
+                }
+                case CodeTokenType.Loopline:
+                {
+                    var loop = (Loopline) token;
                     sb.AppendLine("inputs = input().split(' ')");
                     sb.Append($"for i in range({loop.Limit})");
                     sb.AppendLine(":");
@@ -582,6 +669,7 @@ public static class StubGenerator
                     }
 
                     break;
+                }
             }
         }
 
@@ -621,6 +709,18 @@ public static class StubGenerator
     private class Loop : CodeToken
     {
         public Loop(string limit) : base(CodeTokenType.Loop)
+        {
+            Limit = limit;
+            Variables = new List<Variable>();
+        }
+
+        public string Limit { get; }
+        public List<Variable> Variables { get; }
+    }
+
+    private class Loopline : CodeToken
+    {
+        public Loopline(string limit) : base(CodeTokenType.Loopline)
         {
             Limit = limit;
             Variables = new List<Variable>();
