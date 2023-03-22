@@ -51,7 +51,8 @@ public class Program
             options.AddPolicy(MyAllowSpecificOrigins,
                 policy =>
                 {
-                    policy.WithOrigins("https://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+                    policy.WithOrigins("https://thankful-plant-032342003.2.azurestaticapps.net").AllowAnyMethod()
+                        .AllowAnyHeader().AllowCredentials();
                 });
         });
 
