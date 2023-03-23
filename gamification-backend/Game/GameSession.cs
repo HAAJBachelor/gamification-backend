@@ -36,6 +36,7 @@ public class GameSession : IGameSession
         }
 
         _currentTask = _taskSetToSelectFrom[id];
+        _currentTask.SessionId = _id;
         _currentTask.StartCode = StubService.GenerateCode(_currentTask.StubCode, StubGenerator.Language.Java);
         _taskSetToSelectFrom.Clear();
         StateManager.SetInTask();
