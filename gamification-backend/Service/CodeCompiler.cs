@@ -13,6 +13,8 @@ public class CodeCompiler
     private CodeCompiler()
     {
         _client = new HttpClient();
+        //base URL of the API
+        _client.BaseAddress = new Uri("https://oxxcodecompiler.azurewebsites.net");
     }
 
     public static CodeCompiler Instance()
@@ -38,11 +40,12 @@ public class CodeCompiler
         var stringPayload = JsonSerializer.Serialize(payload);
         // Wrap our JSON inside a StringContent which then can be used by the HttpClient class
         var httpContent = new StringContent(stringPayload, Encoding.UTF8, "application/json");
+        Console.WriteLine(stringPayload);
 
 
         // Do the actual request and await the response
         var httpResponse =
-            await _client.PostAsync("http://oxxcodecompiler.azurewebsites.net/compiler/", httpContent);
+            await _client.PostAsync("/compiler/", httpContent);
 
         // If the response contains content we want to read it!
         if (httpResponse.Content == null)
