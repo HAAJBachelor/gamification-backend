@@ -42,7 +42,7 @@ public class CodeCompiler
 
         // Do the actual request and await the response
         var httpResponse =
-            await _client.PostAsync("https://oxxcodecompiler.azurewebsites.net:8000/compiler/", httpContent);
+            await _client.PostAsync("http://oxxcodecompiler.azurewebsites.net/compiler/", httpContent);
 
         // If the response contains content we want to read it!
         if (httpResponse.Content == null)
