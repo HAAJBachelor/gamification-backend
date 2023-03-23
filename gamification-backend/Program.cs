@@ -32,7 +32,7 @@ public class Program
             options.IdleTimeout = TimeSpan.FromMinutes(20);
             options.Cookie.IsEssential = true;
             options.Cookie.MaxAge = TimeSpan.FromMinutes(120);
-            options.Cookie.SameSite = SameSiteMode.Lax;
+            options.Cookie.SameSite = SameSiteMode.None;
         });
 
         var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
