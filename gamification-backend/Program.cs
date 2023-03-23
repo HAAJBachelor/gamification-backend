@@ -33,6 +33,7 @@ public class Program
             options.Cookie.IsEssential = true;
             options.Cookie.MaxAge = TimeSpan.FromMinutes(120);
             options.Cookie.SameSite = SameSiteMode.None;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         });
 
         var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
