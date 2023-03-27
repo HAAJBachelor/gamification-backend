@@ -17,8 +17,6 @@ public class GameRepository : IGameRepository
             return;
         var token = configuration["CMS:Token"];
         var projectId = configuration["CMS:ProjectID"];
-        Console.WriteLine("ProjectId: " + projectId);
-        Console.WriteLine("Token: " + token);
         var options = new SanityOptions
         {
             ProjectId = projectId,
