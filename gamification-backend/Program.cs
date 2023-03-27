@@ -15,11 +15,16 @@ public class Program
         StartTime = 600;
         var builder = WebApplication.CreateBuilder(args);
 
+        //set cors based on environment
+        builder.Configuration.AddJsonFile(
+            builder.Environment.IsDevelopment() ? "appsettings.Development.json" : "appsettings.Production.json",
+            optional: true);
         // Add services to the container.
 
         builder.Services.AddControllers();
         // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-        builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlite("Data source=myDb.db"),
+        builder.Services.AddDbContext<ApplicationDbContext>(
+            options => options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")),
             ServiceLifetime.Singleton);
         builder.Services.AddEndpointsApiExplorer();
         builder.Services.AddSwaggerGen();
@@ -52,11 +57,12 @@ public class Program
             options.AddPolicy(MyAllowSpecificOrigins,
                 policy =>
                 {
-                    policy.WithOrigins("https://thankful-plant-032342003.2.azurestaticapps.net").AllowAnyMethod()
-                        .AllowAnyHeader().AllowCredentials();
+                    policy.WithOrigins(builder.Configuration.GetSection("AllowedOrigins").Get<string[]>())
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
                 });
         });
-
         builder.Configuration.AddUserSecrets<Program>();
 
         var app = builder.Build();

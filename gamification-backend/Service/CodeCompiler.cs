@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json;
+using gamification_backend.DAL;
 using gamification_backend.DTO;
 using gamification_backend.Models;
 
@@ -14,7 +15,7 @@ public class CodeCompiler
     {
         _client = new HttpClient();
         //base URL of the API
-        _client.BaseAddress = new Uri("https://oxxcodecompiler.azurewebsites.net");
+        _client.BaseAddress = new Uri(GameRepository.GetCompilerPath());
     }
 
     public static CodeCompiler Instance()

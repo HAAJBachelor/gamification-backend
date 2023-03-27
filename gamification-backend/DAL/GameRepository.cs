@@ -7,6 +7,7 @@ namespace gamification_backend.DAL;
 
 public class GameRepository : IGameRepository
 {
+    private static string? _compilerPath;
     private readonly SanityClient _client;
     private readonly SanityDataContext _sanity;
 
@@ -17,8 +18,6 @@ public class GameRepository : IGameRepository
             return;
         var token = configuration["CMS:Token"];
         var projectId = configuration["CMS:ProjectID"];
-        Console.WriteLine("ProjectId: " + projectId);
-        Console.WriteLine("Token: " + token);
         var options = new SanityOptions
         {
             ProjectId = projectId,
@@ -29,6 +28,7 @@ public class GameRepository : IGameRepository
         };
         _sanity = new SanityDataContext(options);
         _client = new SanityClient(options);
+        _compilerPath = configuration["CodeCompiler"];
     }
 
     public async Task<List<Task>> GenerateTaskSet()
@@ -46,5 +46,10 @@ public class GameRepository : IGameRepository
         if (task == null)
             task = set.Get("drafts." + taskId);
         return TaskMapper.FromSanityTaskToGameTask(task);
+    }
+
+    public static string? GetCompilerPath()
+    {
+        return _compilerPath;
     }
 }
