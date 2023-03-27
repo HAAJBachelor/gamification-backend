@@ -6,7 +6,7 @@ name: Build and deploy ASP.Net Core app to Azure Web App - oxxgame
 on:
   push:
     branches:
-      - production
+      - master
   workflow_dispatch:
 
 jobs:
@@ -53,5 +53,5 @@ jobs:
         with:
           app-name: 'oxxgame'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_BCDC348AC1C14584AF28F9342EC6BD1D }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_324C98943F75431C81D81E84C3B9F60F }}
           package: .
