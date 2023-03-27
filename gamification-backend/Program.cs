@@ -30,9 +30,10 @@ public class Program
         builder.Services.AddSession(options =>
         {
             options.IdleTimeout = TimeSpan.FromMinutes(20);
-            options.Cookie.HttpOnly = true;
             options.Cookie.IsEssential = true;
             options.Cookie.MaxAge = TimeSpan.FromMinutes(120);
+            options.Cookie.SameSite = SameSiteMode.None;
+            options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         });
 
         var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
@@ -51,7 +52,8 @@ public class Program
             options.AddPolicy(MyAllowSpecificOrigins,
                 policy =>
                 {
-                    policy.WithOrigins("https://localhost:3000").AllowAnyMethod().AllowAnyHeader().AllowCredentials();
+                    policy.WithOrigins("https://thankful-plant-032342003.2.azurestaticapps.net").AllowAnyMethod()
+                        .AllowAnyHeader().AllowCredentials();
                 });
         });
 

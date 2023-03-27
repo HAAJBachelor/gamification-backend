@@ -36,6 +36,7 @@ public class GameSession : IGameSession
         }
 
         _currentTask = _taskSetToSelectFrom[id];
+        _currentTask.SessionId = _id;
         _currentTask.StartCode = StubService.GenerateCode(_currentTask.StubCode, StubGenerator.Language.Java);
         _taskSetToSelectFrom.Clear();
         StateManager.SetInTask();
@@ -50,7 +51,6 @@ public class GameSession : IGameSession
     public TaskResult SubmitTask(string input)
     {
         if (_currentTask == null) throw new NullReferenceException("Error in GameSession.SubmitTask()");
-        _currentTask.SessionId = _id;
         _currentTask.UserCode = input;
         var res = GameLogic.Submit(_currentTask);
 

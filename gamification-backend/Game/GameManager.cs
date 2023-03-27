@@ -123,6 +123,12 @@ public class GameManager : IGameManager
 
     public void CancelSession(Guid sessionId)
     {
+        if (!_sessions.ContainsKey(sessionId))
+        {
+            Console.WriteLine("Session with id {0} does not exist", sessionId);
+            return;
+        }
+
         _sessions[sessionId].Cancel();
         RemoveSession(sessionId);
     }
