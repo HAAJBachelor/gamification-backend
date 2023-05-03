@@ -22,4 +22,6 @@ public interface IStateManager
     public bool InTaskSelect();
 
     public bool IsEnded();
+
+    public bool UseSkip();
 }

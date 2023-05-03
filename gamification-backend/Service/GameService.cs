@@ -127,6 +127,11 @@ public class GameService : IGameService
         _manager.CancelSession(sessionId);
     }
 
+    public bool UseSkip(Guid sessionId)
+    {
+        return _manager.UseSkip(sessionId);
+    }
+
     //public delegate void EventHandler(object? source, TimerDepletedEventArgs args);
     public event EventHandler<TimerDepletedEventArgs> SaveSessionEventHandler;
 

@@ -22,4 +22,6 @@ public interface IGameService
     GameTask? GetSelectedTask(Guid getSessionId);
     public List<SessionRecordDTO> GetLeaderboard();
     public void CancelSession(Guid sessionId);
+
+    public bool UseSkip(Guid sessionId);
 }
