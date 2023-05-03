@@ -8,6 +8,7 @@ public class DbInitializer
     {
         using var serviceScope = applicationBuilder.ApplicationServices.CreateScope();
         var context = serviceScope.ServiceProvider.GetService<ApplicationDbContext>();
+        context.Database.EnsureDeleted();
         context.Database.EnsureCreated();
         context.SaveChanges();
     }

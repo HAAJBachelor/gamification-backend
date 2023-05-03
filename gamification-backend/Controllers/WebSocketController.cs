@@ -23,6 +23,17 @@ public class WebSocketController : Controller
         }
     }
 
+    private async Task sendMessage(WebSocket webSocket, Message message, CancellationToken cancellationToken,
+        byte[] buffer)
+    {
+        var json = JsonSerializer.Serialize(message);
+        buffer = Encoding.UTF8.GetBytes(json);
+        var size = Encoding.UTF8.GetByteCount(json);
+
+        var msg = new ArraySegment<byte>(buffer, 0, size);
+        await webSocket.SendAsync(msg, WebSocketMessageType.Text, true, cancellationToken);
+    }
+
     private async Task SendNumbersAsync(WebSocket webSocket)
     {
         var cancellationToken = new CancellationToken();
@@ -30,20 +41,17 @@ public class WebSocketController : Controller
 
         while (webSocket.State == WebSocketState.Open)
         {
-            var number = GameManager.Instance()
-                .GetSessionTime(Guid.Parse(HttpContext.Session.GetString(GameController.SessionId)));
+            var guid = Guid.Parse(HttpContext.Session.GetString(GameController.SessionId));
+            var timeLeft = GameManager.Instance().GetSessionTime(guid);
             Message msg;
-            msg = number <= 0 ? Message.CreateStateChange("Finished") : Message.CreateUpdate(number.ToString());
-            var json = JsonSerializer.Serialize(msg);
-            buffer = Encoding.UTF8.GetBytes(json);
-            var size = Encoding.UTF8.GetByteCount(json);
-
-            var message = new ArraySegment<byte>(buffer, 0, size);
-            await webSocket.SendAsync(message, WebSocketMessageType.Text, true, cancellationToken);
-
-            await Task.Delay(TimeSpan.FromSeconds(1));
-            if (number <= 0)
+            msg = timeLeft <= 0 ? Message.CreateStateChange("Finished") : Message.CreateTime(timeLeft.ToString());
+            await sendMessage(webSocket, msg, cancellationToken, buffer);
+            var lives = GameManager.Instance().GetState(guid)._lives;
+            msg = Message.CreateSkip(lives.ToString());
+            await sendMessage(webSocket, msg, cancellationToken, buffer);
+            if (timeLeft <= 0)
                 break;
+            await Task.Delay(TimeSpan.FromSeconds(1));
         }
 
         await webSocket.CloseAsync(WebSocketCloseStatus.NormalClosure, "WebSocket closed", cancellationToken);
@@ -66,9 +74,14 @@ public class WebSocketController : Controller
 
         public string data { get; set; }
 
-        public static Message CreateUpdate(string data)
+        public static Message CreateTime(string data)
         {
-            return new Message(Type.Update, data);
+            return new Message(Type.Time, data);
+        }
+
+        public static Message CreateSkip(string data)
+        {
+            return new Message(Type.Skip, data);
         }
 
         public static Message CreateStateChange(string data)
@@ -78,8 +91,9 @@ public class WebSocketController : Controller
 
         internal enum Type
         {
-            Update,
+            Time,
             StateChange,
+            Skip,
         }
     }
 }

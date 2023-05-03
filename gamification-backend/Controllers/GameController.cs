@@ -143,6 +143,14 @@ namespace gamification_backend.Controllers
             return Ok(_service.IsGameSessionActive(GetSessionId()));
         }
 
+        // GET: /api/UseSkip
+        [HttpGet]
+        public ActionResult<bool> SkipTask()
+        {
+            if (!Authorized()) return Forbid();
+            return Ok(_service.UseSkip(GetSessionId()));
+        }
+
         // GET: /api/SubmitUsername
         [HttpGet]
         public ActionResult<string> SubmitUsername(string username)
@@ -168,6 +176,7 @@ namespace gamification_backend.Controllers
             _logger.LogInformation("Ending session with id: " + GetSessionId());
             HttpContext.Session.SetString(Active, "");
         }
+
 
         private string GenKey()
         {

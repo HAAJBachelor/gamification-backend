@@ -90,6 +90,11 @@ public class GameSession : IGameSession
         StateManager.EndGame();
     }
 
+    public bool UseSkip()
+    {
+        return StateManager.UseSkip();
+    }
+
     public event EventHandler<EventArgsFromTimer> _timerEvent;
 
     private void EndSession(object? sender, EventArgsFromTimer args)
