@@ -25,4 +25,6 @@ public interface IGameManager
     public List<string> FinishedTasks(Guid id);
 
     public bool UseSkip(Guid sessionId);
+
+    public int GetScore(Guid sessionId);
 }

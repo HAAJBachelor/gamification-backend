@@ -23,7 +23,7 @@ public class Task : SanityDocument
 
     public Category[] Category { get; set; }
 
-    public int Points { get; set; }
+    public int Score { get; set; }
 }
 
 public class Category : SanityDocument

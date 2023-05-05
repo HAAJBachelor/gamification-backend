@@ -24,4 +24,5 @@ public interface IGameService
     public void CancelSession(Guid sessionId);
 
     public bool UseSkip(Guid sessionId);
+
 }

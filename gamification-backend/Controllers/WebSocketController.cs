@@ -46,8 +46,12 @@ public class WebSocketController : Controller
             Message msg;
             msg = timeLeft <= 0 ? Message.CreateStateChange("Finished") : Message.CreateTime(timeLeft.ToString());
             await sendMessage(webSocket, msg, cancellationToken, buffer);
+            var scores = GameManager.Instance().GetScore(guid);
+            msg = Message.CreateScore(scores.ToString());
+            await sendMessage(webSocket, msg, cancellationToken, buffer);
             var lives = GameManager.Instance().GetState(guid)._lives;
             msg = Message.CreateSkip(lives.ToString());
+            var state = GameManager.Instance().GetState(guid);
             await sendMessage(webSocket, msg, cancellationToken, buffer);
             if (timeLeft <= 0)
                 break;
@@ -84,6 +88,11 @@ public class WebSocketController : Controller
             return new Message(Type.Skip, data);
         }
 
+        public static Message CreateScore(string data)
+        {
+            return new Message(Type.Score, data);
+        }
+
         public static Message CreateStateChange(string data)
         {
             return new Message(Type.StateChange, data);
@@ -94,6 +103,7 @@ public class WebSocketController : Controller
             Time,
             StateChange,
             Skip,
+            Score
         }
     }
 }

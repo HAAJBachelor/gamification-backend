@@ -6,6 +6,8 @@ public class TaskRewards
     public int Lives { get; set; }
 
     public int Time { get; set; }
+    
+    public int Score { get; set; }
 
-    public int Points { get; set; }
+
 }
