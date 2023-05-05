@@ -57,7 +57,7 @@ public class GameSession : IGameSession
         if (!res.Success) return res;
         _finishedTasks.Add(_currentTask.Id);
         var rewards = _currentTask.Rewards;
-        StateManager.UpdateState(rewards.Lives, rewards.Time, rewards.Points);
+        StateManager.UpdateState(rewards.Lives, rewards.Time, rewards.Score);
         StateManager.SetInTaskSelect();
         return res;
     }
@@ -88,6 +88,16 @@ public class GameSession : IGameSession
     public void Cancel()
     {
         StateManager.EndGame();
+    }
+
+    public bool UseSkip()
+    {
+        return StateManager.UseSkip();
+    }
+
+    public int GetScore()
+    {
+        return StateManager.GetScore();
     }
 
     public event EventHandler<EventArgsFromTimer> _timerEvent;

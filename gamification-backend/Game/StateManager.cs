@@ -13,16 +13,16 @@ public class StateManager : IStateManager
     }
 
     private readonly Timer _timer;
-    private int _lives;
     private int _points;
 
     private RunningState _runningState;
+    private int _skip;
 
     public StateManager(int seconds, EventHandler<EventArgsFromTimer> handler)
     {
         _timer = new Timer(this, seconds, handler);
         _points = 0;
-        _lives = 3; // Example amount
+        _skip = 3; // Example amount
     }
 
     public void UpdateState(int lives, int time, int points)
@@ -35,7 +35,7 @@ public class StateManager : IStateManager
     //Returns state as a RunningState-object containing all data.
     public StateDTO GetState()
     {
-        return new StateDTO(_points, _lives, _runningState);
+        return new StateDTO(_points, _skip, _runningState);
     }
 
     public void EndGame()
@@ -77,15 +77,28 @@ public class StateManager : IStateManager
     {
         return _timer.Seconds;
     }
+    
+    public int GetScore()
+    {   
+        return _points;
+    }
+
+    public bool UseSkip()
+    {
+        if (_skip <= 0)
+            return false;
+        _skip--;
+        return true;
+    }
 
     private void UpdateLife(int amount)
     {
-        var newAmount = _lives + amount;
+        var newAmount = _skip + amount;
         if (newAmount < 0)
         {
-            _lives = 0;
+            _skip = 0;
         }
-        else _lives = newAmount;
+        else _skip = newAmount;
     }
 
     private void UpdatePoints(int amount)

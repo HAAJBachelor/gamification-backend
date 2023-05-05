@@ -15,4 +15,7 @@ public interface IGameSession
     public TestCaseResult SubmitTestCase(string input, int id);
     public GameTask? GetCurrentTask();
     public void Cancel();
+
+    public bool UseSkip();
+    public int GetScore();
 }
