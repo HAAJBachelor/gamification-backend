@@ -17,4 +17,5 @@ public interface IGameSession
     public void Cancel();
 
     public bool UseSkip();
+    public int GetScore();
 }

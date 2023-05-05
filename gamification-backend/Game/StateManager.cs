@@ -77,6 +77,11 @@ public class StateManager : IStateManager
     {
         return _timer.Seconds;
     }
+    
+    public int GetScore()
+    {   
+        return _points;
+    }
 
     public bool UseSkip()
     {

@@ -13,7 +13,7 @@ public class GameTask
     {
     }
 
-    public GameTask(string description, int lives, int time)
+    public GameTask(string description, int lives, int time, int points)
     {
         Description = description;
         _rewards = new TaskRewards
@@ -42,6 +42,7 @@ public class GameTask
     public List<TestCase> TestCases { get; set; }
     public List<TestCase> ValidatorCases { get; set; }
     public string Difficulty { get; set; }
+    
 
     public string[] Category { get; set; }
     public TaskRewards Rewards { get; set; }
@@ -64,10 +65,5 @@ public class GameTask
     public TestCase SingleTestCase(int index)
     {
         return TestCases[index];
-    }
-
-    public void SetPoints(int points)
-    {
-        _rewards.Points = points;
     }
 }

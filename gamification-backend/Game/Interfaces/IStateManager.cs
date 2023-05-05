@@ -24,4 +24,6 @@ public interface IStateManager
     public bool IsEnded();
 
     public bool UseSkip();
+
+    public int GetScore();
 }

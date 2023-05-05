@@ -143,6 +143,11 @@ public class GameManager : IGameManager
         return _sessions[sessionId].UseSkip();
     }
 
+    public int GetScore(Guid sessionId)
+    {
+        return _sessions[sessionId].GetScore();
+    }
+
     public static GameManager Instance()
     {
         return _instance ??= new GameManager();

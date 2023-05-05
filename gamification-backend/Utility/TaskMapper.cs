@@ -27,9 +27,9 @@ public static class TaskMapper
             Rewards = new TaskRewards
             {
                 Lives = task.Rewards.Where(reward => reward.Type == "lives").Sum(r => r.Amount),
-                Points = task.Points,
                 Time = task.Rewards.Where(reward => reward.Type == "time").Sum(r => r.Amount),
-            }
+                Score = task.Score
+            },
         };
         return gt;
     }
