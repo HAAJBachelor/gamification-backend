@@ -38,7 +38,7 @@ namespace gamification_backend.Controllers
         [HttpPost]
         public ActionResult<TaskResult> SubmitTask([FromBody] string input)
         {
-            if (!Authorized()) return Unauthorized();
+            if (!Authorized()) return Unauthorized("No session found");
             _logger.LogInformation("Submitting task for session " + GetSessionId());
             return Ok(_service.SubmitTask(GetSessionId(), input));
         }
@@ -47,23 +47,23 @@ namespace gamification_backend.Controllers
         [HttpPost]
         public ActionResult<TestCaseResult> SubmitTestCase([FromBody] string input, int index)
         {
-            if (!Authorized()) return Unauthorized();
+            if (!Authorized()) return Unauthorized("No session found");
             _logger.LogInformation("Submitting testcase for session " + GetSessionId());
-            return _service.SubmitTestCase(GetSessionId(), input, index);
+            return Ok(_service.SubmitTestCase(GetSessionId(), input, index));
         }
 
         //POST: /api/SubmitTestTaskTestCase/
         [HttpPost]
         public ActionResult<TestCaseResult> SubmitTestTaskTestCase([FromBody] string input, int index)
         {
-            return _service.SubmitTestTaskTestCase(input, index);
+            return Ok(_service.SubmitTestTaskTestCase(input, index));
         }
 
         // GET: /api/SelectTask/
         [HttpGet]
         public ActionResult<GameTaskDTO> SelectTask(int taskId)
         {
-            if (!Authorized()) return Unauthorized();
+            if (!Authorized()) return Unauthorized("No session found");
             _logger.LogInformation("Selecting task for session " + GetSessionId());
             var task = _service.SelectTask(GetSessionId(), taskId);
             return Ok(task);
@@ -73,7 +73,7 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<GameTaskDTO> GetSelectedTask()
         {
-            if (!Authorized()) return Unauthorized();
+            if (!Authorized()) return Unauthorized("No session found");
             _logger.LogInformation("Getting selected task for session " + GetSessionId());
             var task = _service.GetSelectedTask(GetSessionId());
             if (task == null)
@@ -102,7 +102,7 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<List<GameTaskDTO>> GenerateTasks()
         {
-            if (!Authorized()) return Unauthorized();
+            if (!Authorized()) return Unauthorized("No session found");
             _logger.LogInformation("Generating taskset for session " + GetSessionId());
             var tasks = _service.GenerateTaskSet(GetSessionId());
             return Ok(tasks);
@@ -112,7 +112,7 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<StateDTO> GetState()
         {
-            if (!Authorized()) return Unauthorized();
+            if (!Authorized()) return Unauthorized("No session found");
             _logger.LogInformation("Fetching state for session " + GetSessionId());
             return Ok(_service.GetState(GetSessionId()));
         }
@@ -125,7 +125,7 @@ namespace gamification_backend.Controllers
             {
                 if (test) return Ok(_service.GetTestTaskStartCode(lang));
 
-                if (!Authorized()) return Unauthorized();
+                if (!Authorized()) return Unauthorized("No session found");
 
                 _logger.LogInformation("Getting startcode for session " + GetSessionId());
                 return Ok(_service.GetStartCode(GetSessionId(), lang));
@@ -147,7 +147,7 @@ namespace gamification_backend.Controllers
         [HttpGet]
         public ActionResult<bool> SkipTask()
         {
-            if (!Authorized()) return Forbid();
+            if (!Authorized()) return Unauthorized("No session found");
             return Ok(_service.UseSkip(GetSessionId()));
         }
 
@@ -163,12 +163,20 @@ namespace gamification_backend.Controllers
 
         public Guid GetSessionId()
         {
-            return Guid.Parse(HttpContext.Session.GetString(SessionId));
+            var id = HttpContext.Session.GetString(SessionId);
+            return Guid.Parse(id!);
         }
 
         private bool Authorized()
         {
-            return !string.IsNullOrEmpty(HttpContext.Session.GetString(Active));
+            try
+            {
+                return !string.IsNullOrEmpty(HttpContext.Session.Get(Active)!.ToString());
+            }
+            catch (Exception e)
+            {
+                return false;
+            }
         }
 
         private void EndSession()
