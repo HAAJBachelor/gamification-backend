@@ -1,4 +1,5 @@
-﻿using gamification_backend.DTO;
+﻿using System.Collections.Concurrent;
+using gamification_backend.DTO;
 using gamification_backend.Models;
 using gamification_backend.Stub;
 using gamification_backend.Utility;
@@ -12,10 +13,6 @@ public class GameManager : IGameManager
     private int _idCounter;
     private GameTask? _testTask;
 
-    private GameManager()
-    {
-        _sessions = new Dictionary<Guid, IGameSession>();
-    }
 
     public bool CreateSession(Guid id, EventHandler<TimerDepletedEventArgs> eventHandler)
     {
@@ -154,19 +151,14 @@ public class GameManager : IGameManager
         return _sessions[sessionId].GetScore();
     }
 
-    public static GameManager Instance()
+    public int GetSessionTime(Guid id)
     {
-        return _instance ??= new GameManager();
+        return _sessions[id].StateManager.GetTime();
     }
 
     public bool SessionIsRunning(Guid id)
     {
         var session = _sessions[id];
         return session.StateManager.InTask();
-    }
-
-    public int GetSessionTime(Guid id)
-    {
-        return _sessions[id].StateManager.GetTime();
     }
 }

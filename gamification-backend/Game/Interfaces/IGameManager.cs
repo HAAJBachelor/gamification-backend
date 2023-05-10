@@ -27,4 +27,6 @@ public interface IGameManager
     public bool UseSkip(Guid sessionId);
 
     public int GetScore(Guid sessionId);
+
+    public int GetSessionTime(Guid sessionId);
 }
