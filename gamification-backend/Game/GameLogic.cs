@@ -81,13 +81,13 @@ public static class GameLogic
         {
             if (i == lines.Length)
             {
-                errorMessage = $"Wrong answer on line {i + 1}: Missing output, expected {expectedLines[i]}";
+                errorMessage = $"Feil svar på linje {i + 1}: Mangler output, forventet {expectedLines[i]}";
                 break;
             }
 
             if (lines[i] != expectedLines[i])
             {
-                errorMessage = $"Wrong answer on line {i + 1}: You got {lines[i]}, expected {expectedLines[i]}";
+                errorMessage = $"Feil svar på linje {i + 1}: Du fikk {lines[i]}, forventet {expectedLines[i]}";
                 break;
             }
         }
@@ -100,7 +100,8 @@ public static class GameLogic
         bool error = false)
     {
         const string internalTimeoutMessage = "timelimit: sending warning signal 15";
-        const string clientTimeoutMessage = "Timeout! Execution timed out after 3 seconds.\n Make your code faster :)";
+        const string clientTimeoutMessage =
+            "Tidsavbrudd! Utførelsen ble avbrutt etter 3 sekunder. \n Gjør koden din raskere :)";
         if (output.Contains(internalTimeoutMessage))
         {
             output = output.Replace(internalTimeoutMessage, clientTimeoutMessage);
@@ -144,7 +145,7 @@ public static class GameLogic
             return output;
         var builder = new StringBuilder();
         for (var i = 0; i < maxLineLength; i++) builder.Append(lines[i]).AppendLine();
-        builder.Append($"{lines.Length - maxLineLength} more lines...");
+        builder.Append($"{lines.Length - maxLineLength} flere linjer...");
         return builder.ToString();
     }
 }
