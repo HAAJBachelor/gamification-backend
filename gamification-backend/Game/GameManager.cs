@@ -156,6 +156,16 @@ public class GameManager : IGameManager
         return _sessions[id].StateManager.GetTime();
     }
 
+    public bool HasGeneratedTaskSet(Guid sessionId)
+    {
+        return _sessions[sessionId].HasGeneratedTaskSet();
+    }
+
+    public List<GameTask>? GetGeneratedTaskSet(Guid sessionId)
+    {
+        return _sessions[sessionId].GetGeneratedTaskSet();
+    }
+
     public bool SessionIsRunning(Guid id)
     {
         var session = _sessions[id];

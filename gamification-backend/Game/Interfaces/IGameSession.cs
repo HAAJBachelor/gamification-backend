@@ -18,4 +18,11 @@ public interface IGameSession
 
     public bool UseSkip();
     public int GetScore();
+
+
+    public List<GameTask>? GetGeneratedTaskSet();
+
+    public bool HasGeneratedTaskSet();
+
+    public void ResetGeneratedTaskSet();
 }

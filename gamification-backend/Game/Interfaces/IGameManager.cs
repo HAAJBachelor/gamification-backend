@@ -29,4 +29,6 @@ public interface IGameManager
     public int GetScore(Guid sessionId);
 
     public int GetSessionTime(Guid sessionId);
+    bool HasGeneratedTaskSet(Guid sessionId);
+    public List<GameTask>? GetGeneratedTaskSet(Guid sessionId);
 }

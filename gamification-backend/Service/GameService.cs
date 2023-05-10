@@ -43,6 +43,8 @@ public class GameService : IGameService
 
     public List<GameTaskDTO> GenerateTaskSet(Guid sessionId)
     {
+        if (_manager.HasGeneratedTaskSet(sessionId))
+            return DTOMapper.GameTaskMapper(_manager.GetGeneratedTaskSet(sessionId)!);
         var finishedTasks = _manager.FinishedTasks(sessionId);
         var sanityTask = _gameRepository.GenerateTaskSet().Result;
         var filteredTasks = sanityTask.Where(t => !finishedTasks.Contains(t._id)).ToList();
