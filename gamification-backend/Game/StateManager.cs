@@ -77,9 +77,9 @@ public class StateManager : IStateManager
     {
         return _timer.Seconds;
     }
-    
+
     public int GetScore()
-    {   
+    {
         return _points;
     }
 
@@ -88,6 +88,7 @@ public class StateManager : IStateManager
         if (_skip <= 0)
             return false;
         _skip--;
+        _runningState = RunningState.TaskSelect;
         return true;
     }
 
