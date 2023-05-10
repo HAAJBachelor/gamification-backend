@@ -29,7 +29,13 @@ namespace gamification_backend.Controllers
             if (Authorized()) _service.CancelSession(GetSessionId());
             HttpContext.Session.SetString(Active, "Active");
             HttpContext.Session.SetString(SessionId, GenKey());
-            _service.CreateSession(GetSessionId());
+            var res = _service.CreateSession(GetSessionId());
+            if (!res)
+            {
+                _logger.LogInformation("Could not create session, already exists");
+                return BadRequest("Something went wrong, could not create session");
+            }
+
             _logger.LogInformation("Created new session with id " + GetSessionId());
             return Ok("A session was Created");
         }

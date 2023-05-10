@@ -8,7 +8,7 @@ namespace gamification_backend.Game;
 public interface IGameManager
 {
     public GameTask? TestTask { get; set; }
-    public void CreateSession(Guid id, EventHandler<TimerDepletedEventArgs> del);
+    public bool CreateSession(Guid id, EventHandler<TimerDepletedEventArgs> del);
     public GameTask SelectTask(Guid sessionId, int taskId);
     public TaskResult SubmitTask(Guid sessionId, string input);
     public void SaveTaskSet(Guid sessionId, List<GameTask> tasks);

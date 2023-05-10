@@ -20,7 +20,7 @@ public class GameService : IGameService
         _sessionRepository = sessionRepository;
     }
 
-    public void CreateSession(Guid id)
+    public bool CreateSession(Guid id)
     {
         SaveSessionEventHandler += SaveSession;
         _manager.CreateSession(id, SaveSessionEventHandler);
