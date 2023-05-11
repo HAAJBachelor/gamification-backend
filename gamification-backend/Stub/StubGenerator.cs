@@ -658,8 +658,6 @@ public static class StubGenerator
                         sb.Append(GenerateVariable(loopVariable, Language.Python));
                     }
 
-                    sb.AppendLine("}");
-
                     break;
                 }
                 case CodeTokenType.Loopline:
