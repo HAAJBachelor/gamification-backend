@@ -1,6 +1,7 @@
 using System.Reflection;
 using gamification_backend.DAL;
 using gamification_backend.DBData;
+using gamification_backend.Game;
 using gamification_backend.Service;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
@@ -31,6 +32,7 @@ public class Program
         builder.Services.AddScoped<IGameRepository, GameRepository>();
         builder.Services.AddScoped<ISessionRepository, SessionRepository>();
         builder.Services.AddScoped<IGameService, GameService>();
+        builder.Services.AddScoped<IGameManager, GameManager>();
         builder.Services.AddDistributedMemoryCache();
         builder.Services.AddSession(options =>
         {

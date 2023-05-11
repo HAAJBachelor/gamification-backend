@@ -59,6 +59,7 @@ public class GameSession : IGameSession
         var rewards = _currentTask.Rewards;
         StateManager.UpdateState(rewards.Lives, rewards.Time, rewards.Score);
         StateManager.SetInTaskSelect();
+        ResetGeneratedTaskSet();
         return res;
     }
 
@@ -92,12 +93,30 @@ public class GameSession : IGameSession
 
     public bool UseSkip()
     {
-        return StateManager.UseSkip();
+        var results = StateManager.UseSkip();
+        if (results)
+            ResetGeneratedTaskSet();
+        return results;
     }
 
     public int GetScore()
     {
         return StateManager.GetScore();
+    }
+
+    public List<GameTask>? GetGeneratedTaskSet()
+    {
+        return _taskSetToSelectFrom;
+    }
+
+    public bool HasGeneratedTaskSet()
+    {
+        return _taskSetToSelectFrom is not null;
+    }
+
+    public void ResetGeneratedTaskSet()
+    {
+        _taskSetToSelectFrom = null;
     }
 
     public event EventHandler<EventArgsFromTimer> _timerEvent;

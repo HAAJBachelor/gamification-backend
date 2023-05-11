@@ -8,6 +8,13 @@ namespace gamification_backend.Controllers;
 
 public class WebSocketController : Controller
 {
+    private readonly IGameManager _gameManager;
+
+    public WebSocketController(IGameManager gameManager)
+    {
+        _gameManager = gameManager;
+    }
+
     [Route("/ws")]
     [HttpGet]
     public async Task InvokeAsync()
@@ -42,16 +49,16 @@ public class WebSocketController : Controller
         while (webSocket.State == WebSocketState.Open)
         {
             var guid = Guid.Parse(HttpContext.Session.GetString(GameController.SessionId));
-            var timeLeft = GameManager.Instance().GetSessionTime(guid);
+            var timeLeft = _gameManager.GetSessionTime(guid);
             Message msg;
             msg = timeLeft <= 0 ? Message.CreateStateChange("Finished") : Message.CreateTime(timeLeft.ToString());
             await sendMessage(webSocket, msg, cancellationToken, buffer);
-            var scores = GameManager.Instance().GetScore(guid);
+            var scores = _gameManager.GetScore(guid);
             msg = Message.CreateScore(scores.ToString());
             await sendMessage(webSocket, msg, cancellationToken, buffer);
-            var lives = GameManager.Instance().GetState(guid)._lives;
+            var lives = _gameManager.GetState(guid)._lives;
             msg = Message.CreateSkip(lives.ToString());
-            var state = GameManager.Instance().GetState(guid);
+            var state = _gameManager.GetState(guid);
             await sendMessage(webSocket, msg, cancellationToken, buffer);
             if (timeLeft <= 0)
                 break;

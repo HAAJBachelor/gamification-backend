@@ -13,17 +13,17 @@ public class GameService : IGameService
     private readonly IGameManager _manager;
     private readonly ISessionRepository _sessionRepository;
 
-    public GameService(IGameRepository repo, ISessionRepository sessionRepository)
+    public GameService(IGameRepository repo, ISessionRepository sessionRepository, IGameManager manager)
     {
-        _manager = GameManager.Instance();
+        _manager = manager;
         _gameRepository = repo;
         _sessionRepository = sessionRepository;
     }
 
-    public void CreateSession(Guid id)
+    public bool CreateSession(Guid id)
     {
         SaveSessionEventHandler += SaveSession;
-        _manager.CreateSession(id, SaveSessionEventHandler);
+        return _manager.CreateSession(id, SaveSessionEventHandler);
     }
 
     public TaskResult SubmitTask(Guid sessionId, string input)
@@ -43,6 +43,8 @@ public class GameService : IGameService
 
     public List<GameTaskDTO> GenerateTaskSet(Guid sessionId)
     {
+        if (_manager.HasGeneratedTaskSet(sessionId))
+            return DTOMapper.GameTaskMapper(_manager.GetGeneratedTaskSet(sessionId)!);
         var finishedTasks = _manager.FinishedTasks(sessionId);
         var sanityTask = _gameRepository.GenerateTaskSet().Result;
         var filteredTasks = sanityTask.Where(t => !finishedTasks.Contains(t._id)).ToList();
@@ -55,11 +57,14 @@ public class GameService : IGameService
             .Take(3));
         if (tasks.Count < 3)
         {
-            randomIndexes = Enumerable.Range(0, filteredTasks.Count).OrderBy(x => rnd.Next()).ToArray();
+            randomIndexes = Enumerable.Range(0, sanityTask.Count).OrderBy(x => rnd.Next()).ToArray();
             var i = 0;
             while (tasks.Count < 3)
             {
-                tasks.Add(TaskMapper.FromSanityTaskToGameTask(sanityTask[randomIndexes[i--]]));
+                var t = TaskMapper.FromSanityTaskToGameTask(sanityTask[randomIndexes[i++]]);
+                if (tasks.Contains(t))
+                    continue;
+                tasks.Add(t);
             }
         }
 

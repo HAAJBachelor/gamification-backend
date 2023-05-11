@@ -1,4 +1,5 @@
-﻿using gamification_backend.DTO;
+﻿using System.Collections.Concurrent;
+using gamification_backend.DTO;
 using gamification_backend.Models;
 using gamification_backend.Stub;
 using gamification_backend.Utility;
@@ -8,20 +9,22 @@ namespace gamification_backend.Game;
 public class GameManager : IGameManager
 {
     private static GameManager? _instance;
-    private readonly Dictionary<Guid, IGameSession> _sessions;
+    private static readonly ConcurrentDictionary<Guid, IGameSession> _sessions = new();
     private int _idCounter;
     private GameTask? _testTask;
 
-    private GameManager()
-    {
-        _sessions = new Dictionary<Guid, IGameSession>();
-    }
 
-    public void CreateSession(Guid id, EventHandler<TimerDepletedEventArgs> eventHandler)
+    public bool CreateSession(Guid id, EventHandler<TimerDepletedEventArgs> eventHandler)
     {
         var session = new GameSession(id, Program.StartTime, eventHandler);
-        _sessions.Add(id, session);
+        var res = _sessions.TryAdd(id, session);
+        if (!res)
+        {
+            return false;
+        }
+
         Console.WriteLine("Creating new session with id {0}, total: {1}", id, _sessions.Count);
+        return true;
     }
 
     public GameTask SelectTask(Guid sessionId, int taskId)
@@ -66,7 +69,7 @@ public class GameManager : IGameManager
 
     public void RemoveSession(Guid sessionId)
     {
-        _sessions.Remove(sessionId);
+        _sessions.TryRemove(sessionId, out _);
     }
 
     public string GetStartCode(Guid sessionId, StubGenerator.Language language)
@@ -148,19 +151,24 @@ public class GameManager : IGameManager
         return _sessions[sessionId].GetScore();
     }
 
-    public static GameManager Instance()
+    public int GetSessionTime(Guid id)
     {
-        return _instance ??= new GameManager();
+        return _sessions[id].StateManager.GetTime();
+    }
+
+    public bool HasGeneratedTaskSet(Guid sessionId)
+    {
+        return _sessions[sessionId].HasGeneratedTaskSet();
+    }
+
+    public List<GameTask>? GetGeneratedTaskSet(Guid sessionId)
+    {
+        return _sessions[sessionId].GetGeneratedTaskSet();
     }
 
     public bool SessionIsRunning(Guid id)
     {
         var session = _sessions[id];
         return session.StateManager.InTask();
-    }
-
-    public int GetSessionTime(Guid id)
-    {
-        return _sessions[id].StateManager.GetTime();
     }
 }

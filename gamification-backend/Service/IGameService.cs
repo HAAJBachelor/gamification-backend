@@ -6,7 +6,7 @@ namespace gamification_backend.Service;
 
 public interface IGameService
 {
-    public void CreateSession(Guid id);
+    public bool CreateSession(Guid id);
     public TaskResult SubmitTask(Guid sessiondId, string input);
     public TestCaseResult SubmitTestCase(Guid sessionId, string input, int index);
     public TestCaseResult SubmitTestTaskTestCase(string input, int index);
@@ -24,5 +24,4 @@ public interface IGameService
     public void CancelSession(Guid sessionId);
 
     public bool UseSkip(Guid sessionId);
-
 }
